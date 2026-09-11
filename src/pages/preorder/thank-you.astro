@@ -1,0 +1,70 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import T from '../../components/T.astro';
+import QrStand from '../../components/QrStand.astro';
+import { site, whatsappUrl } from '../../config/site';
+---
+
+<Base title="Pre-order reserved" noindex headerTone="white">
+  <section class="ty section section--accent">
+    <div class="container ty__grid">
+      <div>
+        <p class="pill pill--glass"><Icon name="check" size={16} /> <T k="preorder.success" /></p>
+        <h1 class="ty__title" data-split="immediate"><T k="preorder.thanks.title" /></h1>
+        <p class="lead"><T k="preorder.thanks.text" /></p>
+        <p class="ty__ref" data-ty-ref hidden>Reference: <strong data-ty-ref-value></strong></p>
+        <h2 class="ty__h"><T k="preorder.thanks.next" /></h2>
+        <ol class="ty__list">
+          <li><span>1</span><T k="preorder.thanks.1" /></li>
+          <li><span>2</span><T k="preorder.thanks.2" /></li>
+          <li><span>3</span><T k="preorder.thanks.3" /></li>
+        </ol>
+        <div class="btn-row">
+          <a class="btn btn--white" href={whatsappUrl('Hi NexGen Digital, I just placed a QR stand pre-order.')} target="_blank" rel="noopener"><Icon name="whatsapp" size={18} />WhatsApp</a>
+          <a class="btn btn--black" href="/services"><T k="services.viewAll" /><Icon name="arrow" size={16} class="arrow" /></a>
+        </div>
+        <p class="script ty__script">{site.phrases.localBusiness}</p>
+      </div>
+      <div class="ty__visual" data-reveal="scale"><QrStand size={260} /></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ty { min-height: 100svh; display: flex; align-items: center; padding-top: calc(var(--header-h) + var(--space-7)); }
+  .ty__grid { display: grid; gap: var(--space-8); align-items: center; }
+  @media (min-width: 1024px) { .ty__grid { grid-template-columns: 1.2fr 1fr; } }
+  .ty__title { color: #fff; margin-top: var(--space-4); }
+  .ty__title :global(.word) { display: inline-block; }
+  .ty .lead { color: #fff; opacity: 0.92; }
+  .ty__ref { font-size: var(--text-lg); }
+  .ty__h { font-size: var(--text-xl); margin-top: var(--space-6); color: #fff; }
+  .ty__list { list-style: none; padding: 0; margin: 0 0 var(--space-6); display: grid; gap: var(--space-3); }
+  .ty__list li { display: flex; gap: var(--space-3); align-items: center; }
+  .ty__list span {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #fff;
+    color: var(--brand-orange);
+    font-family: var(--font-heading);
+    font-weight: 800;
+    flex: none;
+  }
+  .ty__script { margin-top: var(--space-6); }
+  .ty__visual { display: grid; place-items: center; }
+</style>
+
+<script>
+  try {
+    const data = JSON.parse(sessionStorage.getItem('nexgen-preorder') || 'null');
+    if (data?.reference) {
+      const el = document.querySelector<HTMLElement>('[data-ty-ref]')!;
+      el.hidden = false;
+      el.querySelector('[data-ty-ref-value]')!.textContent = data.reference;
+    }
+  } catch {}
+</script>

@@ -1,0 +1,62 @@
+---
+/**
+ * Inline SVG logo built from generated Poppins outlines (see scripts/generate-logo.mjs).
+ * Colours are controlled by CSS so it adapts to light, dark and orange surfaces.
+ *
+ *   <Logo />                          horizontal, brand colours, adapts to theme
+ *   <Logo variant="stacked" />        NexGen over Digital
+ *   <Logo variant="mark" />           X mark only
+ *   <Logo tone="white" />             all white (for orange backgrounds)
+ */
+import paths from '../generated/logo-paths.json';
+
+interface Props {
+  variant?: 'horizontal' | 'stacked' | 'mark';
+  tone?: 'auto' | 'white' | 'dark' | 'light';
+  height?: number;
+  class?: string;
+}
+const { variant = 'horizontal', tone = 'auto', height = 36, class: className } = Astro.props;
+
+const box = variant === 'mark' ? paths.markBox : variant === 'stacked' ? paths.stacked : paths.horizontal;
+const viewBox = variant === 'mark' ? `${box.x} ${box.y} ${box.width} ${box.height}` : (box as { viewBox: string }).viewBox;
+const width = Math.round((box.width / box.height) * height * 100) / 100;
+---
+
+<svg
+  class:list={['logo', `logo--${variant}`, `logo--${tone}`, className]}
+  viewBox={viewBox}
+  width={width}
+  height={height}
+  role="img"
+  aria-label="NexGen Digital"
+>
+  {variant !== 'mark' && <path class="logo__word" d={`${paths.ne} ${paths.gen}`} />}
+  <path class="logo__mark" d={paths.mark} />
+  {variant === 'horizontal' && <path class="logo__digital" d={paths.digital} />}
+  {variant === 'stacked' && <path class="logo__digital" d={paths.stackedDigital} />}
+</svg>
+
+<style>
+  .logo {
+    display: block;
+    flex: none;
+    --logo-word: var(--fg);
+    --logo-mark: var(--brand-orange);
+    --logo-digital: var(--brand-orange);
+  }
+  .logo--white {
+    --logo-word: #fff;
+    --logo-mark: #fff;
+    --logo-digital: #fff;
+  }
+  .logo--dark {
+    --logo-word: #fff;
+  }
+  .logo--light {
+    --logo-word: #0b0b0b;
+  }
+  .logo__word { fill: var(--logo-word); transition: fill var(--dur); }
+  .logo__mark { fill: var(--logo-mark); transition: fill var(--dur); }
+  .logo__digital { fill: var(--logo-digital); transition: fill var(--dur); }
+</style>

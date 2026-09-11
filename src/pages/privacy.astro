@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { site } from '../config/site';
+---
+
+<Base title="Privacy Policy" description="How NexGen Digital collects and uses information." headerTone="white">
+  <PageHero eyebrow="Legal" title="Privacy Policy" lead="Placeholder policy. Replace with your reviewed text before launch." tone="black" compact />
+  <section class="section">
+    <div class="container container--narrow prose">
+      <p class="small muted">Last updated: {new Date().toISOString().slice(0, 10)}</p>
+      <h2>Who we are</h2>
+      <p>{site.legalName} ("NexGen Digital", "we") operates this website from {site.location.city}, {site.location.country}. Contact: {site.contact.email}.</p>
+      <h2>What we collect</h2>
+      <ul>
+        <li>Information you send us through forms, chat or pre-orders: name, business details, phone, email, message.</li>
+        <li>Campaign parameters from links you clicked (for example utm_source) and the page you landed on, so we know which promotion brought you here.</li>
+        <li>Usage analytics through Google Analytics and Meta Pixel when enabled, using cookies. You can block these in your browser.</li>
+        <li>Your language and theme preferences, stored only in your browser.</li>
+      </ul>
+      <h2>How we use it</h2>
+      <ul>
+        <li>To reply to enquiries, prepare quotes and fulfil pre-orders.</li>
+        <li>To send you a confirmation email and follow up about your request.</li>
+        <li>To understand which marketing brings customers, and improve the website.</li>
+      </ul>
+      <h2>Sharing</h2>
+      <p>We do not sell your data. Emails are delivered through Google (Gmail). Analytics providers process usage data under their own policies. We share data with authorities only when required by law.</p>
+      <h2>Retention</h2>
+      <p>Enquiry and pre-order records are kept for as long as needed to serve you and meet legal obligations, then deleted.</p>
+      <h2>Your rights</h2>
+      <p>You may ask us to see, correct or delete your information at any time by emailing {site.contact.email}.</p>
+      <h2>Changes</h2>
+      <p>We may update this policy. The date at the top shows the latest version.</p>
+    </div>
+  </section>
+</Base>

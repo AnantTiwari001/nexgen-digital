@@ -1,0 +1,90 @@
+---
+import SectionHead from '../SectionHead.astro';
+import T from '../T.astro';
+import Icon from '../Icon.astro';
+import type { IconName } from '../../data/types';
+
+interface Props {
+  steps?: { title: string; text: string }[];
+  titleKey?: string;
+}
+const { steps, titleKey } = Astro.props;
+const icons: IconName[] = ['search', 'doc', 'sparkles', 'trend'];
+---
+
+<section class="section process section--inverse">
+  <div class="container">
+    {steps ? (
+      <SectionHead eyebrow="services.howItWorks" title={titleKey ?? 'process.title'} />
+    ) : (
+      <SectionHead eyebrow="process.eyebrow" title="process.title" />
+    )}
+    <ol class="process__list" data-reveal-group>
+      {(steps ?? [1, 2, 3, 4].map((n) => ({ key: n }))).map((s, i) => (
+        <li class="process__step" data-reveal>
+          <span class="process__num">{String(i + 1).padStart(2, '0')}</span>
+          <span class="process__icon"><Icon name={icons[i % icons.length]} /></span>
+          {'key' in s ? (
+            <>
+              <h3><T k={`process.${s.key}.title`} /></h3>
+              <p><T k={`process.${s.key}.text`} /></p>
+            </>
+          ) : (
+            <>
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+            </>
+          )}
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .process__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+    counter-reset: step;
+  }
+  .process__step {
+    position: relative;
+    padding: var(--space-6);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);
+    transition: background-color var(--dur), transform var(--dur) var(--ease-out);
+  }
+  .process__step:hover {
+    background: var(--brand-orange);
+    transform: translateY(-6px);
+  }
+  .process__num {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-5);
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: var(--text-4xl);
+    letter-spacing: -0.04em;
+    opacity: 0.15;
+  }
+  .process__icon {
+    display: inline-grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-md);
+    background: var(--brand-orange);
+    color: #fff;
+    margin-bottom: var(--space-5);
+    transition: background-color var(--dur), color var(--dur);
+  }
+  .process__step:hover .process__icon { background: #fff; color: var(--brand-orange); }
+  .process__step h3 { font-size: var(--text-xl); margin-bottom: var(--space-2); }
+  .process__step p { margin: 0; opacity: 0.85; font-size: var(--text-sm); }
+</style>

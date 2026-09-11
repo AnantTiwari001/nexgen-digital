@@ -1,0 +1,155 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import T from '../components/T.astro';
+import Logo from '../components/Logo.astro';
+import Mountains from '../components/Mountains.astro';
+import Marquee from '../components/sections/Marquee.astro';
+import Stats from '../components/sections/Stats.astro';
+import CtaBand from '../components/sections/CtaBand.astro';
+import { story, values, team, milestones } from '../data/team';
+import { site } from '../config/site';
+import { t } from '../i18n';
+
+const initials = (name: string) => name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase();
+---
+
+<Base title="About" description="NexGen Digital is a Kathmandu-based digital growth agency combining local talent with AI tools to help Nepali businesses, brands and creators grow." headerTone="white">
+  <PageHero eyebrow={t('about.eyebrow')} title={t('about.title')} lead={story.intro} script={site.phrases.scriptHero}>
+    <div slot="visual" class="about-hero__visual">
+      <div class="about-hero__card card card--glass" data-float="10">
+        <Logo variant="stacked" height={80} tone="white" />
+        <p class="caps">{site.phrases.pillars.join(' · ')}</p>
+      </div>
+    </div>
+  </PageHero>
+
+  <Marquee keys={['marquee.d', 'marquee.b', 'marquee.e']} tone="white" />
+
+  <section class="section">
+    <div class="container story">
+      <div class="story__text" data-reveal="left">
+        <p class="eyebrow"><T k="about.story" /></p>
+        <h2>{story.headline}</h2>
+        {story.paragraphs.map((p) => <p class="lead">{p}</p>)}
+        <p class="script">{site.phrases.partner}</p>
+      </div>
+      <div class="story__side" data-reveal="right">
+        <div class="card card--black story__kathmandu">
+          <div class="story__mtn" aria-hidden="true"><Mountains /></div>
+          <Icon name="pin" size={28} />
+          <h3><T k="about.kathmandu" /></h3>
+          <p>{site.location.addressLine}</p>
+          <p class="caps">{site.location.serviceArea}</p>
+        </div>
+        <ol class="milestones">
+          {milestones.map((m) => (
+            <li><span class="milestones__year">{m.year}</span><span>{m.title}</span></li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--accent values-sec" data-parallax-scope>
+    <div class="values-sec__mark" data-parallax="0.12" aria-hidden="true"><Logo variant="mark" height={460} tone="white" /></div>
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow"><T k="about.values" /></p>
+        <h2 data-split>Ideas. Marketing. Creativity. Technology.</h2>
+      </div>
+      <div class="grid grid--4" data-reveal-group>
+        {values.map((v) => (
+          <div class="value" data-reveal>
+            <span class="icon-tile icon-tile--white icon-tile--round"><Icon name={v.icon} /></span>
+            <h3>{v.title}</h3>
+            <p>{v.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head section-head--center" data-reveal>
+        <p class="eyebrow"><T k="about.team" /></p>
+        <h2>Local talent, working for a brighter Nepal</h2>
+      </div>
+      <div class="grid grid--4" data-reveal-group>
+        {team.map((m) => (
+          <div class="member card card--hover" data-reveal data-tilt="6">
+            <div class="member__photo">{m.photo ? <img src={m.photo} alt={m.name} loading="lazy" /> : <span>{initials(m.name)}</span>}</div>
+            <h3>{m.name}</h3>
+            <p class="member__role">{m.role}</p>
+            <p class="small muted">{m.bio}</p>
+          </div>
+        ))}
+      </div>
+      {team.some((m) => m.placeholder) && <p class="center small muted" style="margin-top:var(--space-5)"><T k="common.placeholderNote" /></p>}
+    </div>
+  </section>
+
+  <Stats />
+  <CtaBand />
+</Base>
+
+<style>
+  .about-hero__card {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-4);
+    padding: var(--space-7);
+    text-align: center;
+  }
+  .story { display: grid; gap: var(--space-8); align-items: start; }
+  @media (min-width: 1024px) { .story { grid-template-columns: 1.3fr 1fr; } }
+  .story__text .script { font-size: var(--text-2xl); }
+  .story__side { display: grid; gap: var(--space-5); }
+  .story__kathmandu { position: relative; overflow: hidden; }
+  .story__kathmandu svg:first-of-type { color: var(--brand-orange); }
+  .story__kathmandu h3 { margin-top: var(--space-4); }
+  .story__kathmandu p { margin: 0 0 var(--space-2); opacity: 0.8; }
+  .story__mtn { position: absolute; inset: auto 0 -10% 0; opacity: 0.12; color: var(--brand-orange); }
+  .milestones { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--space-3); }
+  .milestones li {
+    display: flex;
+    gap: var(--space-4);
+    align-items: center;
+    padding: var(--space-4);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+  }
+  .milestones__year {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    color: var(--accent);
+    min-width: 3.5em;
+  }
+  .values-sec { overflow: hidden; }
+  .values-sec__mark { position: absolute; right: -8%; top: -20%; opacity: 0.08; pointer-events: none; }
+  .values-sec .section-head h2 :global(.word) { display: inline-block; }
+  .value { display: grid; gap: var(--space-3); }
+  .value h3 { margin: 0; font-size: var(--text-xl); }
+  .value p { margin: 0; opacity: 0.9; }
+  .member { text-align: center; }
+  .member__photo {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto var(--space-4);
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand-orange), #ffb454);
+    display: grid;
+    place-items: center;
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: var(--text-2xl);
+    overflow: hidden;
+  }
+  .member__photo img { width: 100%; height: 100%; object-fit: cover; }
+  .member h3 { font-size: var(--text-lg); margin-bottom: var(--space-1); }
+  .member__role { color: var(--accent); font-weight: 600; font-size: var(--text-sm); margin-bottom: var(--space-3); }
+  .member p:last-child { margin: 0; }
+</style>

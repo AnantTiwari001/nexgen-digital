@@ -1,0 +1,20 @@
+---
+/**
+ * Translatable text. Renders the English string with a data-i18n key so the
+ * client-side language switcher can replace it.
+ *
+ *   <T k="nav.home" />                 -> <span data-i18n="nav.home">Home</span>
+ *   <T k="hero.title" as="h1" />       -> <h1 data-i18n="hero.title">...</h1>
+ */
+import { t } from '../i18n';
+
+interface Props {
+  k: string;
+  as?: keyof HTMLElementTagNameMap;
+  class?: string;
+  [key: string]: unknown;
+}
+const { k, as: Tag = 'span', class: className, ...rest } = Astro.props;
+---
+
+<Tag data-i18n={k} class={className} {...rest}>{t(k)}</Tag>

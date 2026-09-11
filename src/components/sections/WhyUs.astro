@@ -1,0 +1,91 @@
+---
+/** Poster-style orange section, echoing the outdoor billboard designs. */
+import Icon from '../Icon.astro';
+import T from '../T.astro';
+import Logo from '../Logo.astro';
+import { site } from '../../config/site';
+import type { IconName } from '../../data/types';
+
+const points: { icon: IconName; n: number }[] = [
+  { icon: 'pin', n: 1 },
+  { icon: 'sparkles', n: 2 },
+  { icon: 'chart', n: 3 },
+  { icon: 'grid', n: 4 },
+];
+---
+
+<section class="section why section--accent" data-parallax-scope>
+  <div class="why__mark" data-parallax="0.15" aria-hidden="true"><Logo variant="mark" height={520} tone="white" /></div>
+  <div class="container">
+    <div class="why__poster" data-reveal>
+      <p class="eyebrow"><T k="why.eyebrow" /></p>
+      <h2 class="why__title">
+        <span class="why__line"><T k="why.title.a" /></span>
+        <span class="why__line"><span class="hl-box"><T k="why.title.b" /></span></span>
+      </h2>
+      <p class="why__ne ne">आजको ग्राहकले पहिला अनलाइन हेर्छ। <strong>त्यसपछि मात्रै किन्छ।</strong></p>
+      <p class="lead"><T k="why.lead" /></p>
+      <p class="script why__script">{site.phrases.scriptAlt}</p>
+    </div>
+    <div class="why__grid" data-reveal-group>
+      {points.map((p) => (
+        <div class="why__card" data-reveal>
+          <span class="icon-tile icon-tile--black icon-tile--round"><Icon name={p.icon} /></span>
+          <h3><T k={`why.${p.n}.title`} /></h3>
+          <p><T k={`why.${p.n}.text`} /></p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .why { overflow: hidden; }
+  .why__mark {
+    position: absolute;
+    right: -6%;
+    top: -10%;
+    opacity: 0.08;
+    pointer-events: none;
+  }
+  .why .container {
+    position: relative;
+    display: grid;
+    gap: var(--space-8);
+  }
+  @media (min-width: 1024px) {
+    .why .container { grid-template-columns: 1.1fr 1fr; align-items: center; }
+  }
+  .why__title {
+    font-size: var(--text-4xl);
+    color: #fff;
+  }
+  .why__line { display: block; }
+  .why__ne {
+    font-size: var(--text-2xl);
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: var(--space-4);
+  }
+  .why__script {
+    transform: rotate(-3deg);
+    display: inline-block;
+    margin-top: var(--space-3);
+  }
+  .why__grid {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  }
+  .why__card {
+    background: #fff;
+    color: var(--brand-black);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    transition: transform var(--dur) var(--ease-out), box-shadow var(--dur);
+  }
+  .why__card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); }
+  .why__card .icon-tile { margin-bottom: var(--space-4); }
+  .why__card h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
+  .why__card p { margin: 0; font-size: var(--text-sm); color: #4b5563; }
+</style>

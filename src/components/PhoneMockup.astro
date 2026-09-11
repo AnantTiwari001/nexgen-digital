@@ -1,0 +1,128 @@
+---
+/** Phone frame showing the smart QR landing page (list of one-tap actions). */
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { product } from '../data/product';
+
+interface Props {
+  class?: string;
+  width?: number;
+}
+const { class: className, width = 250 } = Astro.props;
+const rows = [
+  { icon: 'google', label: 'Leave a Google Review' },
+  { icon: 'instagram', label: 'Follow on Instagram' },
+  { icon: 'facebook', label: 'Follow on Facebook' },
+  { icon: 'tiktok', label: 'Follow on TikTok' },
+  { icon: 'card', label: 'Make a Payment' },
+  { icon: 'whatsapp', label: 'Contact Us' },
+] as const;
+---
+
+<div class:list={['phone', className]} style={`--phone-w:${width}px`} data-float="10">
+  <div class="phone__frame">
+    <div class="phone__notch"></div>
+    <div class="phone__screen">
+      <div class="phone__top">
+        <Logo variant="stacked" height={Math.round(width * 0.1)} />
+        <p class="phone__title">Your Business<br />All in One Scan</p>
+      </div>
+      <ul class="phone__list">
+        {rows.map((r, i) => (
+          <li class="phone__row" style={`--i:${i}`}>
+            <span class="phone__icon"><Icon name={r.icon} size={14} /></span>
+            <span>{r.label}</span>
+            <Icon name="arrow" size={12} />
+          </li>
+        ))}
+      </ul>
+      <p class="phone__foot">{product.accentPhrase}</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .phone {
+    width: var(--phone-w);
+    max-width: 100%;
+  }
+  .phone__frame {
+    position: relative;
+    background: #111;
+    border-radius: calc(var(--phone-w) * 0.16);
+    padding: calc(var(--phone-w) * 0.035);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35), inset 0 0 0 2px #333;
+  }
+  .phone__notch {
+    position: absolute;
+    top: calc(var(--phone-w) * 0.05);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 32%;
+    height: calc(var(--phone-w) * 0.07);
+    background: #111;
+    border-radius: 999px;
+    z-index: 2;
+  }
+  .phone__screen {
+    background: #fff;
+    color: #0b0b0b;
+    border-radius: calc(var(--phone-w) * 0.13);
+    padding: calc(var(--phone-w) * 0.14) calc(var(--phone-w) * 0.06) calc(var(--phone-w) * 0.08);
+    aspect-ratio: 9 / 18.5;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .phone__top {
+    display: grid;
+    justify-items: center;
+    gap: calc(var(--phone-w) * 0.02);
+    text-align: center;
+  }
+  .phone__title {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: calc(var(--phone-w) * 0.045);
+    line-height: 1.25;
+  }
+  .phone__list {
+    list-style: none;
+    padding: 0;
+    margin: calc(var(--phone-w) * 0.06) 0 0;
+    display: grid;
+    gap: calc(var(--phone-w) * 0.025);
+  }
+  .phone__row {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--phone-w) * 0.03);
+    padding: calc(var(--phone-w) * 0.03) calc(var(--phone-w) * 0.04);
+    border: 1px solid #e5e7eb;
+    border-radius: 999px;
+    font-size: calc(var(--phone-w) * 0.036);
+    font-weight: 600;
+    font-family: var(--font-heading);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  }
+  .phone__row > :global(svg:last-child) { margin-left: auto; opacity: 0.4; }
+  .phone__icon {
+    display: grid;
+    place-items: center;
+    width: calc(var(--phone-w) * 0.08);
+    height: calc(var(--phone-w) * 0.08);
+    border-radius: 50%;
+    background: #fff3ec;
+    color: var(--brand-orange);
+    flex: none;
+  }
+  .phone__icon :global(svg) { width: 55%; height: auto; }
+  .phone__foot {
+    margin: auto 0 0;
+    text-align: center;
+    font-family: var(--font-accent);
+    color: var(--brand-orange);
+    font-size: calc(var(--phone-w) * 0.06);
+  }
+</style>

@@ -1,43 +1,96 @@
-# Astro Starter Kit: Minimal
+# NexGen Digital — Website
 
-```sh
-npm create astro@latest -- --template minimal
+Marketing website for NexGen Digital, a digital growth agency in Kathmandu, Nepal.
+See [PLAN.md](./PLAN.md) for the full architecture and decisions.
+
+## Quick start
+
+```bash
+npm install
+npm run dev       # http://localhost:4321
+npm run build     # outputs dist/client (static) + dist/server (Node adapter)
+npm run preview   # serve the production build locally
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Editing content (no code changes needed for most updates)
 
-## 🚀 Project Structure
+| What | File |
+| --- | --- |
+| Business name, contact info, hours, socials, feature flags | [src/config/site.ts](./src/config/site.ts) |
+| Services, pricing, FAQs, process steps | [src/data/services.ts](./src/data/services.ts) |
+| The AI Smart Reviews QR product | [src/data/product.ts](./src/data/product.ts) |
+| Testimonials | [src/data/testimonials.ts](./src/data/testimonials.ts) |
+| Stats / social proof | [src/data/stats.ts](./src/data/stats.ts) |
+| About page story, team, values | [src/data/team.ts](./src/data/team.ts) |
+| Chatbot knowledge base | [src/data/faq.ts](./src/data/faq.ts) |
+| English text | [src/i18n/en.json](./src/i18n/en.json) |
+| Nepali text | [src/i18n/ne.json](./src/i18n/ne.json) |
+| Colours, type, spacing (design tokens) | [src/styles/tokens.css](./src/styles/tokens.css) |
 
-Inside of your Astro project, you'll see the following folders and files:
+Every `Rs.` price in the data files is a **placeholder starting price** — replace with
+real numbers before launch. Anything marked `placeholder: true` (testimonials, stats,
+team, about story, contact details) is sample content and should be swapped for the
+real thing.
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+## Regenerating the logo
+
+The logo is built as SVG from Poppins outlines (no raster/AI-generated image):
+
+```bash
+node scripts/generate-logo.mjs
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Edit `scripts/generate-logo.mjs` to change the X-mark geometry, spacing or colours,
+then re-run. Outputs go to `public/brand/*.svg`, `public/favicon.svg` and
+`src/generated/logo-paths.json` (used by `src/components/Logo.astro`).
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## Email (Gmail API)
 
-Any static assets, like images, can be placed in the `public/` directory.
+Contact, pre-order and chat-lead notifications send through the Gmail API
+(`src/server/mailer.ts`). Without credentials configured, messages are logged to the
+server console — the site keeps working in development.
 
-## 🧞 Commands
+To enable real sending, set up a Google Cloud OAuth client with the Gmail API enabled
+and the `gmail.send` scope, get a refresh token for the sending mailbox, then fill in
+`.env` (copy from `.env.example`):
 
-All commands are run from the root of the project, from a terminal:
+```
+GMAIL_CLIENT_ID=
+GMAIL_CLIENT_SECRET=
+GMAIL_REFRESH_TOKEN=
+GMAIL_SENDER=hello@nexgendigital.com.np
+NOTIFY_EMAIL=hello@nexgendigital.com.np
+```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## Analytics
 
-## 👀 Want to learn more?
+Set `PUBLIC_GA_MEASUREMENT_ID` and/or `PUBLIC_META_PIXEL_ID` in `.env` to enable
+Google Analytics 4 and the Meta Pixel (`src/components/Analytics.astro`). Both are
+disabled until an ID is provided. UTM parameters and referrer are captured on landing
+(`src/scripts/utm.ts`) and attached to every form/chat submission, ahead of a future
+analytics/attribution surface.
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## Language
+
+The site renders in English by default. A Nepali translation is available via the
+header toggle or `?lang=ne`. Add or edit strings in `src/i18n/en.json` /
+`src/i18n/ne.json` — any key missing from the Nepali file falls back to English.
+
+## Visual QA
+
+`scripts/screenshot.mjs` renders any route with the locally installed Chrome (no
+extra browser download) for quick visual checks against a running `npm run dev` or
+`node dist/server/entry.mjs` server:
+
+```bash
+node scripts/screenshot.mjs /              # desktop + mobile, full page
+node scripts/screenshot.mjs /about 1440 900 fold      # just the fold
+node scripts/screenshot.mjs / 1440 900 fold dark ne   # dark mode, Nepali
+```
+
+## Hosting
+
+Output is `output: 'static'` with the `@astrojs/node` adapter in standalone mode —
+every page is prerendered HTML; only `/api/contact`, `/api/preorder` and `/api/chat`
+run server-side. Deploy `dist/` behind any Node host, or swap the adapter for a
+platform-specific one (Vercel, Netlify, Cloudflare) later without touching page code.

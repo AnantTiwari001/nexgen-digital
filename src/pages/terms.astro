@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { site } from '../config/site';
+---
+
+<Base title="Terms of Service" description="Terms for using NexGen Digital services and pre-orders." headerTone="white">
+  <PageHero eyebrow="Legal" title="Terms of Service" lead="Placeholder terms. Replace with your reviewed text before launch." tone="black" compact />
+  <section class="section">
+    <div class="container container--narrow prose">
+      <p class="small muted">Last updated: {new Date().toISOString().slice(0, 10)}</p>
+      <h2>Services</h2>
+      <p>{site.legalName} provides digital marketing, creative, web development and related services. Each engagement is defined by a written proposal or invoice that states scope, deliverables, timeline and price.</p>
+      <h2>Pricing and payment</h2>
+      <ul>
+        <li>Prices on this website are indicative starting points in Nepali Rupees and exclude VAT unless stated.</li>
+        <li>Advertising spend is paid by the client directly to the platform and is not included in management fees.</li>
+        <li>Monthly services are billed in advance. Project work is billed in milestones agreed in the proposal.</li>
+      </ul>
+      <h2>Pre-orders</h2>
+      <ul>
+        <li>A pre-order reserves a unit of the AI Smart Reviews QR Stand. No payment is taken at the time of pre-order.</li>
+        <li>We will confirm your order details, final price and delivery timeline before dispatch. Payment is collected by your chosen method on delivery or before dispatch.</li>
+        <li>You may cancel a pre-order free of charge any time before dispatch by contacting us.</li>
+        <li>Delivery timelines are estimates and depend on production batches.</li>
+      </ul>
+      <h2>Content and ownership</h2>
+      <p>On full payment, the client owns the final deliverables created for them. NexGen Digital may show completed work in its portfolio unless agreed otherwise.</p>
+      <h2>Client responsibilities</h2>
+      <p>Clients provide timely access, approvals and accurate information, and confirm they have the rights to any material they supply.</p>
+      <h2>Liability</h2>
+      <p>We work to industry standards but cannot guarantee specific results such as follower counts, rankings or sales. Our liability is limited to the fees paid for the service in question.</p>
+      <h2>Contact</h2>
+      <p>{site.contact.email} · {site.location.addressLine}</p>
+    </div>
+  </section>
+</Base>

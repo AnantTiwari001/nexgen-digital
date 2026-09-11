@@ -1,0 +1,74 @@
+---
+import SectionHead from '../SectionHead.astro';
+import T from '../T.astro';
+import Logo from '../Logo.astro';
+import { stats, trustedBy } from '../../data/stats';
+const anyPlaceholder = stats.some((s) => s.placeholder);
+---
+
+<section class="section section--tight stats">
+  <div class="container">
+    <SectionHead eyebrow="stats.eyebrow" title="stats.title" align="center" />
+    <div class="stats__grid" data-reveal-group>
+      {stats.map((s) => (
+        <div class="stats__item" data-reveal>
+          <span class="stats__num" data-counter={s.value} data-prefix={s.prefix ?? ''} data-suffix={s.suffix ?? ''} data-decimals={Number.isInteger(s.value) ? 0 : 1}>
+            {s.prefix}{s.value}{s.suffix}
+          </span>
+          <span class="stats__label">{s.label}</span>
+        </div>
+      ))}
+    </div>
+    {anyPlaceholder && <p class="center small muted stats__note"><T k="stats.placeholder" /></p>}
+    <div class="stats__logos marquee" style="--marquee-speed:40s" aria-hidden="true">
+      <div class="marquee__track">
+        {[...trustedBy, ...trustedBy].map((b) => (
+          <span class="stats__logo"><Logo variant="mark" height={16} /> {b.name}</span>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .stats__grid {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  }
+  .stats__item {
+    text-align: center;
+    padding: var(--space-6) var(--space-4);
+    border-radius: var(--radius-lg);
+    background: var(--bg-muted);
+    display: grid;
+    gap: var(--space-2);
+  }
+  .stats__num {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: var(--text-5xl);
+    letter-spacing: -0.04em;
+    line-height: 1;
+    color: var(--accent);
+  }
+  .stats__label {
+    font-weight: 600;
+    color: var(--fg-muted);
+  }
+  .stats__note { margin-top: var(--space-4); }
+  .stats__logos {
+    margin-top: var(--space-7);
+    opacity: 0.6;
+  }
+  .stats__logo {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-lg);
+    letter-spacing: -0.01em;
+    filter: grayscale(1);
+  }
+</style>

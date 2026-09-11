@@ -1,0 +1,151 @@
+---
+import SectionHead from '../SectionHead.astro';
+import Icon from '../Icon.astro';
+import T from '../T.astro';
+import { testimonials } from '../../data/testimonials';
+
+const initials = (name: string) =>
+  name
+    .split(' ')
+    .map((n) => n[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
+---
+
+<section class="section testimonials section--soft" id="testimonials">
+  <div class="container">
+    <SectionHead eyebrow="testimonials.eyebrow" title="testimonials.title" lead="testimonials.lead" />
+  </div>
+  <div class="testimonials__scroller" data-reveal>
+    <div class="testimonials__track container">
+      {testimonials.map((t, i) => (
+        <article class:list={['tcard', { 'tcard--video': t.video !== undefined }]} style={`--i:${i}`}>
+          {t.video !== undefined && (
+            <div class="tcard__video">
+              {t.video ? (
+                <iframe src={t.video} title={`${t.business} video testimonial`} loading="lazy" allow="autoplay; encrypted-media" allowfullscreen />
+              ) : (
+                <div class="tcard__video-ph">
+                  <span class="tcard__play"><Icon name="play" size={40} /></span>
+                  <span class="caps"><T k="testimonials.videoSoon" /></span>
+                </div>
+              )}
+            </div>
+          )}
+          <div class="tcard__body">
+            <Icon name="quote" size={32} class="tcard__quote" />
+            <div class="tcard__stars" aria-label={`${t.rating} out of 5 stars`}>
+              {Array.from({ length: t.rating }).map(() => <Icon name="star" size={16} />)}
+            </div>
+            <p class="tcard__text">“{t.quote}”</p>
+            <footer class="tcard__foot">
+              <span class="tcard__avatar">{t.avatar ? <img src={t.avatar} alt="" /> : initials(t.business)}</span>
+              <span>
+                <strong>{t.name}</strong>, {t.role}<br />
+                <span class="small muted">{t.business} · {t.location}</span>
+              </span>
+            </footer>
+            <span class="tcard__service pill pill--soft">{t.service}</span>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .testimonials__scroller {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    padding-bottom: var(--space-4);
+  }
+  .testimonials__scroller::-webkit-scrollbar { display: none; }
+  .testimonials__track {
+    display: flex;
+    gap: var(--space-5);
+  }
+  .tcard {
+    flex: 0 0 min(88vw, 420px);
+    scroll-snap-align: start;
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform var(--dur) var(--ease-out), box-shadow var(--dur);
+  }
+  .tcard:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+  .tcard--video { flex-basis: min(88vw, 520px); }
+  .tcard__video {
+    aspect-ratio: 16 / 9;
+    background: var(--brand-black);
+    position: relative;
+  }
+  .tcard__video iframe { width: 100%; height: 100%; border: 0; }
+  .tcard__video-ph {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: var(--space-3);
+    color: #fff;
+    background:
+      radial-gradient(circle at 30% 30%, rgba(255, 90, 0, 0.55), transparent 55%),
+      linear-gradient(135deg, #1a1a1a, #0b0b0b);
+  }
+  .tcard__play {
+    display: grid;
+    place-items: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--brand-orange);
+    box-shadow: 0 12px 30px rgba(255, 90, 0, 0.5);
+  }
+  .tcard__body {
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    position: relative;
+    flex: 1;
+  }
+  .tcard__body :global(.tcard__quote) {
+    position: absolute;
+    top: var(--space-5);
+    right: var(--space-5);
+    color: var(--accent-soft);
+  }
+  .tcard__stars { display: flex; gap: 2px; color: #f5a623; }
+  .tcard__text {
+    font-size: var(--text-lg);
+    line-height: 1.5;
+    margin: 0;
+    flex: 1;
+  }
+  .tcard__foot {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+    margin-top: var(--space-2);
+  }
+  .tcard__avatar {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--brand-black);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    flex: none;
+    overflow: hidden;
+  }
+  .tcard__avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .tcard__service { align-self: flex-start; }
+</style>

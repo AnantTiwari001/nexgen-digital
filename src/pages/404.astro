@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import T from '../components/T.astro';
+import Logo from '../components/Logo.astro';
+import Mountains from '../components/Mountains.astro';
+---
+
+<Base title="Page not found" noindex headerTone="white">
+  <section class="nf section--accent">
+    <div class="nf__mtn" aria-hidden="true"><Mountains /></div>
+    <div class="container nf__inner">
+      <div class="nf__code"><span>4</span><Logo variant="mark" height={120} tone="white" /><span>4</span></div>
+      <h1><T k="notFound.title" /></h1>
+      <p class="lead mx-auto"><T k="notFound.text" /></p>
+      <div class="btn-row" style="justify-content:center">
+        <a class="btn btn--white btn--lg" href="/"><T k="notFound.cta" /></a>
+        <a class="btn btn--black btn--lg" href="/services"><T k="nav.services" /><Icon name="arrow" size={18} class="arrow" /></a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf { position: relative; min-height: 100svh; display: flex; align-items: center; overflow: hidden; padding-top: var(--header-h); }
+  .nf__mtn { position: absolute; inset: auto 0 -8% 0; color: #0b0b0b; opacity: 0.18; }
+  .nf__inner { position: relative; text-align: center; display: grid; justify-items: center; gap: var(--space-4); }
+  .nf__code { display: flex; align-items: center; gap: var(--space-2); font-family: var(--font-heading); font-weight: 800; font-size: 8rem; line-height: 1; letter-spacing: -0.05em; }
+  .nf h1 { color: #fff; }
+  .nf .lead { color: #fff; }
+</style>

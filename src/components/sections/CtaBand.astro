@@ -1,0 +1,76 @@
+---
+import Icon from '../Icon.astro';
+import T from '../T.astro';
+import Mountains from '../Mountains.astro';
+import { site, whatsappUrl } from '../../config/site';
+
+interface Props {
+  titleKey?: string;
+  textKey?: string;
+  whatsappMessage?: string;
+}
+const { titleKey = 'cta.title', textKey = 'cta.text', whatsappMessage } = Astro.props;
+---
+
+<section class="section cta section--accent" data-parallax-scope>
+  <div class="cta__mountains" data-parallax="0.1" aria-hidden="true"><Mountains /></div>
+  <div class="cta__sun" aria-hidden="true"></div>
+  <div class="container cta__inner">
+    <p class="script cta__script" data-reveal>{site.phrases.dreams}</p>
+    <h2 class="cta__title" data-split><T k={titleKey} /></h2>
+    <p class="lead mx-auto" data-reveal><T k={textKey} /></p>
+    <div class="btn-row cta__btns" data-reveal>
+      <a class="btn btn--black btn--lg" href="/contact" data-magnetic><Icon name="send" size={18} /><T k="cta.dm" /></a>
+      <a class="btn btn--white btn--lg" href={whatsappUrl(whatsappMessage)} target="_blank" rel="noopener" data-magnetic><Icon name="whatsapp" size={20} /><T k="cta.whatsapp" /></a>
+    </div>
+    <p class="caps cta__loc"><Icon name="pin" size={14} /> {site.location.city}, {site.location.country} · {site.phrases.brighter}</p>
+  </div>
+</section>
+
+<style>
+  .cta {
+    overflow: hidden;
+    text-align: center;
+  }
+  .cta__mountains {
+    position: absolute;
+    inset: auto 0 -10% 0;
+    color: #0b0b0b;
+    opacity: 0.18;
+    pointer-events: none;
+  }
+  .cta__sun {
+    position: absolute;
+    left: 50%;
+    bottom: -30%;
+    width: 60vw;
+    max-width: 800px;
+    aspect-ratio: 1;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffd27a 0%, #ff9a3c 30%, transparent 68%);
+    opacity: 0.8;
+    pointer-events: none;
+  }
+  .cta__inner {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: var(--space-4);
+  }
+  .cta__script { font-size: var(--text-2xl); transform: rotate(-2deg); }
+  .cta__title {
+    font-size: var(--text-6xl);
+    color: #fff;
+    margin: 0;
+  }
+  .cta__title :global(.word) { display: inline-block; }
+  .cta__btns { justify-content: center; margin-top: var(--space-3); }
+  .cta__loc {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    margin-top: var(--space-5);
+    opacity: 0.85;
+  }
+</style>

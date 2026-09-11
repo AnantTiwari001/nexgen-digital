@@ -1,0 +1,470 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import T from '../../components/T.astro';
+import QrStand from '../../components/QrStand.astro';
+import { product } from '../../data/product';
+import { site, whatsappUrl } from '../../config/site';
+import { t } from '../../i18n';
+
+const steps = ['preorder.step1', 'preorder.step2', 'preorder.step3', 'preorder.step4', 'preorder.step5'];
+---
+
+<Base title="Pre-order the AI Smart Reviews QR Stand" description="Reserve your AI Smart Reviews QR stand. No payment now. Early access, priority setup, limited units." headerTone="white" noindex={false}>
+  <section class="po">
+    <div class="po__side">
+      <div class="po__side-inner">
+        <p class="eyebrow"><T k="preorder.eyebrow" /></p>
+        <h1 class="po__title"><T k="preorder.title" /></h1>
+        <p class="lead"><T k="preorder.lead" /></p>
+        <div class="po__stand"><QrStand size={220} /></div>
+        <ul class="po__perks">
+          {product.preorderPerks.map((p) => (
+            <li><Icon name={p.icon ?? 'check'} size={18} /> <strong>{p.title}</strong> <span>{p.text}</span></li>
+          ))}
+        </ul>
+        <p class="small po__help">Need help? <a href={whatsappUrl('Hi NexGen Digital, I need help with the QR stand pre-order.')} target="_blank" rel="noopener">WhatsApp us</a> · {site.contact.hours.open} to {site.contact.hours.close}</p>
+      </div>
+    </div>
+
+    <div class="po__main">
+      <ol class="po__steps" data-po-steps>
+        {steps.map((k, i) => (
+          <li class:list={['po__step', { 'is-active': i === 0 }]} data-step-ind={i}><span class="po__step-num">{i + 1}</span><T k={k} /></li>
+        ))}
+      </ol>
+
+      <form class="po__form" data-po-form novalidate>
+        <input type="text" name="website_url" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+        <!-- Step 1: Business -->
+        <fieldset class="po__panel" data-step="0">
+          <legend class="po__legend"><T k="preorder.step1" /></legend>
+          <div class="form-grid">
+            <div class="field span-2">
+              <label for="businessName"><T k="preorder.business.name" /> *</label>
+              <input class="input" id="businessName" name="businessName" required minlength="2" autocomplete="organization" />
+              <span class="error-text" data-error="businessName"></span>
+            </div>
+            <div class="field">
+              <label for="businessType"><T k="preorder.business.type" /> *</label>
+              <select class="select" id="businessType" name="businessType" required>
+                <option value="">Select...</option>
+                {product.options.businessTypes.map((b) => <option value={b}>{b}</option>)}
+              </select>
+              <span class="error-text" data-error="businessType"></span>
+            </div>
+            <div class="field">
+              <label for="city"><T k="preorder.business.city" /> *</label>
+              <input class="input" id="city" name="city" required value="Kathmandu" autocomplete="address-level2" />
+              <span class="error-text" data-error="city"></span>
+            </div>
+            <div class="field span-2">
+              <label for="address"><T k="preorder.business.address" /></label>
+              <input class="input" id="address" name="address" autocomplete="street-address" />
+            </div>
+            <div class="field">
+              <label for="googleMaps"><T k="preorder.business.googleMaps" /></label>
+              <input class="input" id="googleMaps" name="googleMaps" type="url" placeholder="https://maps.app.goo.gl/..." />
+            </div>
+            <div class="field">
+              <label for="website"><T k="preorder.business.website" /></label>
+              <input class="input" id="website" name="website" type="url" placeholder="https://" />
+            </div>
+            <div class="field">
+              <label for="instagram"><T k="preorder.business.instagram" /></label>
+              <input class="input" id="instagram" name="instagram" placeholder="@yourbusiness" />
+            </div>
+            <div class="field">
+              <label for="facebook"><T k="preorder.business.facebook" /></label>
+              <input class="input" id="facebook" name="facebook" placeholder="facebook.com/yourpage" />
+            </div>
+            <div class="field">
+              <label for="tiktok"><T k="preorder.business.tiktok" /></label>
+              <input class="input" id="tiktok" name="tiktok" placeholder="@yourbusiness" />
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Step 2: Contact -->
+        <fieldset class="po__panel" data-step="1" hidden>
+          <legend class="po__legend"><T k="preorder.step2" /></legend>
+          <div class="form-grid">
+            <div class="field">
+              <label for="contactName"><T k="preorder.contact.name" /> *</label>
+              <input class="input" id="contactName" name="contactName" required minlength="2" autocomplete="name" />
+              <span class="error-text" data-error="contactName"></span>
+            </div>
+            <div class="field">
+              <label for="role"><T k="preorder.contact.role" /></label>
+              <input class="input" id="role" name="role" placeholder="Owner, Manager..." autocomplete="organization-title" />
+            </div>
+            <div class="field">
+              <label for="phone"><T k="preorder.contact.phone" /> *</label>
+              <input class="input" id="phone" name="phone" type="tel" required placeholder="+977 98XXXXXXXX" autocomplete="tel" />
+              <span class="error-text" data-error="phone"></span>
+            </div>
+            <div class="field">
+              <label for="email"><T k="preorder.contact.email" /> *</label>
+              <input class="input" id="email" name="email" type="email" required autocomplete="email" />
+              <span class="error-text" data-error="email"></span>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Step 3: Stand -->
+        <fieldset class="po__panel" data-step="2" hidden>
+          <legend class="po__legend"><T k="preorder.step3" /></legend>
+          <div class="field">
+            <span class="label"><T k="preorder.stand.plan" /> *</span>
+            <div class="grid grid--3 po__plans">
+              {product.tiers.filter((tier) => /^\d/.test(tier.price)).map((tier, i) => (
+                <label class="choice">
+                  <input type="radio" name="plan" value={tier.name} checked={i === 0} required />
+                  <span>
+                    <strong>{tier.name}</strong>
+                    <span>Rs. {tier.price}{tier.period ? ` ${tier.period}` : ''}{tier.note ? ` · ${tier.note}` : ''}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+            <span class="error-text" data-error="plan"></span>
+          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label for="quantity"><T k="preorder.stand.quantity" /> *</label>
+              <select class="select" id="quantity" name="quantity" required>
+                {product.options.quantities.map((q) => <option value={q}>{q}</option>)}
+                <option value="20">20</option>
+                <option value="50">50</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="finish"><T k="preorder.stand.finish" /></label>
+              <select class="select" id="finish" name="finish">
+                {product.options.finishes.map((f) => <option value={f}>{f}</option>)}
+              </select>
+            </div>
+            <div class="field span-2">
+              <label for="notes"><T k="preorder.stand.notes" /></label>
+              <textarea class="textarea" id="notes" name="notes" maxlength="2000"></textarea>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Step 4: Payment -->
+        <fieldset class="po__panel" data-step="3" hidden>
+          <legend class="po__legend"><T k="preorder.step4" /></legend>
+          <p class="po__note"><Icon name="shield" size={18} /> <T k="preorder.payment.note" /></p>
+          <div class="field">
+            <span class="label"><T k="preorder.payment.method" /> *</span>
+            <div class="grid grid--2">
+              {product.options.paymentMethods.map((m, i) => (
+                <label class="choice">
+                  <input type="radio" name="paymentMethod" value={m.id} checked={i === 0} required />
+                  <span><strong>{m.label}</strong><span>{m.hint}</span></span>
+                </label>
+              ))}
+            </div>
+            <span class="error-text" data-error="paymentMethod"></span>
+          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label for="billingName"><T k="preorder.payment.billingName" /></label>
+              <input class="input" id="billingName" name="billingName" />
+            </div>
+            <div class="field">
+              <label for="pan"><T k="preorder.payment.pan" /></label>
+              <input class="input" id="pan" name="pan" />
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Step 5: Review -->
+        <fieldset class="po__panel" data-step="4" hidden>
+          <legend class="po__legend"><T k="preorder.review.title" /></legend>
+          <dl class="po__review" data-po-review></dl>
+          <label class="choice po__consent">
+            <input type="checkbox" name="consent" required />
+            <span><T k="preorder.review.consent" /> <a href="/terms" target="_blank">Terms</a>.</span>
+          </label>
+          <span class="error-text" data-error="consent"></span>
+          <p class="error-text po__submit-error" data-po-error hidden><T k="preorder.error" /></p>
+        </fieldset>
+
+        <div class="po__nav">
+          <button type="button" class="btn btn--ghost" data-po-back hidden><T k="preorder.back" /></button>
+          <button type="button" class="btn btn--black" data-po-next><T k="preorder.next" /><Icon name="arrow" size={16} class="arrow" /></button>
+          <button type="submit" class="btn btn--lg" data-po-submit hidden><T k="preorder.submit" /><Icon name="arrow" size={18} class="arrow" /></button>
+        </div>
+      </form>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .po {
+    display: grid;
+    min-height: 100svh;
+    padding-top: var(--header-h);
+  }
+  @media (min-width: 1024px) {
+    .po { grid-template-columns: 0.9fr 1.1fr; }
+  }
+  .po__side {
+    background: var(--brand-orange);
+    color: #fff;
+    padding: var(--space-8) var(--gutter);
+    position: relative;
+    overflow: hidden;
+  }
+  .po__side-inner { max-width: 520px; margin-inline: auto; position: relative; }
+  @media (min-width: 1024px) {
+    .po__side-inner { position: sticky; top: calc(var(--header-h) + var(--space-6)); }
+  }
+  .po__side .eyebrow { color: #fff; }
+  .po__title { font-size: var(--text-4xl); color: #fff; }
+  .po__side .lead { color: #fff; opacity: 0.92; }
+  .po__stand { margin: var(--space-6) auto; display: grid; place-items: center; }
+  .po__perks { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--space-3); }
+  .po__perks li { display: flex; gap: var(--space-2); align-items: baseline; flex-wrap: wrap; }
+  .po__perks svg { flex: none; align-self: center; }
+  .po__perks span { opacity: 0.85; font-size: var(--text-sm); }
+  .po__help { margin-top: var(--space-6); opacity: 0.9; }
+  .po__help a { text-decoration: underline; font-weight: 600; }
+  .po__main { padding: var(--space-8) var(--gutter); background: var(--bg); }
+  .po__steps {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-7);
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    max-width: 760px;
+    margin-inline: auto;
+  }
+  .po__step {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: var(--text-sm);
+    color: var(--fg-subtle);
+    padding: 0.4em 0.9em 0.4em 0.4em;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--line);
+    transition: all var(--dur-fast);
+  }
+  .po__step-num {
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--bg-muted);
+    font-size: var(--text-xs);
+  }
+  .po__step.is-active { color: var(--fg); border-color: var(--accent); }
+  .po__step.is-active .po__step-num,
+  .po__step.is-done .po__step-num { background: var(--accent); color: #fff; }
+  .po__step.is-done { color: var(--fg-muted); }
+  .po__form { max-width: 760px; margin-inline: auto; }
+  .po__panel { border: 0; padding: 0; margin: 0; }
+  .po__panel[hidden] { display: none; }
+  .po__legend {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: var(--text-3xl);
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-5);
+    padding: 0;
+  }
+  .po__panel .field + .form-grid,
+  .po__panel .form-grid + .field { margin-top: var(--space-4); }
+  .po__plans { gap: var(--space-3); }
+  .po__note {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    padding: var(--space-3) var(--space-4);
+    background: var(--bg-soft);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-5);
+    font-size: var(--text-sm);
+  }
+  .po__note svg { color: var(--accent); flex: none; }
+  .po__review {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: var(--space-2) var(--space-5);
+    margin: 0 0 var(--space-5);
+    padding: var(--space-5);
+    background: var(--bg-muted);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-sm);
+  }
+  .po__review dt { color: var(--fg-subtle); font-weight: 600; }
+  .po__review dd { margin: 0; }
+  .po__review .po__review-h { grid-column: 1 / -1; font-family: var(--font-heading); font-weight: 700; margin-top: var(--space-3); display: flex; justify-content: space-between; align-items: center; }
+  .po__review .po__review-h:first-child { margin-top: 0; }
+  .po__review .po__review-h button { background: none; border: 0; color: var(--accent); font-weight: 600; font-size: var(--text-xs); }
+  .po__consent { margin-top: var(--space-4); }
+  .po__consent a { text-decoration: underline; }
+  .po__submit-error { margin-top: var(--space-3); font-size: var(--text-sm); }
+  .po__nav {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-top: var(--space-7);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--line);
+  }
+  .po__nav [hidden] { display: none; }
+  .po__nav > :last-child { margin-left: auto; }
+</style>
+
+<script>
+  import { attachAttribution } from '../../scripts/utm';
+  import { scrollTo } from '../../scripts/animations';
+
+  const form = document.querySelector<HTMLFormElement>('[data-po-form]');
+  if (form) {
+    const panels = Array.from(form.querySelectorAll<HTMLFieldSetElement>('[data-step]'));
+    const indicators = Array.from(document.querySelectorAll<HTMLElement>('[data-step-ind]'));
+    const back = form.querySelector<HTMLButtonElement>('[data-po-back]')!;
+    const next = form.querySelector<HTMLButtonElement>('[data-po-next]')!;
+    const submit = form.querySelector<HTMLButtonElement>('[data-po-submit]')!;
+    const review = form.querySelector<HTMLElement>('[data-po-review]')!;
+    const errBox = form.querySelector<HTMLElement>('[data-po-error]')!;
+    const stepsEl = document.querySelector<HTMLElement>('[data-po-steps]')!;
+    let step = 0;
+
+    // Preselect plan from ?plan=
+    const planParam = new URLSearchParams(location.search).get('plan');
+    if (planParam) {
+      const radio = form.querySelector<HTMLInputElement>(`input[name="plan"][value="${CSS.escape(planParam)}"]`);
+      if (radio) radio.checked = true;
+    }
+
+    const labelFor = (name: string) => {
+      const el = form.querySelector<HTMLElement>(`[name="${name}"]`);
+      const field = el?.closest('.field');
+      const label = field?.querySelector('label, .label');
+      return (label?.textContent || name).replace(/\s*\*\s*$/, '').trim();
+    };
+
+    const validatePanel = (i: number) => {
+      const panel = panels[i];
+      let ok = true;
+      panel.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>('input, select, textarea').forEach((el) => {
+        const err = panel.querySelector<HTMLElement>(`[data-error="${el.name}"]`);
+        if (err) err.textContent = '';
+        el.removeAttribute('aria-invalid');
+      });
+      const seen = new Set<string>();
+      panel.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>('input, select, textarea').forEach((el) => {
+        if (seen.has(el.name)) return;
+        seen.add(el.name);
+        if (!el.checkValidity()) {
+          ok = false;
+          el.setAttribute('aria-invalid', 'true');
+          const err = panel.querySelector<HTMLElement>(`[data-error="${el.name}"]`);
+          if (err) err.textContent = el.validationMessage;
+        }
+      });
+      return ok;
+    };
+
+    const show = (i: number) => {
+      step = i;
+      panels.forEach((p, idx) => (p.hidden = idx !== i));
+      indicators.forEach((ind, idx) => {
+        ind.classList.toggle('is-active', idx === i);
+        ind.classList.toggle('is-done', idx < i);
+      });
+      back.hidden = i === 0;
+      next.hidden = i === panels.length - 1;
+      submit.hidden = i !== panels.length - 1;
+      if (i === panels.length - 1) buildReview();
+      scrollTo(stepsEl, -100);
+    };
+
+    const buildReview = () => {
+      const fd = new FormData(form);
+      const groups: [string, number, string[]][] = [
+        ['Business', 0, ['businessName', 'businessType', 'city', 'address', 'googleMaps', 'website', 'instagram', 'facebook', 'tiktok']],
+        ['Contact', 1, ['contactName', 'role', 'phone', 'email']],
+        ['Your stand', 2, ['plan', 'quantity', 'finish', 'notes']],
+        ['Payment', 3, ['paymentMethod', 'billingName', 'pan']],
+      ];
+      review.innerHTML = '';
+      groups.forEach(([title, idx, names]) => {
+        const h = document.createElement('div');
+        h.className = 'po__review-h';
+        h.innerHTML = `<span>${title}</span>`;
+        const edit = document.createElement('button');
+        edit.type = 'button';
+        edit.textContent = 'Edit';
+        edit.addEventListener('click', () => show(idx));
+        h.appendChild(edit);
+        review.appendChild(h);
+        names.forEach((n) => {
+          const v = String(fd.get(n) ?? '').trim();
+          if (!v) return;
+          const dt = document.createElement('dt');
+          dt.textContent = labelFor(n);
+          const dd = document.createElement('dd');
+          dd.textContent = n === 'paymentMethod' ? (form.querySelector<HTMLInputElement>(`input[name="paymentMethod"][value="${v}"]`)?.closest('.choice')?.querySelector('strong')?.textContent ?? v) : v;
+          review.append(dt, dd);
+        });
+      });
+    };
+
+    next.addEventListener('click', () => validatePanel(step) && show(step + 1));
+    back.addEventListener('click', () => show(step - 1));
+    form.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && (e.target as HTMLElement).tagName !== 'TEXTAREA' && step < panels.length - 1) {
+        e.preventDefault();
+        next.click();
+      }
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!validatePanel(step)) return;
+      attachAttribution(form);
+      submit.disabled = true;
+      const original = submit.innerHTML;
+      submit.textContent = (document.documentElement.getAttribute('data-lang') === 'ne' ? 'Order गर्दै...' : 'Placing order...');
+      errBox.hidden = true;
+      try {
+        const body: Record<string, unknown> = {};
+        new FormData(form).forEach((v, k) => (body[k] = v));
+        body.consent = form.querySelector<HTMLInputElement>('input[name="consent"]')!.checked;
+        const res = await fetch('/api/preorder', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        const data = await res.json();
+        if (!res.ok || !data.ok) {
+          if (data.errors) {
+            const first = Object.keys(data.errors)[0];
+            const idx = panels.findIndex((p) => p.querySelector(`[name="${first}"]`));
+            if (idx >= 0) show(idx);
+            Object.entries<string>(data.errors).forEach(([k, msg]) => {
+              const err = form.querySelector<HTMLElement>(`[data-error="${k}"]`);
+              if (err) err.textContent = msg;
+            });
+          } else errBox.hidden = false;
+          return;
+        }
+        (window as any).track?.('preorder', { reference: data.reference, plan: body.plan, quantity: body.quantity });
+        sessionStorage.setItem('nexgen-preorder', JSON.stringify({ reference: data.reference, plan: body.plan, quantity: body.quantity, email: body.email }));
+        location.href = '/preorder/thank-you';
+      } catch {
+        errBox.hidden = false;
+      } finally {
+        submit.disabled = false;
+        submit.innerHTML = original;
+      }
+    });
+  }
+</script>

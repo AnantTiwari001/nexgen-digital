@@ -1,0 +1,306 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import T from '../../components/T.astro';
+import Logo from '../../components/Logo.astro';
+import Mountains from '../../components/Mountains.astro';
+import QrStand from '../../components/QrStand.astro';
+import PhoneMockup from '../../components/PhoneMockup.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import PricingCard from '../../components/PricingCard.astro';
+import FaqList from '../../components/FaqList.astro';
+import Marquee from '../../components/sections/Marquee.astro';
+import CtaBand from '../../components/sections/CtaBand.astro';
+import { product } from '../../data/product';
+import { site, whatsappUrl } from '../../config/site';
+
+const productLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: product.name,
+  description: product.summary,
+  brand: { '@type': 'Brand', name: site.name },
+  offers: product.tiers
+    .filter((t) => /^\d/.test(t.price))
+    .map((t) => ({ '@type': 'Offer', name: t.name, price: t.price.replace(/,/g, ''), priceCurrency: 'NPR', availability: 'https://schema.org/PreOrder' })),
+};
+---
+
+<Base title={product.seo.title} description={product.seo.description} headerTone="white" jsonLd={[productLd]}>
+  <section class="qhero" data-parallax-scope>
+    <div class="qhero__bg" data-hero-bg aria-hidden="true">
+      <div class="qhero__sun"></div>
+      <div class="qhero__mountains"><Mountains /></div>
+    </div>
+    <div class="container qhero__inner">
+      <div class="qhero__text" data-hero-fade>
+        <p class="pill pill--glass" data-reveal><span class="dot"></span> <T k="product.preorderBadge" /></p>
+        <h1 class="qhero__title" data-split="immediate" data-split-delay="0.15">
+          <span class="qhero__line ne">ग्राहकले <span class="hl-box">scan</span> गर्छन्,</span>
+          <span class="qhero__line ne"><span class="hl-box">review</span> दिन्छन्।</span>
+        </h1>
+        <p class="qhero__sub" data-reveal style="--reveal-delay:500ms">
+          <strong class="qhero__name"><T k="product.title" /></strong><br />
+          <T k="product.lead" />
+        </p>
+        <div class="btn-row" data-reveal style="--reveal-delay:600ms">
+          <a class="btn btn--black btn--lg" href="/preorder" data-magnetic><T k="product.cta" /><Icon name="arrow" size={18} class="arrow" /></a>
+          <a class="btn btn--white btn--lg" href="#how"><Icon name="play" size={20} /><T k="product.cta2" /></a>
+        </div>
+        <p class="qhero__np small" data-reveal style="--reveal-delay:700ms"><Icon name="check" size={16} /> <T k="product.noPayment" /> · <T k="product.limited" /></p>
+        <p class="script qhero__script" data-reveal style="--reveal-delay:800ms">{site.phrases.localBusiness}</p>
+      </div>
+      <div class="qhero__visual" data-reveal="scale" style="--reveal-delay:300ms">
+        <div class="qhero__stage">
+          <QrStand size={300} class="qhero__stand" />
+          <PhoneMockup width={190} class="qhero__phone" />
+          <div class="qhero__badge card card--glass" data-float="8">
+            <Icon name="star" size={18} /><span>4.9 <small>Google rating</small></span>
+          </div>
+          <div class="qhero__badge qhero__badge--2 card card--glass" data-float="12">
+            <Icon name="trend" size={18} /><span>+128 <small>reviews this month</small></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Marquee items={['Scan · Tap · Review', 'Google Reviews', 'More Trust', 'More Visibility', 'One QR, More Possibilities', 'Local Business, Stronger Nepal']} tone="black" />
+
+  <section class="section" id="how">
+    <div class="container">
+      <SectionHead eyebrow="services.howItWorks" align="center">
+        <span slot="title"><T k="product.title" /> · <T k="services.howItWorks" /></span>
+      </SectionHead>
+      <ol class="how" data-reveal-group>
+        {product.howItWorks.map((s, i) => (
+          <li class="how__step card card--hover" data-reveal>
+            <span class="how__num">{i + 1}</span>
+            <h3>{s.title}</h3>
+            <p class="muted">{s.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--accent qlinks" data-parallax-scope>
+    <div class="qlinks__mark" data-parallax="0.15" aria-hidden="true"><Logo variant="mark" height={480} tone="white" /></div>
+    <div class="container qlinks__grid">
+      <div>
+        <p class="eyebrow"><T k="product.whatOpens" /></p>
+        <h2 data-split><T k="product.oneQr" /></h2>
+        <p class="lead">{product.summary}</p>
+        <p class="script">{product.accentPhrase}</p>
+      </div>
+      <ul class="qlinks__list" data-reveal-group>
+        {product.links.map((l) => (
+          <li class="qlinks__item" data-reveal>
+            <span class="icon-tile icon-tile--white icon-tile--round"><Icon name={l.icon} /></span>
+            <div><strong>{l.title}</strong><br /><span class="small">{l.text}</span></div>
+            <Icon name="arrow" size={18} />
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="product.eyebrow" align="center">
+        <span slot="title">More reviews. More trust. More visibility.</span>
+      </SectionHead>
+      <div class="grid grid--3" data-reveal-group>
+        {product.features.map((f) => (
+          <div class="card card--hover feat" data-reveal>
+            <span class="icon-tile icon-tile--black icon-tile--round"><Icon name={f.icon ?? 'check'} /></span>
+            <h3>{f.title}</h3>
+            <p class="muted">{f.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--muted">
+    <div class="container">
+      <SectionHead eyebrow="product.forWho" align="center">
+        <span slot="title">Nepal's local businesses, one scan away from growth</span>
+      </SectionHead>
+      <div class="audience" data-reveal-group>
+        {product.audience.map((a) => (
+          <span class="audience__pill pill" data-reveal><Icon name="pin" size={14} />{a}</span>
+        ))}
+      </div>
+      <p class="center ne audience__ne" data-reveal>नेपालका café, restaurant, salon, clinic, hotel र local business का लागि।</p>
+    </div>
+  </section>
+
+  <section class="section" id="pricing">
+    <div class="container">
+      <SectionHead eyebrow="pricing.eyebrow" lead="services.pricingNote" align="center">
+        <span slot="title"><T k="product.perks" /> · <T k="pricing.eyebrow" /></span>
+      </SectionHead>
+      <div class="grid grid--3 perks" data-reveal-group>
+        {product.preorderPerks.map((p) => (
+          <div class="perk" data-reveal>
+            <span class="icon-tile"><Icon name={p.icon ?? 'check'} /></span>
+            <div><strong>{p.title}</strong><br /><span class="small muted">{p.text}</span></div>
+          </div>
+        ))}
+      </div>
+      <div class="grid grid--3 tiers" data-reveal-group>
+        {product.tiers.map((tier, i) => (
+          <PricingCard tier={{ ...tier, cta: tier.price === 'Custom' ? 'Talk to us' : 'Pre-order' }} href={tier.price === 'Custom' ? whatsappUrl('Hi NexGen Digital, I need Smart Reviews QR stands for multiple locations.') : `/preorder?plan=${encodeURIComponent(tier.name)}`} index={i} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--muted">
+    <div class="container container--narrow">
+      <SectionHead eyebrow="services.faq" align="center">
+        <span slot="title"><T k="services.faq" /></span>
+      </SectionHead>
+      <FaqList items={product.faqs} />
+    </div>
+  </section>
+
+  <CtaBand titleKey="product.cta" textKey="product.lead" whatsappMessage="Hi NexGen Digital, I want to pre-order the AI Smart Reviews QR stand." />
+</Base>
+
+<style>
+  .qhero {
+    position: relative;
+    overflow: hidden;
+    background: var(--brand-orange);
+    color: #fff;
+    padding-top: calc(var(--header-h) + var(--space-7));
+    padding-bottom: var(--space-8);
+    min-height: 92svh;
+    display: flex;
+    align-items: center;
+  }
+  .qhero__bg { position: absolute; inset: -10% 0 0 0; pointer-events: none; }
+  .qhero__sun {
+    position: absolute;
+    left: -10%;
+    top: -10%;
+    width: 55vw;
+    max-width: 760px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffd27a 0%, #ff9a3c 30%, transparent 70%);
+    opacity: 0.85;
+  }
+  .qhero__mountains { position: absolute; inset: auto 0 -6% 0; color: #0b0b0b; opacity: 0.18; }
+  .qhero__inner {
+    position: relative;
+    display: grid;
+    gap: var(--space-8);
+    align-items: center;
+  }
+  @media (min-width: 1024px) { .qhero__inner { grid-template-columns: 1.1fr 1fr; } }
+  .qhero__title {
+    font-size: clamp(2.4rem, 1.4rem + 3.6vw, 4.2rem);
+    line-height: 1.15;
+    color: #fff;
+    margin: var(--space-5) 0 var(--space-4);
+    font-family: var(--font-ne);
+    font-weight: 800;
+  }
+  .qhero__line { display: block; }
+  .qhero__title :global(.word) { display: inline-block; }
+  .qhero__sub { font-size: var(--text-lg); max-width: 52ch; margin-bottom: var(--space-5); }
+  .qhero__name { font-family: var(--font-heading); font-size: var(--text-2xl); display: inline-block; margin-bottom: var(--space-2); }
+  .qhero__np { display: inline-flex; align-items: center; gap: 0.4em; margin-top: var(--space-4); opacity: 0.95; }
+  .qhero__script { margin-top: var(--space-3); font-size: var(--text-2xl); transform: rotate(-2deg); display: inline-block; }
+  .qhero__stage { position: relative; display: grid; place-items: center; min-height: 480px; }
+  .qhero :global(.qhero__stand) { position: relative; z-index: 2; margin-right: 18%; }
+  .qhero :global(.qhero__phone) { position: absolute; right: 2%; bottom: 0; z-index: 3; }
+  .qhero__badge {
+    position: absolute;
+    top: 6%;
+    left: 0;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: var(--text-lg);
+    color: #fff;
+  }
+  .qhero__badge small { display: block; font-size: var(--text-xs); font-weight: 600; opacity: 0.9; }
+  .qhero__badge svg { color: #ffd27a; }
+  .qhero__badge--2 { top: auto; bottom: 6%; left: -2%; }
+  @media (max-width: 480px) {
+    .qhero__stage { min-height: 420px; }
+    .qhero :global(.qhero__stand) { --stand-w: 220px; margin-right: 28%; }
+    .qhero :global(.qhero__phone) { --phone-w: 140px; }
+    .qhero__badge { font-size: var(--text-sm); }
+  }
+
+  .how {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+    counter-reset: how;
+  }
+  .how__step { position: relative; }
+  .how__num {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--brand-orange);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-4);
+  }
+  .how__step h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
+  .how__step p { margin: 0; font-size: var(--text-sm); }
+
+  .qlinks { overflow: hidden; }
+  .qlinks__mark { position: absolute; left: -6%; bottom: -20%; opacity: 0.08; pointer-events: none; }
+  .qlinks__grid { position: relative; display: grid; gap: var(--space-7); align-items: center; }
+  @media (min-width: 900px) { .qlinks__grid { grid-template-columns: 1fr 1fr; } }
+  .qlinks__grid .lead { color: #fff; opacity: 0.92; }
+  .qlinks__grid h2 :global(.word) { display: inline-block; }
+  .qlinks__list { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--space-3); }
+  .qlinks__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-4) var(--space-5);
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius-pill);
+    transition: background-color var(--dur), transform var(--dur) var(--ease-out);
+  }
+  .qlinks__item:hover { background: #fff; color: var(--brand-black); transform: translateX(6px); }
+  .qlinks__item > svg:last-child { margin-left: auto; }
+  .feat h3 { font-size: var(--text-lg); margin: var(--space-4) 0 var(--space-2); }
+  .feat p { margin: 0; font-size: var(--text-sm); }
+  .audience { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); }
+  .audience__pill { background: var(--bg-elev); }
+  .audience__ne { margin-top: var(--space-5); font-size: var(--text-lg); color: var(--fg-muted); }
+  .perks { margin-bottom: var(--space-7); }
+  .perk {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+    padding: var(--space-4);
+    background: var(--bg-soft);
+    border-radius: var(--radius-md);
+  }
+  .tiers { align-items: stretch; padding-top: var(--space-4); }
+</style>

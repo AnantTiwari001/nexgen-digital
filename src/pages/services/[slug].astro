@@ -1,0 +1,193 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Icon from '../../components/Icon.astro';
+import T from '../../components/T.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import PricingCard from '../../components/PricingCard.astro';
+import FaqList from '../../components/FaqList.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import Process from '../../components/sections/Process.astro';
+import CtaBand from '../../components/sections/CtaBand.astro';
+import { categories, getService, servicePages } from '../../data/services';
+import { site, whatsappUrl } from '../../config/site';
+import { t } from '../../i18n';
+
+export const getStaticPaths: GetStaticPaths = () => servicePages.map((s) => ({ params: { slug: s.slug }, props: { service: s } }));
+
+const { service } = Astro.props;
+const category = categories.find((c) => c.id === service.category)!;
+const related = service.related.map((r) => getService(r)!).filter(Boolean);
+const wa = whatsappUrl(`Hi NexGen Digital, I am interested in ${service.name}.`);
+
+const serviceLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: service.name,
+  description: service.summary,
+  serviceType: category.name,
+  provider: { '@type': 'Organization', name: site.name },
+  areaServed: 'Nepal',
+  offers: service.pricing
+    .filter((p) => /^\d/.test(p.price))
+    .map((p) => ({ '@type': 'Offer', name: p.name, price: p.price.replace(/,/g, ''), priceCurrency: 'NPR' })),
+};
+---
+
+<Base title={service.seo.title} description={service.seo.description} headerTone="white" jsonLd={[serviceLd]}>
+  <PageHero script={service.accentPhrase}>
+    <p class="eyebrow" slot="eyebrow"><a href={`/services#${category.id}`} data-i18n={`cat.${category.id}.name`}>{category.name}</a></p>
+    <span slot="title" data-i18n={`svc.${service.slug}.name`}>{service.name}</span>
+    <span slot="lead" data-i18n={`svc.${service.slug}.tagline`}>{service.tagline}</span>
+    <div class="btn-row svc-hero__btns">
+      <a class="btn btn--white btn--lg" href="/contact" data-magnetic><T k="services.getQuote" /><Icon name="arrow" size={18} class="arrow" /></a>
+      <a class="btn btn--outline btn--lg" href="#pricing"><T k="services.pricing" /></a>
+      <a class="btn btn--whatsapp btn--lg" href={wa} target="_blank" rel="noopener"><Icon name="whatsapp" size={20} />WhatsApp</a>
+    </div>
+    {service.nepaliLine && <p class="ne svc-hero__ne">{service.nepaliLine}</p>}
+    <div slot="visual" class="svc-hero__icon" data-float="14">
+      <Icon name={service.icon} size={140} />
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="container svc-intro">
+      <div data-reveal="left">
+        <p class="eyebrow"><T k="services.problem" /></p>
+        <h2>{service.problem.title}</h2>
+        <p class="lead">{service.problem.text}</p>
+      </div>
+      <div class="card card--black svc-intro__summary" data-reveal="right">
+        <Icon name="quote" size={36} class="svc-intro__q" />
+        <p>{service.summary}</p>
+        <span class="script">{service.accentPhrase}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--muted">
+    <div class="container">
+      <SectionHead eyebrow="services.whatYouGet">
+        <span slot="title">{service.tagline}</span>
+      </SectionHead>
+      <div class="grid grid--2 svc-benefits" data-reveal-group>
+        {service.benefits.map((b) => (
+          <div class="card card--hover svc-benefit" data-reveal>
+            <span class="icon-tile"><Icon name={b.icon ?? 'check'} /></span>
+            <div>
+              <h3>{b.title}</h3>
+              <p class="muted">{b.text}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <ul class="svc-deliverables" data-reveal-group>
+        {service.deliverables.map((d) => (
+          <li data-reveal><Icon name="check" size={18} /> {d}</li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <Process steps={service.process} />
+
+  <section class="section" id="pricing">
+    <div class="container">
+      <SectionHead eyebrow="services.pricing" lead="services.pricingNote" align="center">
+        <span slot="title"><span data-i18n={`svc.${service.slug}.name`}>{service.name}</span> · <T k="pricing.title" /></span>
+      </SectionHead>
+      <div class="grid grid--3 svc-pricing" data-reveal-group>
+        {service.pricing.map((tier, i) => (
+          <PricingCard tier={tier} context={service.name} index={i} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {service.faqs.length > 0 && (
+    <section class="section section--muted">
+      <div class="container container--narrow">
+        <SectionHead eyebrow="services.faq" align="center">
+          <span slot="title"><T k="services.faq" /></span>
+        </SectionHead>
+        <FaqList items={service.faqs} />
+      </div>
+    </section>
+  )}
+
+  {related.length > 0 && (
+    <section class="section">
+      <div class="container">
+        <SectionHead eyebrow="services.related">
+          <span slot="title"><T k="services.related" /></span>
+        </SectionHead>
+        <div class="grid grid--3" data-reveal-group>
+          {related.map((r, i) => (
+            <ServiceCard service={r} index={i} variant="compact" />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <CtaBand titleKey="services.cta.title" textKey="services.cta.text" whatsappMessage={`Hi NexGen Digital, I am interested in ${service.name}.`} />
+</Base>
+
+<style>
+  .svc-hero__btns { margin-top: var(--space-5); }
+  .svc-hero__ne { margin-top: var(--space-5); font-size: var(--text-lg); opacity: 0.92; }
+  .svc-hero__icon {
+    display: grid;
+    place-items: center;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
+  }
+  .svc-intro {
+    display: grid;
+    gap: var(--space-7);
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .svc-intro { grid-template-columns: 1.1fr 1fr; }
+  }
+  .svc-intro__summary {
+    position: relative;
+    padding: var(--space-7);
+    font-size: var(--text-lg);
+  }
+  .svc-intro__summary :global(.svc-intro__q) { color: var(--brand-orange); margin-bottom: var(--space-4); }
+  .svc-intro__summary .script { font-size: var(--text-2xl); }
+  .svc-benefit {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+  }
+  .svc-benefit h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
+  .svc-benefit p { margin: 0; font-size: var(--text-sm); }
+  .svc-deliverables {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-7) 0 0;
+    display: grid;
+    gap: var(--space-3);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  }
+  .svc-deliverables li {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    padding: var(--space-3) var(--space-4);
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    font-weight: 500;
+  }
+  .svc-deliverables svg { color: var(--accent); flex: none; }
+  .svc-pricing { align-items: stretch; padding-top: var(--space-4); }
+</style>

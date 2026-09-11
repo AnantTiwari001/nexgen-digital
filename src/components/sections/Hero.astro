@@ -1,0 +1,258 @@
+---
+import Icon from '../Icon.astro';
+import T from '../T.astro';
+import Mountains from '../Mountains.astro';
+import QrStand from '../QrStand.astro';
+import { site, whatsappUrl } from '../../config/site';
+import { services } from '../../data/services';
+
+const chips = ['social-media-management', 'ai-video-production', 'meta-ads', 'website-design-development', 'ai-graphics-design']
+  .map((slug) => services.find((s) => s.slug === slug)!)
+  .filter(Boolean);
+---
+
+<section class="hero" data-parallax-scope>
+  <div class="hero__bg" data-hero-bg aria-hidden="true">
+    <div class="hero__sun"></div>
+    <div class="hero__glow"></div>
+    <div class="hero__mountains hero__mountains--far"><Mountains /></div>
+    <div class="hero__mountains hero__mountains--near"><Mountains /></div>
+    <div class="hero__grain"></div>
+  </div>
+
+  <div class="container hero__inner">
+    <div class="hero__content" data-hero-fade>
+      <p class="pill pill--glass hero__badge" data-reveal><span class="dot"></span> <T k="hero.badge" /></p>
+      <h1 class="hero__title" data-split="immediate" data-split-delay="0.2">
+        <span class="hero__line"><T k="hero.title.a" /></span>
+        <span class="hero__line hero__line--box"><T k="hero.title.b" /></span>
+      </h1>
+      <p class="hero__script script" data-reveal style="--reveal-delay:700ms">{site.phrases.scriptHero}</p>
+      <p class="hero__sub" data-reveal style="--reveal-delay:800ms"><T k="hero.subtitle" /></p>
+      <div class="btn-row" data-reveal style="--reveal-delay:900ms">
+        <a class="btn btn--white btn--lg" href="/contact" data-magnetic><T k="hero.cta" /><Icon name="arrow" size={18} class="arrow" /></a>
+        <a class="btn btn--outline btn--lg" href="/services"><T k="hero.cta2" /></a>
+        <a class="hero__wa" href={whatsappUrl()} target="_blank" rel="noopener" aria-label="WhatsApp"><Icon name="whatsapp" size={22} /></a>
+      </div>
+      <p class="hero__ne ne" data-reveal style="--reveal-delay:1000ms"><T k="hero.nepaliLine" /></p>
+    </div>
+
+    <div class="hero__visual" data-reveal="scale" style="--reveal-delay:400ms">
+      <div class="hero__stand"><QrStand size={280} /></div>
+      {chips.map((c, i) => (
+        <a href={`/services/${c.slug}`} class="hero__chip card card--glass" data-float={10 + i * 2} data-pos={i}>
+          <span class="icon-tile icon-tile--white"><Icon name={c.icon} /></span>
+          <span class="hero__chip-text" data-i18n={`svc.${c.slug}.name`}>{c.shortName ?? c.name}</span>
+        </a>
+      ))}
+    </div>
+  </div>
+
+  <div class="hero__foot container">
+    <p class="caps hero__pillars"><T k="hero.pillars" /></p>
+    <a href="#services" class="hero__scroll caps"><T k="hero.scroll" /><span class="hero__scroll-line"></span></a>
+    <p class="caps hero__loc"><Icon name="pin" size={14} /> {site.location.city}, {site.location.country}</p>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: var(--brand-orange);
+    color: #fff;
+    overflow: hidden;
+    padding-top: calc(var(--header-h) + var(--space-6));
+    padding-bottom: var(--space-8);
+  }
+  .hero__bg {
+    position: absolute;
+    inset: -10% 0 0 0;
+    pointer-events: none;
+    will-change: transform;
+  }
+  .hero__sun {
+    position: absolute;
+    right: -10%;
+    top: 5%;
+    width: 60vw;
+    max-width: 820px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle at center, #ffd27a 0%, #ff9a3c 28%, rgba(255, 90, 0, 0) 70%);
+    opacity: 0.9;
+    filter: blur(2px);
+  }
+  .hero__glow {
+    position: absolute;
+    left: -20%;
+    bottom: -10%;
+    width: 60vw;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(11, 11, 11, 0.35), transparent 65%);
+  }
+  .hero__mountains {
+    position: absolute;
+    inset: auto 0 0 0;
+    color: #0b0b0b;
+  }
+  .hero__mountains--far {
+    opacity: 0.12;
+    transform: translateY(6%) scale(1.15);
+    transform-origin: bottom;
+  }
+  .hero__mountains--near {
+    opacity: 0.22;
+    bottom: -8%;
+  }
+  .hero__grain {
+    position: absolute;
+    inset: 0;
+    opacity: 0.08;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: soft-light;
+  }
+  .hero__inner {
+    position: relative;
+    display: grid;
+    gap: var(--space-8);
+    align-items: center;
+  }
+  @media (min-width: 1024px) {
+    .hero__inner { grid-template-columns: 1.15fr 1fr; }
+  }
+  .hero__badge { margin-bottom: var(--space-5); }
+  .hero__title {
+    font-size: clamp(2.5rem, 1.3rem + 4.1vw, 4.6rem);
+    line-height: 1;
+    margin-bottom: var(--space-4);
+    color: #fff;
+  }
+  .hero__line { display: block; overflow: hidden; padding-bottom: 0.06em; }
+  .hero__line :global(.word) { display: inline-block; will-change: transform; }
+  .hero__line--box { margin-top: 0.08em; }
+  .hero__line--box :global([data-i18n]) {
+    background: #fff;
+    color: var(--brand-black);
+    padding: 0.04em 0.18em 0.06em;
+    display: inline-block;
+    line-height: 1.02;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+  .hero__script {
+    font-size: clamp(1.6rem, 1.2rem + 1.5vw, 2.4rem);
+    color: #fff;
+    transform: rotate(-2deg);
+    transform-origin: left;
+    margin-bottom: var(--space-4);
+  }
+  .hero__sub {
+    font-size: var(--text-lg);
+    max-width: 54ch;
+    opacity: 0.95;
+    margin-bottom: var(--space-6);
+  }
+  .hero__wa {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #25d366;
+    color: #06341a;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+    transition: transform var(--dur-fast);
+  }
+  .hero__wa:hover { transform: translateY(-2px) scale(1.05); }
+  .hero__ne {
+    margin-top: var(--space-5);
+    font-size: var(--text-base);
+    opacity: 0.9;
+    max-width: 48ch;
+  }
+
+  .hero__visual {
+    position: relative;
+    min-height: 420px;
+    display: grid;
+    place-items: center;
+  }
+  .hero__stand {
+    position: relative;
+    z-index: 2;
+    filter: drop-shadow(0 40px 60px rgba(0, 0, 0, 0.35));
+  }
+  .hero__chip {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    white-space: nowrap;
+    z-index: 3;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+    color: #fff;
+  }
+  .hero__chip .icon-tile { width: 40px; height: 40px; border-radius: 50%; }
+  .hero__chip .icon-tile :global(svg) { width: 20px; height: 20px; }
+  .hero__chip[data-pos='0'] { top: 4%; left: 0; }
+  .hero__chip[data-pos='1'] { top: 18%; right: 0; }
+  .hero__chip[data-pos='2'] { bottom: 30%; left: -4%; }
+  .hero__chip[data-pos='3'] { bottom: 8%; right: 2%; }
+  .hero__chip[data-pos='4'] { bottom: -2%; left: 22%; }
+  @media (max-width: 1023px) {
+    .hero__visual { min-height: 460px; }
+    .hero__chip { font-size: var(--text-xs); padding: var(--space-2) var(--space-3); }
+    .hero__chip .icon-tile { width: 32px; height: 32px; }
+  }
+  @media (max-width: 480px) {
+    .hero__chip[data-pos='2'],
+    .hero__chip[data-pos='4'] { display: none; }
+  }
+
+  .hero__foot {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+    margin-top: var(--space-8);
+    opacity: 0.9;
+  }
+  .hero__foot p { margin: 0; display: inline-flex; align-items: center; gap: 0.4em; }
+  .hero__pillars { display: none; }
+  @media (min-width: 720px) { .hero__pillars { display: inline-flex; } }
+  .hero__scroll {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .hero__scroll-line {
+    width: 1px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.5);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero__scroll-line::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: #fff;
+    animation: scroll-line 1.8s var(--ease-in-out) infinite;
+  }
+  @keyframes scroll-line {
+    0% { transform: translateY(-100%); }
+    60%, 100% { transform: translateY(100%); }
+  }
+</style>

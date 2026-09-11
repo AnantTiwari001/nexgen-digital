@@ -1,0 +1,227 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import T from '../components/T.astro';
+import FaqList from '../components/FaqList.astro';
+import { site, whatsappUrl } from '../config/site';
+import { services } from '../data/services';
+import { generalFaq } from '../data/faq';
+import { t } from '../i18n';
+
+const socials = [
+  { name: 'facebook', href: site.social.facebook, label: 'Facebook' },
+  { name: 'instagram', href: site.social.instagram, label: 'Instagram' },
+  { name: 'tiktok', href: site.social.tiktok, label: 'TikTok' },
+  { name: 'linkedin', href: site.social.linkedin, label: 'LinkedIn' },
+  { name: 'youtube', href: site.social.youtube, label: 'YouTube' },
+] as const;
+const budgets = ['Under Rs. 10,000', 'Rs. 10,000 to 25,000', 'Rs. 25,000 to 50,000', 'Rs. 50,000 to 1,00,000', 'Above Rs. 1,00,000'];
+---
+
+<Base title="Contact" description="Contact NexGen Digital in Kathmandu. WhatsApp, email or send the form. Available 6 AM to 10 PM every day." headerTone="white">
+  <PageHero eyebrow={t('contact.eyebrow')} title={t('contact.title')} lead={t('contact.lead')} compact>
+    <div class="btn-row" style="margin-top: var(--space-4)">
+      <a class="btn btn--whatsapp btn--lg" href={whatsappUrl()} target="_blank" rel="noopener" data-magnetic><Icon name="whatsapp" size={20} /><T k="cta.whatsapp" /></a>
+      <a class="btn btn--outline btn--lg" href={`tel:${site.contact.phone.replace(/\s/g, '')}`}><Icon name="phone" size={18} />{site.contact.phone}</a>
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="container contact">
+      <form class="contact__form card" data-contact-form novalidate data-reveal="left">
+        <input type="text" name="website_url" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <div class="form-grid">
+          <div class="field">
+            <label for="name"><T k="contact.form.name" /> *</label>
+            <input class="input" id="name" name="name" required minlength="2" autocomplete="name" />
+            <span class="error-text" data-error="name"></span>
+          </div>
+          <div class="field">
+            <label for="business"><T k="contact.form.business" /></label>
+            <input class="input" id="business" name="business" autocomplete="organization" />
+          </div>
+          <div class="field">
+            <label for="phone"><T k="contact.form.phone" /> *</label>
+            <input class="input" id="phone" name="phone" type="tel" required placeholder="+977 98XXXXXXXX" autocomplete="tel" />
+            <span class="error-text" data-error="phone"></span>
+          </div>
+          <div class="field">
+            <label for="email"><T k="contact.form.email" /></label>
+            <input class="input" id="email" name="email" type="email" autocomplete="email" />
+            <span class="error-text" data-error="email"></span>
+          </div>
+          <div class="field">
+            <label for="service"><T k="contact.form.service" /></label>
+            <select class="select" id="service" name="service">
+              <option value="">{t('contact.form.serviceAny')}</option>
+              {services.map((s) => <option value={s.name}>{s.name}</option>)}
+            </select>
+          </div>
+          <div class="field">
+            <label for="budget"><T k="contact.form.budget" /></label>
+            <select class="select" id="budget" name="budget">
+              <option value="">—</option>
+              {budgets.map((b) => <option value={b}>{b}</option>)}
+            </select>
+          </div>
+          <div class="field span-2">
+            <label for="message"><T k="contact.form.message" /> *</label>
+            <textarea class="textarea" id="message" name="message" required minlength="5" maxlength="3000"></textarea>
+            <span class="error-text" data-error="message"></span>
+          </div>
+        </div>
+        <div class="contact__actions">
+          <button class="btn btn--lg" type="submit" data-submit><T k="contact.form.submit" /><Icon name="send" size={18} /></button>
+          <p class="small muted">We reply within one business day.</p>
+        </div>
+        <p class="contact__status" data-status role="status" aria-live="polite" hidden></p>
+      </form>
+
+      <aside class="contact__info" data-reveal="right">
+        <div class="card card--black contact__card">
+          <ul class="contact__list">
+            <li><span class="icon-tile icon-tile--round"><Icon name="clock" /></span><div><strong><T k="contact.hours" /></strong><br /><T k="contact.hoursValue" /></div></li>
+            <li><span class="icon-tile icon-tile--round"><Icon name="whatsapp" /></span><div><strong>WhatsApp</strong><br /><a href={whatsappUrl()} target="_blank" rel="noopener">+{site.contact.whatsapp}</a></div></li>
+            <li><span class="icon-tile icon-tile--round"><Icon name="mail" /></span><div><strong><T k="contact.email" /></strong><br /><a href={`mailto:${site.contact.email}`}>{site.contact.email}</a></div></li>
+            <li><span class="icon-tile icon-tile--round"><Icon name="pin" /></span><div><strong><T k="contact.location" /></strong><br />{site.location.addressLine}</div></li>
+          </ul>
+          <div class="contact__social">
+            <span class="caps"><T k="contact.follow" /></span>
+            {socials.map((s) => (
+              <a href={s.href} target="_blank" rel="noopener" aria-label={s.label}><Icon name={s.name} size={18} /></a>
+            ))}
+          </div>
+        </div>
+        <div class="contact__map">
+          {site.location.mapEmbedUrl ? (
+            <iframe src={site.location.mapEmbedUrl} title="Map" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" />
+          ) : (
+            <div class="contact__map-ph"><Icon name="pin" size={32} /><span class="small"><T k="contact.map" /></span></div>
+          )}
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section--muted">
+    <div class="container container--narrow">
+      <div class="section-head section-head--center" data-reveal><h2><T k="contact.faq" /></h2></div>
+      <FaqList items={generalFaq.map((k) => ({ q: k.question, a: k.answer }))} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .contact { display: grid; gap: var(--space-6); align-items: start; }
+  @media (min-width: 1024px) { .contact { grid-template-columns: 1.4fr 1fr; } }
+  .contact__form { padding: var(--space-7); }
+  .contact__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    margin-top: var(--space-5);
+  }
+  .contact__actions p { margin: 0; }
+  .contact__status {
+    margin: var(--space-4) 0 0;
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-md);
+    background: var(--accent-soft);
+    color: var(--fg);
+    font-weight: 500;
+  }
+  .contact__status.is-error { background: #fee2e2; color: #991b1b; }
+  .contact__status[hidden] { display: none; }
+  .contact__info { display: grid; gap: var(--space-5); }
+  .contact__list { list-style: none; padding: 0; margin: 0 0 var(--space-5); display: grid; gap: var(--space-4); }
+  .contact__list li { display: flex; gap: var(--space-3); align-items: center; }
+  .contact__list a { color: var(--brand-orange); font-weight: 600; }
+  .contact__list .icon-tile { background: rgba(255, 255, 255, 0.1); color: var(--brand-orange); }
+  .contact__social { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
+  .contact__social .caps { margin-right: var(--space-2); opacity: 0.7; }
+  .contact__social a {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: background-color var(--dur-fast);
+  }
+  .contact__social a:hover { background: var(--brand-orange); border-color: var(--brand-orange); }
+  .contact__map { aspect-ratio: 4 / 3; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--line); }
+  .contact__map iframe { width: 100%; height: 100%; border: 0; }
+  .contact__map-ph {
+    height: 100%;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: var(--space-3);
+    text-align: center;
+    padding: var(--space-5);
+    color: var(--fg-subtle);
+    background:
+      linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 24px 24px,
+      linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 24px 24px,
+      var(--bg-muted);
+  }
+  .contact__map-ph svg { color: var(--accent); }
+</style>
+
+<script>
+  import { attachAttribution } from '../scripts/utm';
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+  if (form) {
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const setError = (name: string, msg: string) => {
+      const el = form.querySelector<HTMLElement>(`[data-error="${name}"]`);
+      if (el) el.textContent = msg;
+      form.querySelector(`[name="${name}"]`)?.setAttribute('aria-invalid', msg ? 'true' : 'false');
+    };
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.hidden = true;
+      let ok = true;
+      form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input[required], textarea[required], input[type=email]').forEach((el) => {
+        setError(el.name, '');
+        if (!el.checkValidity()) {
+          ok = false;
+          setError(el.name, el.validationMessage);
+        }
+      });
+      if (!ok) return;
+      attachAttribution(form);
+      submit.disabled = true;
+      const original = submit.innerHTML;
+      submit.textContent = document.documentElement.getAttribute('data-lang') === 'ne' ? 'पठाउँदै...' : 'Sending...';
+      try {
+        const body: Record<string, unknown> = {};
+        new FormData(form).forEach((v, k) => (body[k] = v));
+        const res = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        const data = await res.json();
+        if (res.ok && data.ok) {
+          status.textContent = document.documentElement.getAttribute('data-lang') === 'ne' ? 'धन्यवाद! सन्देश प्राप्त भयो, एक कार्यदिन भित्र जवाफ दिन्छौं।' : 'Thank you! We received your message and will reply within one business day.';
+          status.classList.remove('is-error');
+          status.hidden = false;
+          form.reset();
+          (window as any).track?.('generate_lead', { source: 'contact_form', service: body.service });
+        } else {
+          if (data.errors) Object.entries<string>(data.errors).forEach(([k, m]) => setError(k, m));
+          status.textContent = data.error || 'Please check the highlighted fields.';
+          status.classList.add('is-error');
+          status.hidden = false;
+        }
+      } catch {
+        status.textContent = 'Something went wrong. Please try again or message us on WhatsApp.';
+        status.classList.add('is-error');
+        status.hidden = false;
+      } finally {
+        submit.disabled = false;
+        submit.innerHTML = original;
+      }
+    });
+  }
+</script>

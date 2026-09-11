@@ -1,0 +1,146 @@
+---
+import { Font } from 'astro:assets';
+import '../styles/global.css';
+import { site } from '../config/site';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ChatWidget from '../components/ChatWidget.astro';
+import Analytics from '../components/Analytics.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  noindex?: boolean;
+  /** Header text colour while the page is at the top (over a dark or orange hero) */
+  headerTone?: 'auto' | 'white';
+  /** JSON-LD objects to embed */
+  jsonLd?: Record<string, unknown>[];
+  bodyClass?: string;
+}
+
+const {
+  title,
+  description = site.description,
+  ogImage = site.seo.ogImage,
+  noindex = false,
+  headerTone = 'auto',
+  jsonLd = [],
+  bodyClass,
+} = Astro.props;
+
+const fullTitle = title ? site.seo.titleTemplate.replace('%s', title) : site.seo.defaultTitle;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://nexgendigital.com.np');
+const ogUrl = new URL(ogImage, Astro.site ?? 'https://nexgendigital.com.np');
+
+const organizationLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: site.name,
+  url: Astro.site?.toString(),
+  logo: new URL('/brand/logo-stacked.svg', Astro.site ?? 'https://nexgendigital.com.np').toString(),
+  description: site.description,
+  email: site.contact.email,
+  telephone: site.contact.phone,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.location.addressLine,
+    addressLocality: site.location.city,
+    addressCountry: 'NP',
+  },
+  sameAs: Object.values(site.social).filter((u) => !u.includes('placeholder')),
+};
+---
+
+<html lang="en" data-lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content={site.seo.keywords.join(', ')} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="theme-color" content="#ff5a00" />
+    <meta name="generator" content={Astro.generator} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="ne_NP" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content={site.seo.twitterHandle} />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogUrl} />
+
+    <Font cssVariable="--font-poppins" preload={[{ weight: 800 }, { weight: 600 }]} />
+    <Font cssVariable="--font-inter" preload={[{ weight: 400 }]} />
+    <Font cssVariable="--font-script" />
+    <Font cssVariable="--font-devanagari" />
+
+    <script is:inline>
+      // Apply theme before first paint to avoid a flash.
+      (function () {
+        try {
+          var t = localStorage.getItem('nexgen-theme');
+          if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+        document.documentElement.classList.remove('no-js');
+      })();
+    </script>
+
+    <script type="application/ld+json" set:html={JSON.stringify(organizationLd)} />
+    {jsonLd.map((obj) => <script type="application/ld+json" set:html={JSON.stringify(obj)} />)}
+    <Analytics />
+  </head>
+  <body class={bodyClass}>
+    <a class="skip" href="#main">Skip to content</a>
+    <div class="progress" aria-hidden="true"><span data-progress></span></div>
+    <Header tone={headerTone} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    {site.features.chatWidget && <ChatWidget />}
+    <script src="../scripts/main.ts"></script>
+  </body>
+</html>
+
+<style is:global>
+  .skip {
+    position: absolute;
+    top: -100px;
+    left: 16px;
+    z-index: 1000;
+    background: var(--brand-black);
+    color: #fff;
+    padding: 12px 16px;
+    border-radius: 8px;
+  }
+  .skip:focus {
+    top: 16px;
+  }
+  .progress {
+    position: fixed;
+    inset: 0 0 auto 0;
+    height: 3px;
+    z-index: 200;
+    pointer-events: none;
+  }
+  .progress span {
+    display: block;
+    height: 100%;
+    background: var(--brand-orange);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+</style>

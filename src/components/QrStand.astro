@@ -1,0 +1,154 @@
+---
+/**
+ * CSS/SVG mock-up of the AI Smart Reviews QR stand. The QR pattern is decorative
+ * (deterministic pseudo-random modules with real finder patterns) and carries the X mark.
+ */
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  class?: string;
+  finish?: 'white' | 'orange' | 'black';
+  size?: number;
+}
+const { class: className, finish = 'white', size = 300 } = Astro.props;
+
+// Deterministic QR-like pattern
+const N = 25;
+let seed = 1337;
+const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+const cells: [number, number][] = [];
+const inFinder = (r: number, c: number) => (r < 8 && c < 8) || (r < 8 && c >= N - 8) || (r >= N - 8 && c < 8);
+const inCenter = (r: number, c: number) => r >= 9 && r <= 15 && c >= 9 && c <= 15;
+for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) if (!inFinder(r, c) && !inCenter(r, c) && rnd() > 0.52) cells.push([r, c]);
+const finder = (r: number, c: number) =>
+  `<rect x="${c}" y="${r}" width="7" height="7" fill="currentColor"/><rect x="${c + 1}" y="${r + 1}" width="5" height="5" fill="#fff"/><rect x="${c + 2}" y="${r + 2}" width="3" height="3" fill="currentColor"/>`;
+const qr = `${cells.map(([r, c]) => `<rect x="${c}" y="${r}" width="1" height="1"/>`).join('')}${finder(0, 0)}${finder(0, N - 7)}${finder(N - 7, 0)}`;
+---
+
+<div class:list={['stand', `stand--${finish}`, className]} style={`--stand-w:${size}px`} data-tilt="6">
+  <div class="stand__card">
+    <div class="stand__logo"><Logo variant="stacked" height={Math.round(size * 0.13)} tone={finish === 'white' ? 'auto' : 'white'} /></div>
+    <div class="stand__qr">
+      <svg viewBox={`0 0 ${N} ${N}`} shape-rendering="crispEdges" aria-hidden="true">
+        <g fill="currentColor" set:html={qr} />
+        <g transform="translate(9.5 9.5) scale(0.08)">
+          <path fill="var(--brand-orange)" d="M0 0h20l25 32 25-32h20L54 44l36 44H70L45 56 20 88H0l36-44z" />
+        </g>
+      </svg>
+      <span class="stand__corner stand__corner--tl"></span>
+      <span class="stand__corner stand__corner--tr"></span>
+      <span class="stand__corner stand__corner--bl"></span>
+      <span class="stand__corner stand__corner--br"></span>
+    </div>
+    <div class="stand__label">SCAN &amp; CONNECT</div>
+    <div class="stand__icons">
+      <Icon name="google" size={16} />
+      <Icon name="instagram" size={16} />
+      <Icon name="facebook" size={16} />
+      <Icon name="tiktok" size={16} />
+      <Icon name="card" size={16} />
+      <Icon name="phone" size={16} />
+    </div>
+    <div class="stand__foot">REVIEWS · PAY · FOLLOW · CONNECT</div>
+  </div>
+  <div class="stand__base"></div>
+  <div class="stand__shadow"></div>
+</div>
+
+<style>
+  .stand {
+    --stand-fg: var(--brand-black);
+    --stand-bg: #fff;
+    --stand-accent: var(--brand-orange);
+    position: relative;
+    width: var(--stand-w);
+    max-width: 100%;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+  .stand--orange {
+    --stand-bg: var(--brand-orange);
+    --stand-fg: #fff;
+    --stand-accent: #fff;
+  }
+  .stand--black {
+    --stand-bg: #141414;
+    --stand-fg: #fff;
+  }
+  .stand__card {
+    position: relative;
+    z-index: 2;
+    background: var(--stand-bg);
+    color: var(--stand-fg);
+    border-radius: calc(var(--stand-w) * 0.05);
+    padding: calc(var(--stand-w) * 0.07) calc(var(--stand-w) * 0.08);
+    display: grid;
+    gap: calc(var(--stand-w) * 0.035);
+    justify-items: center;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25), inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+    transform: rotateX(4deg);
+  }
+  .stand__qr {
+    position: relative;
+    width: 66%;
+    background: #fff;
+    padding: 6%;
+    border-radius: 8px;
+    color: #0b0b0b;
+  }
+  .stand__qr svg {
+    width: 100%;
+    height: auto;
+  }
+  .stand__corner {
+    position: absolute;
+    width: 14%;
+    height: 14%;
+    border: 3px solid var(--brand-orange);
+  }
+  .stand__corner--tl { top: 0; left: 0; border-right: 0; border-bottom: 0; border-top-left-radius: 6px; }
+  .stand__corner--tr { top: 0; right: 0; border-left: 0; border-bottom: 0; border-top-right-radius: 6px; }
+  .stand__corner--bl { bottom: 0; left: 0; border-right: 0; border-top: 0; border-bottom-left-radius: 6px; }
+  .stand__corner--br { bottom: 0; right: 0; border-left: 0; border-top: 0; border-bottom-right-radius: 6px; }
+  .stand__label {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    font-size: calc(var(--stand-w) * 0.035);
+  }
+  .stand__icons {
+    display: flex;
+    gap: calc(var(--stand-w) * 0.03);
+    color: var(--stand-accent);
+  }
+  .stand__icons :global(svg) { width: calc(var(--stand-w) * 0.055); height: auto; }
+  .stand__foot {
+    font-size: calc(var(--stand-w) * 0.025);
+    letter-spacing: 0.2em;
+    opacity: 0.55;
+    font-family: var(--font-heading);
+    font-weight: 600;
+  }
+  .stand__base {
+    position: relative;
+    z-index: 1;
+    margin: -6px auto 0;
+    width: 70%;
+    height: calc(var(--stand-w) * 0.07);
+    background: linear-gradient(180deg, #d9d9d9, #9e9e9e);
+    border-radius: 0 0 12px 12px;
+    transform: perspective(600px) rotateX(55deg);
+    transform-origin: top;
+  }
+  .stand--orange .stand__base,
+  .stand--black .stand__base { background: linear-gradient(180deg, #333, #111); }
+  .stand__shadow {
+    position: absolute;
+    inset: auto 5% -8% 5%;
+    height: 10%;
+    background: radial-gradient(closest-side, rgba(0, 0, 0, 0.35), transparent);
+    filter: blur(8px);
+    z-index: 0;
+  }
+</style>

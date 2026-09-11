@@ -1,0 +1,277 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import T from './T.astro';
+import { site, whatsappUrl } from '../config/site';
+import { t } from '../i18n';
+
+interface Props {
+  tone?: 'auto' | 'white';
+}
+const { tone = 'auto' } = Astro.props;
+const path = Astro.url.pathname;
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+
+const nav = [
+  { href: '/', key: 'nav.home' },
+  { href: '/services', key: 'nav.services' },
+  { href: '/products/ai-smart-reviews-qr', key: 'nav.product' },
+  { href: '/pricing', key: 'nav.pricing', show: site.features.pricingPage },
+  { href: '/about', key: 'nav.about' },
+  { href: '/contact', key: 'nav.contact' },
+].filter((n) => n.show !== false);
+---
+
+<header class="header" data-header data-tone={tone}>
+  <div class="container header__inner">
+    <a href="/" class="header__logo" aria-label="NexGen Digital home">
+      <Logo height={34} />
+    </a>
+
+    <nav class="header__nav" aria-label="Primary">
+      {nav.map((n) => (
+        <a href={n.href} class:list={['header__link', { 'is-active': isActive(n.href) }]} aria-current={isActive(n.href) ? 'page' : undefined}>
+          <T k={n.key} />
+        </a>
+      ))}
+    </nav>
+
+    <div class="header__actions">
+      {site.features.languageToggle && (
+        <button class="icon-btn" type="button" data-lang-toggle aria-pressed="false" aria-label={t('nav.language')} title={t('nav.language')}>
+          <span class="icon-btn__lang" data-lang-label>ने</span>
+        </button>
+      )}
+      {site.features.darkMode && (
+        <button class="icon-btn" type="button" data-theme-toggle aria-pressed="false" aria-label={t('nav.theme')} title={t('nav.theme')}>
+          <Icon name="sun" size={20} class="icon-sun" />
+          <Icon name="moon" size={20} class="icon-moon" />
+        </button>
+      )}
+      <a class="btn btn--sm header__cta" href="/contact" data-magnetic>
+        <T k="nav.getStarted" />
+        <Icon name="arrow" size={16} class="arrow" />
+      </a>
+      <button class="icon-btn header__burger" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu" aria-label={t('nav.menu')}>
+        <Icon name="menu" size={22} />
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile" id="mobile-menu" data-mobile-menu hidden>
+  <div class="mobile__top container">
+    <a href="/" aria-label="NexGen Digital home"><Logo height={32} tone="white" /></a>
+    <button class="icon-btn icon-btn--on-accent" type="button" data-menu-close aria-label={t('nav.close')}>
+      <Icon name="close" size={22} />
+    </button>
+  </div>
+  <nav class="mobile__nav container" aria-label="Mobile">
+    {nav.map((n, i) => (
+      <a href={n.href} class="mobile__link" style={`--i:${i}`} aria-current={isActive(n.href) ? 'page' : undefined}>
+        <T k={n.key} />
+        <Icon name="arrow" size={22} />
+      </a>
+    ))}
+  </nav>
+  <div class="mobile__bottom container">
+    <a class="btn btn--white btn--lg" href={whatsappUrl()} target="_blank" rel="noopener">
+      <Icon name="whatsapp" size={20} />
+      <T k="nav.whatsapp" />
+    </a>
+    <a class="btn btn--black btn--lg" href="/preorder">
+      <T k="nav.preorder" />
+    </a>
+    <p class="mobile__script script">{site.phrases.scriptAlt}</p>
+  </div>
+</div>
+
+<style>
+  .header {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 100;
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+    transition: background-color var(--dur) var(--ease-out), box-shadow var(--dur), transform var(--dur) var(--ease-out), color var(--dur);
+    color: var(--fg);
+  }
+  .header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+  .header.is-scrolled {
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    box-shadow: 0 1px 0 var(--line);
+  }
+  .header.is-hidden {
+    transform: translateY(-100%);
+  }
+  .header__logo {
+    display: block;
+  }
+  .header__nav {
+    display: none;
+    gap: var(--space-1);
+  }
+  .header__link {
+    position: relative;
+    padding: 0.55em 0.9em;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: var(--text-sm);
+    transition: background-color var(--dur-fast), color var(--dur-fast);
+  }
+  .header__link:hover {
+    background: color-mix(in srgb, currentColor 10%, transparent);
+  }
+  .header__link.is-active {
+    color: var(--accent);
+  }
+  .header__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .header__cta {
+    display: none;
+  }
+  .icon-btn {
+    display: inline-grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+    background: transparent;
+    color: inherit;
+    transition: background-color var(--dur-fast), transform var(--dur-fast);
+  }
+  .icon-btn:hover {
+    background: color-mix(in srgb, currentColor 10%, transparent);
+    transform: translateY(-1px);
+  }
+  .icon-btn__lang {
+    font-family: var(--font-ne);
+    font-weight: 800;
+    font-size: 15px;
+    line-height: 1;
+  }
+  .icon-btn :global(.icon-moon) { display: none; }
+  :global([data-theme='dark']) .icon-btn :global(.icon-moon) { display: block; }
+  :global([data-theme='dark']) .icon-btn :global(.icon-sun) { display: none; }
+
+  /* White tone while at the top of a dark/orange hero */
+  .header[data-tone='white']:not(.is-scrolled) {
+    color: #fff;
+  }
+  .header[data-tone='white']:not(.is-scrolled) :global(.logo) {
+    --logo-word: #fff;
+    --logo-mark: #fff;
+    --logo-digital: #fff;
+  }
+  .header[data-tone='white']:not(.is-scrolled) .header__link.is-active {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.16);
+  }
+  .header[data-tone='white']:not(.is-scrolled) .header__cta {
+    --btn-bg: #fff;
+    --btn-fg: var(--brand-black);
+    --btn-bg-hover: #f3f3f3;
+  }
+
+  @media (min-width: 1024px) {
+    .header__nav { display: flex; }
+    .header__cta { display: inline-flex; }
+    .header__burger { display: none; }
+  }
+
+  /* Mobile menu */
+  .mobile {
+    position: fixed;
+    inset: 0;
+    z-index: 150;
+    background: var(--brand-orange);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    padding-block: var(--space-4) var(--space-6);
+    overflow-y: auto;
+  }
+  .mobile[hidden] { display: none; }
+  .mobile__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: calc(var(--header-h) - var(--space-4));
+  }
+  .icon-btn--on-accent {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+  .mobile__nav {
+    display: flex;
+    flex-direction: column;
+    margin-top: var(--space-6);
+    flex: 1;
+  }
+  .mobile__link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.28);
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: var(--text-3xl);
+    letter-spacing: -0.02em;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out);
+    transition-delay: calc(var(--i) * 60ms + 80ms);
+  }
+  .mobile.is-open .mobile__link {
+    opacity: 1;
+    transform: none;
+  }
+  .mobile__link[aria-current='page'] {
+    color: var(--brand-black);
+  }
+  .mobile__bottom {
+    display: grid;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+  }
+  .mobile__script {
+    color: #fff;
+    margin: var(--space-3) 0 0;
+    text-align: center;
+  }
+</style>
+
+<script>
+  import { lockScroll } from '../scripts/animations';
+  const menu = document.querySelector<HTMLElement>('[data-mobile-menu]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const close = document.querySelector<HTMLButtonElement>('[data-menu-close]');
+  const open = (state: boolean) => {
+    if (!menu || !toggle) return;
+    menu.hidden = !state;
+    requestAnimationFrame(() => menu.classList.toggle('is-open', state));
+    toggle.setAttribute('aria-expanded', String(state));
+    lockScroll(state);
+    if (state) (close ?? menu).focus();
+  };
+  toggle?.addEventListener('click', () => open(menu?.hidden ?? true));
+  close?.addEventListener('click', () => open(false));
+  menu?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => open(false)));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menu && !menu.hidden) open(false);
+  });
+</script>

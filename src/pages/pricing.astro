@@ -1,0 +1,108 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import PricingCard from '../components/PricingCard.astro';
+import Icon from '../components/Icon.astro';
+import T from '../components/T.astro';
+import CtaBand from '../components/sections/CtaBand.astro';
+import FaqList from '../components/FaqList.astro';
+import { categories, servicePages } from '../data/services';
+import { product } from '../data/product';
+import { t } from '../i18n';
+
+const bundles = [
+  { name: 'Launch Bundle', price: '35,000', period: '/month', features: ['Social Media Management · Growth', 'Meta Ads · Starter', '4 AI reels per month', 'Monthly strategy call'], note: 'Save Rs. 10,000 vs separate', highlight: true },
+  { name: 'Local Business Bundle', price: '18,000', period: '/month', features: ['Social Media Management · Starter', 'Google Ads · Local', 'Smart Reviews QR stand included', 'Review response management'], note: 'Ideal for cafés, clinics, salons' },
+  { name: 'Brand Bundle', price: '85,000', period: 'one-time', features: ['Brand Kit', 'Business website', '10 social creatives', '2 promo videos'], note: 'Everything to launch a brand' },
+];
+const faqs = [
+  { q: 'Are these final prices?', a: 'They are starting points. After a short call we send a fixed quote based on your scope, and that quote is what you pay.' },
+  { q: 'Is there a contract?', a: 'Monthly services run month to month. We ask for a minimum of three months for social media and ads because results take time to compound.' },
+  { q: 'How do I pay?', a: 'Bank transfer, eSewa, Khalti or cash. International clients can pay by card.' },
+  { q: 'Is VAT included?', a: 'Prices shown exclude VAT. A VAT invoice is provided on request.' },
+];
+---
+
+<Base title="Pricing" description="Transparent starting prices for digital marketing in Nepal: social media, ads, AI video and graphics, websites, and the Smart Reviews QR stand." headerTone="white">
+  <PageHero eyebrow={t('pricing.eyebrow')} title={t('pricing.title')} lead={t('pricing.lead')} align="center" script="Same Dreams. Bigger Possibilities." />
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head section-head--center" data-reveal>
+        <p class="eyebrow">Bundles</p>
+        <h2>Combine services and save</h2>
+        <p class="lead mx-auto">Our most requested combinations, priced as one plan.</p>
+      </div>
+      <div class="grid grid--3 bundles" data-reveal-group>
+        {bundles.map((b, i) => <PricingCard tier={b} context={b.name} index={i} />)}
+      </div>
+    </div>
+  </section>
+
+  {categories.map((c, ci) => {
+    const list = servicePages.filter((s) => s.category === c.id);
+    if (!list.length) return null;
+    return (
+      <section class:list={['section', { 'section--muted': ci % 2 === 0 }]} id={c.id}>
+        <div class="container">
+          <div class="section-head" data-reveal>
+            <p class="eyebrow"><Icon name={c.icon} size={16} /> <span data-i18n={`cat.${c.id}.name`}>{c.name}</span></p>
+            <h2>{c.tagline}</h2>
+          </div>
+          {list.map((s) => (
+            <div class="price-block">
+              <div class="price-block__head">
+                <h3><a href={`/services/${s.slug}`} data-i18n={`svc.${s.slug}.name`}>{s.name}</a></h3>
+                <a class="btn btn--sm btn--ghost" href={`/services/${s.slug}`}><T k="services.learnMore" /><Icon name="arrow" size={14} class="arrow" /></a>
+              </div>
+              <div class="grid grid--3 price-block__grid" data-reveal-group>
+                {s.pricing.map((tier, i) => <PricingCard tier={tier} context={s.name} index={i} />)}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  })}
+
+  <section class="section" id="product">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow"><Icon name="qr" size={16} /> <span data-i18n="cat.local.name">Local Business Tools</span></p>
+        <h2>{product.name}</h2>
+        <p class="lead">{product.tagline} <a href="/products/ai-smart-reviews-qr" class="hl">Learn more</a></p>
+      </div>
+      <div class="grid grid--3" data-reveal-group>
+        {product.tiers.map((tier, i) => (
+          <PricingCard tier={{ ...tier, cta: tier.price === 'Custom' ? 'Talk to us' : 'Pre-order' }} href={tier.price === 'Custom' ? '/contact' : `/preorder?plan=${encodeURIComponent(tier.name)}`} index={i} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--muted">
+    <div class="container container--narrow">
+      <div class="section-head section-head--center" data-reveal><h2><T k="services.faq" /></h2></div>
+      <FaqList items={faqs} />
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .bundles { padding-top: var(--space-4); align-items: stretch; }
+  .price-block { margin-top: var(--space-7); }
+  .price-block__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-5);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--line);
+  }
+  .price-block__head h3 { margin: 0; }
+  .price-block__grid { align-items: stretch; padding-top: var(--space-3); }
+</style>

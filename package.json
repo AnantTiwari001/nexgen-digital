@@ -23,6 +23,7 @@
     "esbuild": true
   },
   "devDependencies": {
-    "opentype.js": "^2.0.0"
+    "opentype.js": "^2.0.0",
+    "puppeteer-core": "^25.10.0"
   }
 }

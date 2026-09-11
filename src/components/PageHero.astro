@@ -1,0 +1,100 @@
+---
+/** Inner-page hero: bold orange surface, eyebrow, title, lead, optional visual slot. */
+import Mountains from './Mountains.astro';
+import Logo from './Logo.astro';
+
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  lead?: string;
+  script?: string;
+  align?: 'left' | 'center';
+  tone?: 'orange' | 'black' | 'light';
+  compact?: boolean;
+}
+const { eyebrow, title, lead, script, align = 'left', tone = 'orange', compact = false } = Astro.props;
+---
+
+<section class:list={['phero', `phero--${tone}`, `phero--${align}`, { 'phero--compact': compact }]} data-parallax-scope>
+  <div class="phero__mark" data-parallax="0.12" aria-hidden="true"><Logo variant="mark" height={420} tone="white" /></div>
+  <div class="phero__mountains" aria-hidden="true"><Mountains /></div>
+  <div class="container phero__inner">
+    <div class="phero__text">
+      {eyebrow && <p class="eyebrow" data-reveal><slot name="eyebrow">{eyebrow}</slot></p>}
+      {title && <h1 class="phero__title" data-split="immediate" data-split-delay="0.1"><slot name="title">{title}</slot></h1>}
+      {script && <p class="script phero__script" data-reveal style="--reveal-delay:400ms">{script}</p>}
+      {lead && <p class="lead" data-reveal style="--reveal-delay:500ms"><slot name="lead">{lead}</slot></p>}
+      <div data-reveal style="--reveal-delay:600ms"><slot /></div>
+    </div>
+    {Astro.slots.has('visual') && <div class="phero__visual" data-reveal="scale" style="--reveal-delay:300ms"><slot name="visual" /></div>}
+  </div>
+</section>
+
+<style>
+  .phero {
+    position: relative;
+    overflow: hidden;
+    padding-top: calc(var(--header-h) + var(--space-8));
+    padding-bottom: var(--space-8);
+    background: var(--brand-orange);
+    color: #fff;
+  }
+  .phero--black { background: var(--brand-black); }
+  .phero--light {
+    background: var(--bg-soft);
+    color: var(--fg);
+  }
+  .phero--compact { padding-top: calc(var(--header-h) + var(--space-6)); padding-bottom: var(--space-6); }
+  .phero__mark {
+    position: absolute;
+    right: -4%;
+    top: -14%;
+    opacity: 0.1;
+    pointer-events: none;
+  }
+  .phero--light .phero__mark { opacity: 0.06; }
+  .phero--light .phero__mark :global(.logo) { --logo-mark: var(--brand-orange); }
+  .phero__mountains {
+    position: absolute;
+    inset: auto 0 -14% 0;
+    color: #0b0b0b;
+    opacity: 0.14;
+    pointer-events: none;
+  }
+  .phero--black .phero__mountains { color: #fff; opacity: 0.06; }
+  .phero--light .phero__mountains { color: var(--brand-orange); opacity: 0.08; }
+  .phero__inner {
+    position: relative;
+    display: grid;
+    gap: var(--space-7);
+    align-items: center;
+  }
+  .phero__inner:has(.phero__visual) {
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 1024px) {
+    .phero__inner:has(.phero__visual) { grid-template-columns: 1.2fr 1fr; }
+  }
+  .phero--center .phero__text {
+    text-align: center;
+    margin-inline: auto;
+    max-width: 800px;
+  }
+  .phero--center .lead { margin-inline: auto; }
+  .phero__title {
+    font-size: var(--text-5xl);
+    color: inherit;
+  }
+  .phero__title :global(.word) { display: inline-block; }
+  .phero__script {
+    font-size: var(--text-2xl);
+    color: inherit;
+    transform: rotate(-2deg);
+    display: inline-block;
+  }
+  .phero--orange .eyebrow,
+  .phero--black .eyebrow { color: #fff; }
+  .phero--orange .lead,
+  .phero--black .lead { color: inherit; opacity: 0.92; }
+  .phero__visual { display: grid; place-items: center; }
+</style>

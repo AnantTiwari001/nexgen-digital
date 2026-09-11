@@ -1,0 +1,38 @@
+---
+/** Eyebrow + title + lead, with optional alignment. Slots: title (default), lead, aside. */
+import T from './T.astro';
+
+interface Props {
+  eyebrow?: string; // i18n key
+  title?: string; // i18n key
+  lead?: string; // i18n key
+  align?: 'left' | 'center';
+  as?: 'h1' | 'h2';
+  class?: string;
+}
+const { eyebrow, title, lead, align = 'left', as: Tag = 'h2', class: className } = Astro.props;
+---
+
+<div class:list={['section-head', `section-head--${align}`, className]} data-reveal>
+  {eyebrow && <T k={eyebrow} as="p" class="eyebrow" />}
+  {title ? <T k={title} as={Tag} class="section-head__title" /> : <Tag class="section-head__title"><slot name="title" /></Tag>}
+  {lead ? <T k={lead} as="p" class="lead" /> : <slot name="lead" />}
+  <slot />
+</div>
+
+<style>
+  .section-head {
+    margin-bottom: var(--space-7);
+    max-width: 760px;
+  }
+  .section-head--center {
+    text-align: center;
+    margin-inline: auto;
+  }
+  .section-head--center .lead {
+    margin-inline: auto;
+  }
+  .section-head__title {
+    margin-bottom: var(--space-4);
+  }
+</style>

@@ -1,0 +1,58 @@
+---
+import SectionHead from '../SectionHead.astro';
+import PricingCard from '../PricingCard.astro';
+import Icon from '../Icon.astro';
+import T from '../T.astro';
+import { getService } from '../../data/services';
+
+const picks = [
+  { slug: 'social-media-management', tier: 1 },
+  { slug: 'meta-ads', tier: 1 },
+  { slug: 'website-design-development', tier: 0 },
+];
+const tiers = picks
+  .map((p) => {
+    const s = getService(p.slug)!;
+    const tier = { ...s.pricing[p.tier], name: `${s.shortName ?? s.name} · ${s.pricing[p.tier].name}`, highlight: p.slug === 'social-media-management' };
+    return { tier, service: s };
+  })
+  .filter(Boolean);
+---
+
+<section class="section pricing-teaser">
+  <div class="container">
+    <SectionHead eyebrow="pricing.eyebrow" title="pricing.title" lead="pricing.lead" align="center" />
+    <div class="grid grid--3 pricing-teaser__grid" data-reveal-group>
+      {tiers.map(({ tier, service }, i) => (
+        <PricingCard tier={tier} context={service.name} href={`/services/${service.slug}#pricing`} index={i} />
+      ))}
+    </div>
+    <div class="pricing-teaser__foot" data-reveal>
+      <div>
+        <h3><T k="pricing.custom" /></h3>
+        <p class="muted"><T k="pricing.customText" /></p>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn--black" href="/pricing"><T k="pricing.viewAll" /><Icon name="arrow" size={16} class="arrow" /></a>
+        <a class="btn btn--outline" href="/contact"><T k="pricing.talk" /></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pricing-teaser__grid { padding-top: var(--space-4); align-items: stretch; }
+  .pricing-teaser__foot {
+    margin-top: var(--space-7);
+    padding: var(--space-6);
+    border-radius: var(--radius-lg);
+    background: var(--bg-muted);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-5);
+  }
+  .pricing-teaser__foot h3 { margin-bottom: var(--space-1); }
+  .pricing-teaser__foot p { margin: 0; }
+</style>

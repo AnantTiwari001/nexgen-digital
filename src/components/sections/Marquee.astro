@@ -1,0 +1,44 @@
+---
+import Logo from '../Logo.astro';
+import { t } from '../../i18n';
+
+interface Props {
+  items?: string[];
+  keys?: string[];
+  tone?: 'black' | 'white' | 'orange';
+  reverse?: boolean;
+  speed?: string;
+}
+const { items = [], keys = [], tone = 'black', reverse = false, speed = '32s' } = Astro.props;
+const entries = keys.length ? keys.map((k) => ({ key: k })) : items.map((text) => ({ text }));
+const doubled = [...entries, ...entries];
+---
+
+<div class:list={['ticker', `ticker--${tone}`, 'marquee', { 'marquee--reverse': reverse }]} style={`--marquee-speed:${speed}`} aria-hidden="true">
+  <div class="marquee__track">
+    {doubled.map((e) => (
+      <span class="ticker__item">
+        <Logo variant="mark" height={18} tone={tone === 'orange' ? 'white' : 'auto'} />
+        {'key' in e ? <span data-i18n={e.key}>{t(e.key)}</span> : <span>{e.text}</span>}
+      </span>
+    ))}
+  </div>
+</div>
+
+<style>
+  .ticker {
+    padding-block: var(--space-4);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-lg);
+    letter-spacing: 0.02em;
+  }
+  .ticker--black { background: var(--brand-black); color: #fff; }
+  .ticker--white { background: var(--bg); color: var(--fg); border-block: 1px solid var(--line); }
+  .ticker--orange { background: var(--brand-orange); color: #fff; }
+  .ticker__item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+</style>

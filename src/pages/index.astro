@@ -1,17 +1,53 @@
 ---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/sections/Hero.astro';
+import Marquee from '../components/sections/Marquee.astro';
+import ServicesGrid from '../components/sections/ServicesGrid.astro';
+import ProductSpotlight from '../components/sections/ProductSpotlight.astro';
+import Process from '../components/sections/Process.astro';
+import WhyUs from '../components/sections/WhyUs.astro';
+import Stats from '../components/sections/Stats.astro';
+import Testimonials from '../components/sections/Testimonials.astro';
+import PricingTeaser from '../components/sections/PricingTeaser.astro';
+import CtaBand from '../components/sections/CtaBand.astro';
+import { site } from '../config/site';
 
+const featured = [
+  'social-media-management',
+  'social-media-marketing',
+  'ai-video-production',
+  'ai-graphics-design',
+  'ai-smart-reviews-qr',
+  'meta-ads',
+  'google-ads',
+  'website-design-development',
+];
+
+const localBusinessLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: site.name,
+  description: site.description,
+  url: Astro.site?.toString(),
+  telephone: site.contact.phone,
+  email: site.contact.email,
+  address: { '@type': 'PostalAddress', streetAddress: site.location.addressLine, addressLocality: site.location.city, addressCountry: 'NP' },
+  geo: { '@type': 'GeoCoordinates', latitude: site.location.geo.lat, longitude: site.location.geo.lng },
+  openingHours: 'Mo-Su 06:00-22:00',
+  areaServed: 'Nepal',
+  priceRange: 'NPR',
+};
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Base headerTone="white" jsonLd={[localBusinessLd]}>
+  <Hero />
+  <Marquee keys={['marquee.a', 'marquee.b', 'marquee.c', 'marquee.d', 'marquee.e']} />
+  <ServicesGrid featured={featured} />
+  <ProductSpotlight />
+  <Process />
+  <WhyUs />
+  {site.features.stats && <Stats />}
+  {site.features.testimonials && <Testimonials />}
+  {site.features.pricingPage && <PricingTeaser />}
+  <CtaBand />
+</Base>

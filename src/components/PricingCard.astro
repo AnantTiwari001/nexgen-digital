@@ -1,0 +1,115 @@
+---
+import Icon from './Icon.astro';
+import T from './T.astro';
+import type { PricingTier } from '../data/types';
+import { whatsappUrl } from '../config/site';
+
+interface Props {
+  tier: PricingTier;
+  context?: string; // service or product name for the CTA message
+  href?: string;
+  index?: number;
+}
+const { tier, context = '', href, index = 0 } = Astro.props;
+const isNumeric = /^\d/.test(tier.price);
+const ctaHref = href ?? whatsappUrl(`Hi NexGen Digital, I am interested in the ${tier.name} plan${context ? ` for ${context}` : ''}.`);
+---
+
+<div class:list={['price', { 'price--hl': tier.highlight }]} data-reveal style={`--reveal-delay:${index * 90}ms`}>
+  {tier.highlight && <span class="price__badge"><T k="services.mostPopular" /></span>}
+  <h3 class="price__name">{tier.name}</h3>
+  <div class="price__amount">
+    {isNumeric && <span class="price__cur">Rs.</span>}
+    <span class="price__num">{tier.price}</span>
+    {tier.period && <span class="price__period">{tier.period}</span>}
+  </div>
+  {tier.note && <p class="price__note">{tier.note}</p>}
+  <ul class="price__list">
+    {tier.features.map((f) => (
+      <li><Icon name="check" size={18} /><span>{f}</span></li>
+    ))}
+  </ul>
+  <a class:list={['btn', tier.highlight ? 'btn--black' : 'btn--outline']} href={ctaHref} target={href ? undefined : '_blank'} rel={href ? undefined : 'noopener'}>
+    {tier.cta ?? <T k="services.choose" />} <Icon name="arrow" size={16} class="arrow" />
+  </a>
+</div>
+
+<style>
+  .price {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: var(--space-6);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--line);
+    background: var(--bg-elev);
+    transition: transform var(--dur) var(--ease-out), box-shadow var(--dur);
+  }
+  .price:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+  }
+  .price--hl {
+    background: var(--brand-orange);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: var(--shadow-accent);
+  }
+  .price__badge {
+    position: absolute;
+    top: -14px;
+    left: var(--space-6);
+    padding: 0.35em 0.9em;
+    border-radius: var(--radius-pill);
+    background: var(--brand-black);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .price__name {
+    font-size: var(--text-lg);
+    margin: 0;
+  }
+  .price__amount {
+    display: flex;
+    align-items: baseline;
+    gap: 0.25em;
+    font-family: var(--font-heading);
+  }
+  .price__cur { font-weight: 600; font-size: var(--text-lg); }
+  .price__num {
+    font-weight: 800;
+    font-size: var(--text-4xl);
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .price__period { color: var(--fg-muted); font-size: var(--text-sm); }
+  .price--hl .price__period { color: rgba(255, 255, 255, 0.85); }
+  .price__note {
+    margin: calc(-1 * var(--space-2)) 0 0;
+    font-size: var(--text-xs);
+    color: var(--fg-subtle);
+  }
+  .price--hl .price__note { color: rgba(255, 255, 255, 0.85); }
+  .price__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-2);
+    flex: 1;
+    font-size: var(--text-sm);
+  }
+  .price__list li {
+    display: flex;
+    gap: var(--space-2);
+    align-items: flex-start;
+  }
+  .price__list svg { flex: none; color: var(--accent); margin-top: 2px; }
+  .price--hl .price__list svg { color: #fff; }
+  .price .btn { margin-top: var(--space-2); }
+</style>

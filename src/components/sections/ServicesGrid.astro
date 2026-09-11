@@ -1,0 +1,58 @@
+---
+import SectionHead from '../SectionHead.astro';
+import ServiceCard from '../ServiceCard.astro';
+import Icon from '../Icon.astro';
+import T from '../T.astro';
+import { services } from '../../data/services';
+
+interface Props {
+  featured?: string[];
+}
+const { featured } = Astro.props;
+const list = featured ? featured.map((slug) => services.find((s) => s.slug === slug)!).filter(Boolean) : services;
+---
+
+<section class="section services" id="services">
+  <div class="container">
+    <SectionHead eyebrow="services.eyebrow" title="services.title" lead="services.lead" />
+    <div class="grid grid--3" data-reveal-group>
+      {list.map((s, i) => (
+        <ServiceCard service={s} index={i} variant={s.slug === 'ai-smart-reviews-qr' ? 'accent' : 'default'} />
+      ))}
+      <a href="/services" class="card card--black services__more" data-reveal>
+        <span class="services__more-title"><T k="services.viewAll" /></span>
+        <span class="services__more-count">{services.length}+ <Icon name="arrow" size={28} class="arrow" /></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .services__more {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-6);
+    min-height: 100%;
+    transition: transform var(--dur) var(--ease-out), box-shadow var(--dur);
+  }
+  .services__more:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+  .services__more-title {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: var(--text-2xl);
+    letter-spacing: -0.02em;
+  }
+  .services__more-count {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: var(--text-5xl);
+    color: var(--brand-orange);
+    letter-spacing: -0.04em;
+  }
+  .services__more:hover :global(.arrow) { transform: translateX(6px); }
+  .services__more :global(.arrow) { transition: transform var(--dur-fast) var(--ease-out); color: #fff; }
+</style>

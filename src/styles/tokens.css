@@ -1,0 +1,142 @@
+/*
+  Design tokens for NexGen Digital.
+  Brand sheet: NexGen Black #0B0B0B, NexGen Orange #FF5A00, Clean White #FFFFFF, Modern Gray #E5E7EB.
+  Type: Poppins (headings), Inter (body), Caveat (script accents), Mukta (Devanagari).
+  Light theme on :root, dark theme on [data-theme="dark"].
+*/
+:root {
+  /* Brand */
+  --brand-orange: #ff5a00;
+  --brand-orange-600: #e64f00;
+  --brand-orange-700: #c94500;
+  --brand-orange-300: #ff8a4d;
+  --brand-orange-100: #ffe3d3;
+  --brand-orange-50: #fff3ec;
+  --brand-black: #0b0b0b;
+  --brand-white: #ffffff;
+  --brand-gray: #e5e7eb;
+  --brand-gold: #ffb454; /* sunrise accent from the launch posters */
+
+  /* Surfaces */
+  --bg: #ffffff;
+  --bg-elev: #ffffff;
+  --bg-muted: #f6f7f9;
+  --bg-soft: #fff3ec;
+  --bg-inverse: #0b0b0b;
+  --bg-accent: var(--brand-orange);
+
+  /* Text */
+  --fg: #0b0b0b;
+  --fg-muted: #4b5563;
+  --fg-subtle: #6b7280;
+  --fg-inverse: #ffffff;
+  --fg-on-accent: #ffffff;
+
+  /* Lines */
+  --line: #e5e7eb;
+  --line-strong: #d1d5db;
+  --line-on-accent: rgba(255, 255, 255, 0.28);
+
+  /* Accent */
+  --accent: var(--brand-orange);
+  --accent-hover: var(--brand-orange-600);
+  --accent-soft: var(--brand-orange-100);
+  --accent-contrast: #ffffff;
+  --focus: #0b0b0b;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(11, 11, 11, 0.06), 0 1px 3px rgba(11, 11, 11, 0.08);
+  --shadow-md: 0 8px 24px rgba(11, 11, 11, 0.1);
+  --shadow-lg: 0 24px 60px rgba(11, 11, 11, 0.16);
+  --shadow-accent: 0 12px 32px rgba(255, 90, 0, 0.35);
+
+  /* Type */
+  --font-heading: var(--font-poppins), 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: var(--font-inter), 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --font-accent: var(--font-script), 'Brush Script MT', cursive;
+  --font-ne: var(--font-devanagari), var(--font-inter), sans-serif;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: clamp(1.5rem, 1.2rem + 1.2vw, 1.875rem);
+  --text-3xl: clamp(1.875rem, 1.4rem + 1.8vw, 2.5rem);
+  --text-4xl: clamp(2.25rem, 1.6rem + 2.8vw, 3.5rem);
+  --text-5xl: clamp(2.75rem, 1.8rem + 4.5vw, 5rem);
+  --text-6xl: clamp(3.25rem, 2rem + 6.5vw, 7rem);
+
+  --leading-tight: 1.05;
+  --leading-snug: 1.2;
+  --leading-normal: 1.6;
+  --tracking-caps: 0.22em;
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
+  --section-y: clamp(4rem, 8vw, 8rem);
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+  --container: 1240px;
+  --container-narrow: 820px;
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-xl: 32px;
+  --radius-pill: 999px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 160ms;
+  --dur: 320ms;
+  --dur-slow: 700ms;
+
+  /* Layout */
+  --header-h: 76px;
+
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --bg: #0b0b0b;
+  --bg-elev: #141414;
+  --bg-muted: #171717;
+  --bg-soft: #1f120a;
+  --bg-inverse: #ffffff;
+
+  --fg: #f5f5f5;
+  --fg-muted: #b3b3b3;
+  --fg-subtle: #8a8a8a;
+  --fg-inverse: #0b0b0b;
+
+  --line: #262626;
+  --line-strong: #333333;
+
+  --accent-soft: #3a1c0a;
+  --focus: #ffffff;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.6);
+
+  color-scheme: dark;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur: 0ms;
+    --dur-slow: 0ms;
+  }
+}

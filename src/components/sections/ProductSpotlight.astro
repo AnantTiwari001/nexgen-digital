@@ -1,0 +1,125 @@
+---
+import Icon from '../Icon.astro';
+import T from '../T.astro';
+import QrStand from '../QrStand.astro';
+import PhoneMockup from '../PhoneMockup.astro';
+import { product } from '../../data/product';
+---
+
+<section class="section spotlight section--muted" id="product">
+  <div class="container spotlight__grid">
+    <div class="spotlight__visual" data-reveal="left">
+      <div class="spotlight__stage">
+        <div class="spotlight__ring" aria-hidden="true"></div>
+        <QrStand size={260} class="spotlight__stand" />
+        <PhoneMockup width={200} class="spotlight__phone" />
+        <span class="spotlight__note script">{product.accentPhrase}</span>
+      </div>
+    </div>
+    <div class="spotlight__content">
+      <p class="pill pill--accent" data-reveal><span class="dot"></span> <T k="product.preorderBadge" /></p>
+      <p class="eyebrow" data-reveal style="--reveal-delay:60ms"><T k="product.eyebrow" /></p>
+      <h2 data-reveal style="--reveal-delay:120ms"><T k="product.title" /></h2>
+      <p class="lead" data-reveal style="--reveal-delay:180ms"><T k="product.lead" /></p>
+      <p class="spotlight__ne ne" data-reveal style="--reveal-delay:220ms">{product.nepaliTagline}</p>
+      <ul class="spotlight__links" data-reveal-group>
+        {product.links.map((l) => (
+          <li data-reveal>
+            <span class="icon-tile icon-tile--round"><Icon name={l.icon} /></span>
+            <span><strong>{l.title}</strong><br /><span class="muted small">{l.text}</span></span>
+          </li>
+        ))}
+      </ul>
+      <div class="btn-row" data-reveal>
+        <a class="btn btn--lg" href="/preorder" data-magnetic><T k="product.cta" /><Icon name="arrow" size={18} class="arrow" /></a>
+        <a class="btn btn--ghost btn--lg" href="/products/ai-smart-reviews-qr"><Icon name="play" size={20} /><T k="product.cta2" /></a>
+      </div>
+      <p class="small muted spotlight__np"><Icon name="check" size={16} /> <T k="product.noPayment" /> · <T k="product.limited" /></p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .spotlight { overflow: hidden; }
+  .spotlight__grid {
+    display: grid;
+    gap: var(--space-8);
+    align-items: center;
+  }
+  @media (min-width: 1024px) {
+    .spotlight__grid { grid-template-columns: 1fr 1.1fr; }
+  }
+  .spotlight__stage {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: 520px;
+  }
+  .spotlight__ring {
+    position: absolute;
+    width: min(520px, 100%);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--brand-orange) 0%, transparent 62%);
+    opacity: 0.25;
+  }
+  .spotlight__ring::before {
+    content: '';
+    position: absolute;
+    inset: 12%;
+    border-radius: 50%;
+    border: 1px dashed color-mix(in srgb, var(--brand-orange) 50%, transparent);
+    animation: spin 40s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spotlight :global(.spotlight__stand) {
+    position: relative;
+    z-index: 2;
+    margin-right: 22%;
+  }
+  .spotlight :global(.spotlight__phone) {
+    position: absolute;
+    right: 4%;
+    bottom: 4%;
+    z-index: 3;
+  }
+  .spotlight__note {
+    position: absolute;
+    left: 0;
+    top: 6%;
+    transform: rotate(-8deg);
+    font-size: var(--text-2xl);
+  }
+  @media (max-width: 480px) {
+    .spotlight__stage { min-height: 460px; }
+    .spotlight :global(.spotlight__stand) { margin-right: 30%; --stand-w: 200px; }
+    .spotlight :global(.spotlight__phone) { --phone-w: 150px; }
+  }
+  .spotlight__ne {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .spotlight__links {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-5) 0 var(--space-6);
+    display: grid;
+    gap: var(--space-3);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  }
+  .spotlight__links li {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+  }
+  .spotlight__links .icon-tile { width: 46px; height: 46px; }
+  .spotlight__links .icon-tile :global(svg) { width: 22px; height: 22px; }
+  .spotlight__np {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    margin-top: var(--space-4);
+  }
+  .spotlight__np svg { color: #16a34a; }
+</style>

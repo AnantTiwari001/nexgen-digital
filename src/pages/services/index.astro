@@ -1,0 +1,65 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import Icon from '../../components/Icon.astro';
+import T from '../../components/T.astro';
+import CtaBand from '../../components/sections/CtaBand.astro';
+import Marquee from '../../components/sections/Marquee.astro';
+import { categories, servicesByCategory } from '../../data/services';
+import { t } from '../../i18n';
+import { site } from '../../config/site';
+---
+
+<Base title="Services" description="Digital marketing services in Nepal: social media management, content, Meta and Google ads, AI video and graphics, websites, strategy and the Smart Reviews QR stand." headerTone="white">
+  <PageHero eyebrow={t('services.eyebrow')} title={t('services.allTitle')} lead={t('services.allLead')} script={site.phrases.scriptHero}>
+    <nav class="cat-nav" aria-label="Service categories">
+      {categories.map((c) => (
+        <a href={`#${c.id}`} class="pill pill--glass"><Icon name={c.icon} size={16} /><span data-i18n={`cat.${c.id}.name`}>{c.name}</span></a>
+      ))}
+    </nav>
+  </PageHero>
+
+  <Marquee keys={['marquee.a', 'marquee.c', 'marquee.d']} />
+
+  {categories.map((c, ci) => {
+    const list = servicesByCategory(c.id);
+    return (
+      <section class:list={['section', { 'section--muted': ci % 2 === 1 }]} id={c.id}>
+        <div class="container">
+          <div class="cat-head" data-reveal>
+            <span class="icon-tile"><Icon name={c.icon} /></span>
+            <div>
+              <h2 class="cat-head__title" data-i18n={`cat.${c.id}.name`}>{c.name}</h2>
+              <p class="lead">{c.tagline}</p>
+            </div>
+          </div>
+          <div class="grid grid--3" data-reveal-group>
+            {list.map((s, i) => (
+              <ServiceCard service={s} index={i} variant={s.slug === 'ai-smart-reviews-qr' ? 'accent' : 'default'} />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  })}
+
+  <CtaBand />
+</Base>
+
+<style>
+  .cat-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+  }
+  .cat-head {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+    margin-bottom: var(--space-6);
+  }
+  .cat-head__title { margin-bottom: var(--space-1); }
+  .cat-head .lead { margin: 0; }
+</style>

@@ -1,0 +1,114 @@
+---
+import Icon from './Icon.astro';
+import T from './T.astro';
+import type { Service } from '../data/types';
+import { serviceHref } from '../data/services';
+
+interface Props {
+  service: Service;
+  variant?: 'default' | 'compact' | 'accent';
+  index?: number;
+}
+const { service, variant = 'default', index = 0 } = Astro.props;
+const href = serviceHref(service);
+const fromPrice = service.pricing[0];
+---
+
+<a href={href} class:list={['svc', `svc--${variant}`, 'card', 'card--hover']} data-reveal style={`--reveal-delay:${(index % 6) * 70}ms`}>
+  <div class="svc__top">
+    <span class:list={['icon-tile', { 'icon-tile--white': variant === 'accent' }]}><Icon name={service.icon} /></span>
+    <span class="svc__num">{String(index + 1).padStart(2, '0')}</span>
+  </div>
+  <h3 class="svc__title" data-i18n={`svc.${service.slug}.name`}>{service.name}</h3>
+  <p class="svc__tagline" data-i18n={`svc.${service.slug}.tagline`}>{service.tagline}</p>
+  {variant !== 'compact' && (
+    <div class="svc__foot">
+      {fromPrice && fromPrice.price !== 'Custom' && fromPrice.price !== 'Quote' && (
+        <span class="svc__price"><T k="services.startingFrom" /> <strong>Rs. {fromPrice.price}</strong></span>
+      )}
+      <span class="svc__link"><T k="services.learnMore" /> <Icon name="arrow" size={16} class="arrow" /></span>
+    </div>
+  )}
+</a>
+
+<style>
+  .svc {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    min-height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  .svc::after {
+    content: '';
+    position: absolute;
+    inset: auto -30% -40% auto;
+    width: 60%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--brand-orange) 18%, transparent), transparent);
+    opacity: 0;
+    transition: opacity var(--dur);
+    pointer-events: none;
+  }
+  .svc:hover::after { opacity: 1; }
+  .svc__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .svc__num {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    color: var(--fg-subtle);
+  }
+  .svc__title {
+    font-size: var(--text-xl);
+    margin: var(--space-2) 0 0;
+  }
+  .svc__tagline {
+    color: var(--fg-muted);
+    margin: 0;
+    font-size: var(--text-sm);
+    flex: 1;
+  }
+  .svc__foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--line);
+    font-size: var(--text-sm);
+  }
+  .svc__price { color: var(--fg-muted); }
+  .svc__price strong { color: var(--fg); font-family: var(--font-heading); }
+  .svc__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    color: var(--accent);
+    font-family: var(--font-heading);
+    font-weight: 700;
+  }
+  .svc:hover .svc__link :global(.arrow) { transform: translateX(4px); }
+  .svc__link :global(.arrow) { transition: transform var(--dur-fast) var(--ease-out); }
+
+  .svc--accent {
+    background: var(--brand-orange);
+    color: #fff;
+    border-color: transparent;
+  }
+  .svc--accent .svc__tagline,
+  .svc--accent .svc__num,
+  .svc--accent .svc__price,
+  .svc--accent .svc__link { color: #fff; }
+  .svc--accent .svc__price strong { color: #fff; }
+  .svc--accent .svc__foot { border-color: rgba(255, 255, 255, 0.3); }
+  .svc--accent::after { background: radial-gradient(closest-side, rgba(255, 255, 255, 0.25), transparent); }
+  .svc--compact { padding: var(--space-5); }
+</style>
