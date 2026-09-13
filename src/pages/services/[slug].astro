@@ -10,6 +10,8 @@ import FaqList from '../../components/FaqList.astro';
 import ServiceCard from '../../components/ServiceCard.astro';
 import Process from '../../components/sections/Process.astro';
 import CtaBand from '../../components/sections/CtaBand.astro';
+import BeforeAfterReveal from '../../components/sections/BeforeAfterReveal.astro';
+import VideoScrubDemo from '../../components/sections/VideoScrubDemo.astro';
 import { categories, getService, servicePages } from '../../data/services';
 import { testimonialForService } from '../../data/testimonials';
 import { site, whatsappUrl } from '../../config/site';
@@ -74,6 +76,9 @@ const serviceLd = {
       </div>
     </div>
   </section>
+
+  {service.beforeAfter && <BeforeAfterReveal data={service.beforeAfter} />}
+  {service.videoDemo && <VideoScrubDemo data={service.videoDemo} />}
 
   <section class="section section--muted">
     <div class="container">
@@ -225,11 +230,12 @@ const serviceLd = {
   }
   .svc-intro {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-7);
     align-items: center;
   }
   @media (min-width: 900px) {
-    .svc-intro { grid-template-columns: 1.1fr 1fr; }
+    .svc-intro { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
   }
   .svc-intro__summary {
     position: relative;
@@ -316,10 +322,11 @@ const serviceLd = {
   /* ---- Why choose NexGen ---- */
   .svc-why__grid {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-7);
   }
   @media (min-width: 900px) {
-    .svc-why__grid { grid-template-columns: 1fr 1fr; align-items: start; }
+    .svc-why__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
   }
   .svc-why__list {
     list-style: none;

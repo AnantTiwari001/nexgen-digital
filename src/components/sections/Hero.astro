@@ -38,13 +38,24 @@ const chips = ['social-media-management', 'ai-video-production', 'meta-ads', 'we
     </div>
 
     <div class="hero__visual" data-reveal="scale" style="--reveal-delay:400ms">
-      <div class="hero__stand"><QrStand size={280} /></div>
-      {chips.map((c, i) => (
-        <a href={`/services/${c.slug}`} class="hero__chip card card--glass" data-float={10 + i * 2} data-pos={i}>
-          <span class="icon-tile icon-tile--white"><Icon name={c.icon} /></span>
-          <span class="hero__chip-text" data-i18n={`svc.${c.slug}.name`}>{c.shortName ?? c.name}</span>
-        </a>
-      ))}
+      <div class="hero__stand-wrap">
+        <svg class="trace-svg trace-path--white hero__trace" viewBox="0 0 320 200" aria-hidden="true">
+          <path id="heroTracePath" class="trace-path trace-path--white" d="M18,18 C 110,28 55,95 128,112 S 235,80 198,122" />
+        </svg>
+        <div class="hero__stand"><QrStand size={280} /></div>
+        <div class="spark-wrap" id="heroSparkWrap" style="left:62%; top:60%;"></div>
+      </div>
+      <div class="hero__chip-rail" id="heroChipRail">
+        <span class="hero__chip-spacer"></span>
+        {chips.map((c) => (
+          <a href={`/services/${c.slug}`} class="hero__chip card card--glass">
+            <span class="icon-tile icon-tile--white"><Icon name={c.icon} /></span>
+            <span class="hero__chip-text" data-i18n={`svc.${c.slug}.name`}>{c.shortName ?? c.name}</span>
+          </a>
+        ))}
+        <span class="hero__chip-spacer"></span>
+      </div>
+      <div class="hero__chip-dots" id="heroChipDots"></div>
     </div>
   </div>
 
@@ -119,11 +130,16 @@ const chips = ['social-media-management', 'ai-video-production', 'meta-ads', 'we
   .hero__inner {
     position: relative;
     display: grid;
+    /* Without an explicit track, an auto column sizes to its content's
+       max-content width instead of the container — the classic grid-blowout
+       trap. minmax(0, 1fr) forces it to respect the container and actually
+       shrink nowrap children (the CTA row) down to it. */
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-8);
     align-items: center;
   }
   @media (min-width: 1024px) {
-    .hero__inner { grid-template-columns: 1.15fr 1fr; }
+    .hero__inner { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
   }
   .hero__badge { margin-bottom: var(--space-5); }
   .hero__title {
@@ -178,17 +194,46 @@ const chips = ['social-media-management', 'ai-video-production', 'meta-ads', 'we
 
   .hero__visual {
     position: relative;
-    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-5);
+  }
+  .hero__stand-wrap {
+    position: relative;
     display: grid;
     place-items: center;
+    min-height: 340px;
+    width: 100%;
   }
   .hero__stand {
     position: relative;
     z-index: 2;
     filter: drop-shadow(0 40px 60px rgba(0, 0, 0, 0.35));
   }
+  .hero__trace {
+    /* Sized and positioned to arc around the top of the stand, not pinned to exact pixels */
+    width: 78%;
+    height: 60%;
+    top: 2%;
+    left: 8%;
+    inset: auto;
+  }
+  .hero__chip-rail {
+    width: 100%;
+    display: flex;
+    gap: var(--space-3);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: var(--space-2);
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .hero__chip-rail::-webkit-scrollbar { display: none; }
+  .hero__chip-spacer { flex: none; width: 1px; }
   .hero__chip {
-    position: absolute;
+    flex: none;
+    scroll-snap-align: center;
     display: flex;
     align-items: center;
     gap: var(--space-3);
@@ -198,25 +243,33 @@ const chips = ['social-media-management', 'ai-video-production', 'meta-ads', 'we
     font-weight: 700;
     font-size: var(--text-sm);
     white-space: nowrap;
-    z-index: 3;
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
     color: #fff;
+    transition: transform var(--dur-fast) var(--ease-out);
   }
+  .hero__chip:hover { transform: translateY(-3px); }
   .hero__chip .icon-tile { width: 40px; height: 40px; border-radius: 50%; }
   .hero__chip .icon-tile :global(svg) { width: 20px; height: 20px; }
-  .hero__chip[data-pos='0'] { top: 4%; left: 0; }
-  .hero__chip[data-pos='1'] { top: 18%; right: 0; }
-  .hero__chip[data-pos='2'] { bottom: 30%; left: -4%; }
-  .hero__chip[data-pos='3'] { bottom: 8%; right: 2%; }
-  .hero__chip[data-pos='4'] { bottom: -2%; left: 22%; }
+  .hero__chip-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+  }
+  .hero__chip-dots span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.35);
+    transition: background-color 0.2s, transform 0.2s;
+  }
+  .hero__chip-dots span.is-active {
+    background: #fff;
+    transform: scale(1.3);
+  }
   @media (max-width: 1023px) {
-    .hero__visual { min-height: 460px; }
+    .hero__stand-wrap { min-height: 300px; }
     .hero__chip { font-size: var(--text-xs); padding: var(--space-2) var(--space-3); }
     .hero__chip .icon-tile { width: 32px; height: 32px; }
-  }
-  @media (max-width: 480px) {
-    .hero__chip[data-pos='2'],
-    .hero__chip[data-pos='4'] { display: none; }
   }
 
   .hero__foot {
@@ -256,3 +309,50 @@ const chips = ['social-media-management', 'ai-video-production', 'meta-ads', 'we
     60%, 100% { transform: translateY(100%); }
   }
 </style>
+
+<script>
+  import { drawPath, spawnSparks } from '../../scripts/trace';
+
+  // Traced line: draws in shortly after the hero paints, lands a spark on the stand.
+  const heroPath = document.getElementById('heroTracePath') as SVGPathElement | null;
+  setTimeout(() => drawPath(heroPath, 1100, () => spawnSparks(document.getElementById('heroSparkWrap'), 5)), 550);
+
+  // Chip rail: dot pagination synced to scroll position, plus a one-time nudge so
+  // visitors see it's swipeable without needing to discover that themselves.
+  const rail = document.getElementById('heroChipRail');
+  const dotsWrap = document.getElementById('heroChipDots');
+  if (rail && dotsWrap) {
+    const chips = Array.from(rail.querySelectorAll<HTMLElement>('.hero__chip'));
+    chips.forEach((_, i) => {
+      const d = document.createElement('span');
+      if (i === 0) d.classList.add('is-active');
+      dotsWrap.appendChild(d);
+    });
+    const dots = Array.from(dotsWrap.children);
+    let ticking = false;
+    rail.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const center = rail.scrollLeft + rail.clientWidth / 2;
+        let closest = 0;
+        let closestDist = Infinity;
+        chips.forEach((c, i) => {
+          const d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - center);
+          if (d < closestDist) {
+            closestDist = d;
+            closest = i;
+          }
+        });
+        dots.forEach((d, i) => d.classList.toggle('is-active', i === closest));
+        ticking = false;
+      });
+    });
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setTimeout(() => {
+        rail.scrollTo({ left: 46, behavior: 'smooth' });
+        setTimeout(() => rail.scrollTo({ left: 0, behavior: 'smooth' }), 650);
+      }, 1400);
+    }
+  }
+</script>

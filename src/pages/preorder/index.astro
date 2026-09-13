@@ -205,11 +205,12 @@ const steps = ['preorder.step1', 'preorder.step2', 'preorder.step3', 'preorder.s
 <style>
   .po {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     min-height: 100svh;
     padding-top: var(--header-h);
   }
   @media (min-width: 1024px) {
-    .po { grid-template-columns: 0.9fr 1.1fr; }
+    .po { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); }
   }
   .po__side {
     background: var(--brand-orange);

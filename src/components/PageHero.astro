@@ -79,10 +79,10 @@ const { eyebrow, title, lead, script, align = 'left', tone = 'orange', compact =
     align-items: center;
   }
   .phero__inner:has(.phero__visual) {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   @media (min-width: 1024px) {
-    .phero__inner:has(.phero__visual) { grid-template-columns: 1.2fr 1fr; }
+    .phero__inner:has(.phero__visual) { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); }
   }
   .phero--center .phero__text {
     text-align: center;

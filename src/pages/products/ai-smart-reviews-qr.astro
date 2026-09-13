@@ -197,10 +197,11 @@ const productLd = {
   .qhero__inner {
     position: relative;
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-8);
     align-items: center;
   }
-  @media (min-width: 1024px) { .qhero__inner { grid-template-columns: 1.1fr 1fr; } }
+  @media (min-width: 1024px) { .qhero__inner { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); } }
   .qhero__title {
     font-size: clamp(2.4rem, 1.4rem + 3.6vw, 4.2rem);
     line-height: 1.15;
@@ -271,8 +272,8 @@ const productLd = {
 
   .qlinks { overflow: hidden; }
   .qlinks__mark { position: absolute; left: -6%; bottom: -20%; opacity: 0.08; pointer-events: none; }
-  .qlinks__grid { position: relative; display: grid; gap: var(--space-7); align-items: center; }
-  @media (min-width: 900px) { .qlinks__grid { grid-template-columns: 1fr 1fr; } }
+  .qlinks__grid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-7); align-items: center; }
+  @media (min-width: 900px) { .qlinks__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
   .qlinks__grid .lead { color: #fff; opacity: 0.92; }
   .qlinks__grid h2 :global(.word) { display: inline-block; }
   .qlinks__list { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--space-3); }

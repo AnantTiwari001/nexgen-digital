@@ -103,8 +103,8 @@ const initials = (name: string) => name.split(' ').map((n) => n[0]).join('').sli
     padding: var(--space-7);
     text-align: center;
   }
-  .story { display: grid; gap: var(--space-8); align-items: start; }
-  @media (min-width: 1024px) { .story { grid-template-columns: 1.3fr 1fr; } }
+  .story { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-8); align-items: start; }
+  @media (min-width: 1024px) { .story { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); } }
   .story__text .script { font-size: var(--text-2xl); }
   .story__side { display: grid; gap: var(--space-5); }
   .story__kathmandu { position: relative; overflow: hidden; }

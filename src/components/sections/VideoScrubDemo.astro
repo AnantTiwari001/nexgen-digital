@@ -1,0 +1,204 @@
+---
+/**
+ * Auto-playing scrub-style video timeline — part of the traced-line signature
+ * moment system (see PLAN.md "Signature Moments"). Plays through its scenes once
+ * automatically the moment it scrolls into view, then hands control to the
+ * visitor via the track (drag) or the replay button. Only rendered on
+ * services.ts entries with a `videoDemo` field (AI Video Production only).
+ */
+import type { VideoScrubDemo as VideoScrubData } from '../../data/types';
+
+interface Props {
+  data: VideoScrubData;
+}
+const { data } = Astro.props;
+const fmt = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+const gradients = ['#ff7a2e,#ff5a00', '#2b2b2b,#0b0b0b', '#ffb454,#ff7a2e', '#ff5a00,#c94500'];
+---
+
+<section class="section section--muted sd-section">
+  <div class="container container--narrow">
+    <p class="eyebrow center"><span class="dot"></span> The cut plays itself, then hands you control</p>
+    <h2 class="center">Scroll to it and watch the edit happen</h2>
+    <p class="lead center sd-section__lead">Plays through once automatically, then you can scrub it yourself.</p>
+  </div>
+  <div class="container container--narrow">
+    <div class="sd-shell" data-sd-frame>
+      <div class="sd-video">
+        <div class="sd-bg" data-sd-bg></div>
+        <button class="sd-replay" type="button" data-sd-replay aria-label="Replay">↻</button>
+        <div class="sd-overlay">
+          <span class="sd-timecode" data-sd-time>0:00 / {fmt(data.durationSeconds)}</span>
+          <span class="sd-scene-tag" data-sd-tag>Scene 1 · {data.scenes[0]?.name}</span>
+        </div>
+      </div>
+      <div class="sd-track-wrap">
+        <div class="sd-track" data-sd-track>
+          <div class="sd-track__line"></div>
+          <div class="sd-track__fill" data-sd-fill></div>
+          <div class="sd-track__handle" data-sd-handle></div>
+        </div>
+        <div class="sd-scenes">
+          {data.scenes.map((s) => <span>{s.name}</span>)}
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="application/json" data-sd-scenes set:html={JSON.stringify({ scenes: data.scenes.map((s) => s.name), duration: data.durationSeconds, gradients })} />
+</section>
+
+<style>
+  .sd-section__lead { margin-inline: auto; margin-top: var(--space-2); }
+  .sd-section .eyebrow { justify-content: center; }
+  .sd-section .eyebrow .dot {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--accent); display: inline-block;
+    animation: sd-pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes sd-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .5; transform: scale(1.5); } }
+
+  .sd-shell {
+    margin-top: var(--space-7);
+    max-width: 420px;
+    margin-inline: auto;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--line);
+    background: var(--bg-elev);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+  }
+  .sd-video { position: relative; aspect-ratio: 9 / 12; display: flex; align-items: flex-end; overflow: hidden; }
+  .sd-bg { position: absolute; inset: 0; transition: background 0.15s linear; }
+  .sd-overlay { position: relative; z-index: 2; width: 100%; padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-3); }
+  .sd-scene-tag {
+    align-self: flex-start; font-family: var(--font-heading); font-weight: 800; font-size: var(--text-xs);
+    letter-spacing: 0.08em; text-transform: uppercase; background: rgba(0, 0, 0, 0.5); color: #fff;
+    padding: 0.4em 0.85em; border-radius: var(--radius-pill); backdrop-filter: blur(4px);
+  }
+  .sd-timecode {
+    font-variant-numeric: tabular-nums; font-family: var(--font-heading); font-weight: 700; font-size: var(--text-sm);
+    color: #fff; background: rgba(0, 0, 0, 0.5); align-self: flex-start; padding: 0.3em 0.7em; border-radius: var(--radius-pill);
+  }
+  .sd-replay {
+    position: absolute; z-index: 3; top: var(--space-4); right: var(--space-4); width: 34px; height: 34px;
+    border-radius: 50%; background: rgba(0, 0, 0, 0.5); color: #fff; border: none; display: grid; place-items: center;
+    font-size: 14px; opacity: 0; transition: opacity 0.2s;
+  }
+  .sd-replay.is-visible { opacity: 1; }
+  .sd-track-wrap { padding: var(--space-4) var(--space-5) var(--space-2); }
+  .sd-track { position: relative; height: 34px; display: flex; align-items: center; touch-action: pan-y; }
+  .sd-track__line { position: absolute; left: 0; right: 0; height: 4px; border-radius: 4px; background: var(--line); }
+  .sd-track__fill {
+    position: absolute; left: 0; height: 4px; border-radius: 4px; background: var(--brand-gold);
+    width: var(--scrub, 0%); box-shadow: 0 0 8px 1px rgba(255, 180, 84, 0.7);
+  }
+  .sd-track__handle {
+    position: absolute; left: var(--scrub, 0%); width: 18px; height: 18px; border-radius: 50%; background: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); transform: translateX(-50%); cursor: grab;
+  }
+  .sd-scenes {
+    display: flex; justify-content: space-between; padding: 0.2em; font-size: 10.5px; color: var(--fg-subtle);
+    font-family: var(--font-heading); font-weight: 600;
+  }
+</style>
+
+<script>
+  import { onEnterOnce } from '../../scripts/trace';
+
+  document.querySelectorAll<HTMLElement>('[data-sd-frame]').forEach((shell) => {
+    const track = shell.querySelector<HTMLElement>('[data-sd-track]')!;
+    const fill = shell.querySelector<HTMLElement>('[data-sd-fill]')!;
+    const handle = shell.querySelector<HTMLElement>('[data-sd-handle]')!;
+    const bg = shell.querySelector<HTMLElement>('[data-sd-bg]')!;
+    const tag = shell.querySelector<HTMLElement>('[data-sd-tag]')!;
+    const time = shell.querySelector<HTMLElement>('[data-sd-time]')!;
+    const replayBtn = shell.querySelector<HTMLButtonElement>('[data-sd-replay]')!;
+    const configEl = shell.closest('section')?.querySelector<HTMLScriptElement>('[data-sd-scenes]');
+    const config = configEl ? JSON.parse(configEl.textContent || '{}') : { scenes: [], duration: 18, gradients: [] };
+    const sceneNames: string[] = config.scenes;
+    const gradients: string[] = config.gradients;
+    const DURATION: number = config.duration;
+    const sceneAt = (i: number) => (sceneNames.length ? i / sceneNames.length : 0);
+
+    let pct = 0;
+    let dragging = false;
+    let playing = false;
+    let raf: number | null = null;
+    let lastT = 0;
+    let everPlayed = false;
+
+    function fmt(s: number) {
+      return Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
+    }
+    function render() {
+      fill.style.setProperty('--scrub', pct * 100 + '%');
+      handle.style.setProperty('--scrub', pct * 100 + '%');
+      let idx = 0;
+      for (let i = sceneNames.length - 1; i >= 0; i--) {
+        if (pct >= sceneAt(i)) {
+          idx = i;
+          break;
+        }
+      }
+      tag.textContent = `Scene ${idx + 1} · ${sceneNames[idx] ?? ''}`;
+      bg.style.background = `linear-gradient(160deg, ${gradients[idx % gradients.length]})`;
+      time.textContent = fmt(pct * DURATION) + ' / ' + fmt(DURATION);
+      replayBtn.classList.toggle('is-visible', everPlayed && !playing);
+    }
+    function setFromClientX(clientX: number) {
+      const r = track.getBoundingClientRect();
+      pct = Math.max(0, Math.min(1, (clientX - r.left) / r.width));
+      render();
+    }
+    function down(e: PointerEvent | TouchEvent) {
+      dragging = true;
+      stopPlay();
+      setFromClientX('touches' in e ? e.touches[0].clientX : (e as PointerEvent).clientX);
+      e.preventDefault();
+    }
+    function move(e: PointerEvent | TouchEvent) {
+      if (!dragging) return;
+      setFromClientX('touches' in e ? e.touches[0].clientX : (e as PointerEvent).clientX);
+    }
+    function up() {
+      dragging = false;
+    }
+    track.addEventListener('pointerdown', down);
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+    track.addEventListener('touchstart', down, { passive: false });
+    track.addEventListener('touchmove', move, { passive: false });
+    window.addEventListener('touchend', up);
+
+    function stopPlay() {
+      playing = false;
+      if (raf) cancelAnimationFrame(raf);
+      render();
+    }
+    function play() {
+      everPlayed = true;
+      playing = true;
+      lastT = 0;
+      pct = 0;
+      render();
+      raf = requestAnimationFrame(tick);
+    }
+    function tick(t: number) {
+      if (!playing) return;
+      if (!lastT) lastT = t;
+      const dt = (t - lastT) / 1000;
+      lastT = t;
+      pct = Math.min(1, pct + dt / DURATION);
+      render();
+      if (pct >= 1) {
+        playing = false;
+        render();
+        return;
+      }
+      raf = requestAnimationFrame(tick);
+    }
+    replayBtn.addEventListener('click', play);
+    render();
+
+    onEnterOnce(shell, () => { if (!everPlayed) play(); }, 0.45);
+  });
+</script>

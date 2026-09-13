@@ -451,6 +451,10 @@ export const services: Service[] = [
         { title: 'Days, not weeks', text: 'Most short videos are delivered in three to five working days, so a launch or festival window is never missed.' },
       ],
     },
+    videoDemo: {
+      scenes: [{ name: 'The Hook' }, { name: 'The Product' }, { name: 'The Proof' }, { name: 'The CTA' }],
+      durationSeconds: 18,
+    },
     related: ['ai-graphics-design', 'content-creation', 'meta-ads'],
     seo: {
       title: 'AI Video Production in Nepal',
@@ -512,6 +516,11 @@ export const services: Service[] = [
         { title: 'A system, not a one-off design', text: 'Every piece is built against a brand kit, colour, type and templates, so nothing looks like it came from a different designer each time.' },
         { title: 'Same-week delivery when it matters', text: 'Most social creatives are ready in 24 to 48 hours, built for the pace Nepali festivals and promotions actually move at.' },
       ],
+    },
+    beforeAfter: {
+      beforeCaption: '☕ New menu items available now! Come check it out guys, link in bio thanks',
+      afterCaption: "The valley's best cold brew, brewed slow for 18 hours.",
+      afterTag: 'NEW · WINTER MENU',
     },
     related: ['ai-video-production', 'content-creation', 'website-design-development'],
     seo: {

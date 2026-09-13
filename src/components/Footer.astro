@@ -96,15 +96,15 @@ const socials = [
     position: relative;
     display: grid;
     gap: var(--space-7);
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     padding-bottom: var(--space-8);
   }
   @media (min-width: 720px) {
-    .footer__grid { grid-template-columns: 1.4fr 1fr 1fr; }
+    .footer__grid { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr); }
     .footer__brand { grid-column: 1 / -1; }
   }
   @media (min-width: 1024px) {
-    .footer__grid { grid-template-columns: 1.6fr 1fr 1fr 1.3fr; }
+    .footer__grid { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.3fr); }
     .footer__brand { grid-column: auto; }
   }
   .footer :global(.logo) { --logo-word: var(--fg-inverse); }

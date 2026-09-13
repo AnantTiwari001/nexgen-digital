@@ -51,10 +51,11 @@ const points: { icon: IconName; n: number }[] = [
   .why .container {
     position: relative;
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-8);
   }
   @media (min-width: 1024px) {
-    .why .container { grid-template-columns: 1.1fr 1fr; align-items: center; }
+    .why .container { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: center; }
   }
   .why__title {
     font-size: var(--text-4xl);

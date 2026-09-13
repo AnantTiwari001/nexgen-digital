@@ -113,8 +113,8 @@ const budgets = ['Under Rs. 10,000', 'Rs. 10,000 to 25,000', 'Rs. 25,000 to 50,0
 </Base>
 
 <style>
-  .contact { display: grid; gap: var(--space-6); align-items: start; }
-  @media (min-width: 1024px) { .contact { grid-template-columns: 1.4fr 1fr; } }
+  .contact { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6); align-items: start; }
+  @media (min-width: 1024px) { .contact { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); } }
   .contact__form { padding: var(--space-7); }
   @media (max-width: 640px) { .contact__form { padding: var(--space-5); } }
   .contact__actions {

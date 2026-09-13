@@ -111,6 +111,32 @@ export interface ServiceWhyUs {
   points: WhyUsPoint[];
 }
 
+/**
+ * A drag-to-compare before/after reveal, part of the site's traced-line signature
+ * moment system (see PLAN.md "Signature Moments"). Only services where the work
+ * is literally a visible transformation should set this — it auto-sweeps open
+ * on scroll into view, no drag required to see it happen.
+ */
+export interface BeforeAfterDemo {
+  beforeCaption: string;
+  afterCaption: string;
+  afterTag: string;
+}
+
+/** One scene in a VideoScrubDemo's auto-playing timeline. */
+export interface VideoScrubScene {
+  name: string;
+}
+
+/**
+ * An auto-playing scrub-style video timeline, part of the traced-line signature
+ * moment system. Only the video production service should set this.
+ */
+export interface VideoScrubDemo {
+  scenes: VideoScrubScene[];
+  durationSeconds: number;
+}
+
 export interface Service {
   slug: string;
   name: string;
@@ -128,6 +154,10 @@ export interface Service {
   deliverables: string[];
   examples: CaseStudyExample[];
   whyUs: ServiceWhyUs;
+  /** Only set for the AI Graphics Design service. */
+  beforeAfter?: BeforeAfterDemo;
+  /** Only set for the AI Video Production service. */
+  videoDemo?: VideoScrubDemo;
   process: ProcessStep[];
   pricing: PricingTier[];
   faqs: Faq[];

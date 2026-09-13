@@ -43,11 +43,12 @@ import { product } from '../../data/product';
   .spotlight { overflow: hidden; }
   .spotlight__grid {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-8);
     align-items: center;
   }
   @media (min-width: 1024px) {
-    .spotlight__grid { grid-template-columns: 1fr 1.1fr; }
+    .spotlight__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); }
   }
   .spotlight__stage {
     position: relative;
