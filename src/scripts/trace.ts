@@ -72,6 +72,22 @@ export function onEnterOnce(el: Element | null | undefined, callback: () => void
   obs.observe(el);
 }
 
+/**
+ * Auto-wires every `[data-trace-band]` section on the page: draws its
+ * `[data-trace-path]` line and bursts sparks from its `[data-trace-sparks]`
+ * wrapper once the section scrolls into view. Call once from a page's own
+ * script block — lets a decorative photo/gradient band opt into the same
+ * traced-line touch as the hero and growth chart without repeating the wiring
+ * on every page that uses one.
+ */
+export function initTraceBands() {
+  document.querySelectorAll<HTMLElement>('[data-trace-band]').forEach((band) => {
+    const path = band.querySelector<SVGPathElement>('[data-trace-path]');
+    const sparks = band.querySelector<HTMLElement>('[data-trace-sparks]');
+    onEnterOnce(band, () => drawPath(path, 1300, () => spawnSparks(sparks, 5)), 0.35);
+  });
+}
+
 /** Applies a gentle scroll-linked rotateX tilt to `el`, clamped to +/- maxDeg. Needs `perspective` on a parent. */
 export function scrollTilt(el: HTMLElement | null | undefined, maxDeg = 6) {
   if (!el || reducedMotion()) return;
