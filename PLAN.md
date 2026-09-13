@@ -59,7 +59,7 @@ public/brand/             logo-horizontal.svg, logo-stacked.svg, logo-mark.svg, 
 | --- | --- |
 | `/` | Hero (parallax mountains), marquee, services grid, product spotlight, process, stats, testimonials, pricing teaser, CTA |
 | `/services` | Categorised catalogue |
-| `/services/[slug]` | One page per service: hero, benefits, deliverables, process, pricing tiers, FAQ, CTA |
+| `/services/[slug]` | One page per service: hero, benefits, deliverables, recent-results gallery (placeholder case studies), process, why-choose-NexGen, matching testimonial, pricing tiers, FAQ, CTA |
 | `/products/ai-smart-reviews-qr` | Product landing: how it works, features, use cases, tiers, pre-order CTA |
 | `/preorder` | Multi-step pre-order: business, contact, product options, payment preference (no charge), review |
 | `/preorder/thank-you` | Confirmation |
