@@ -14,9 +14,9 @@ const href = serviceHref(service);
 const fromPrice = service.pricing[0];
 ---
 
-<a href={href} class:list={['svc', `svc--${variant}`, 'card', 'card--hover']} data-reveal style={`--reveal-delay:${(index % 6) * 70}ms`}>
+<a href={href} class:list={['svc', `svc--${variant}`, 'card', 'card--hover']} data-reveal data-tilt="4" style={`--reveal-delay:${(index % 6) * 70}ms`}>
   <div class="svc__top">
-    <span class:list={['icon-tile', { 'icon-tile--white': variant === 'accent' }]}><Icon name={service.icon} /></span>
+    <span class:list={['icon-tile', { 'icon-tile--white': variant === 'accent' }]} data-parallax="0.1"><Icon name={service.icon} /></span>
     <span class="svc__num">{String(index + 1).padStart(2, '0')}</span>
   </div>
   <h3 class="svc__title" data-i18n={`svc.${service.slug}.name`}>{service.name}</h3>

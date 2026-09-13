@@ -19,9 +19,14 @@ const list = featured ? featured.map((slug) => services.find((s) => s.slug === s
       {list.map((s, i) => (
         <ServiceCard service={s} index={i} variant={s.slug === 'ai-smart-reviews-qr' ? 'accent' : 'default'} />
       ))}
-      <a href="/services" class="card card--black services__more" data-reveal>
+      <a href="/services" class="card card--black services__more" data-reveal data-tilt="5">
+        <span class="services__more-glow" aria-hidden="true"></span>
+        <span class="services__more-count">{services.length}+</span>
         <span class="services__more-title"><T k="services.viewAll" /></span>
-        <span class="services__more-count">{services.length}+ <Icon name="arrow" size={28} class="arrow" /></span>
+        <span class="services__more-cta" aria-hidden="true">
+          <span class="services__more-ring"></span>
+          <Icon name="arrow" size={20} class="arrow" />
+        </span>
       </a>
     </div>
   </div>
@@ -29,30 +34,68 @@ const list = featured ? featured.map((slug) => services.find((s) => s.slug === s
 
 <style>
   .services__more {
+    position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    gap: var(--space-6);
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: var(--space-3);
     min-height: 100%;
-    transition: transform var(--dur) var(--ease-out), box-shadow var(--dur);
+    overflow: hidden;
+    transform-style: preserve-3d;
+    transition: box-shadow var(--dur);
   }
-  .services__more:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
-  .services__more-title {
-    font-family: var(--font-heading);
-    font-weight: 800;
-    font-size: var(--text-2xl);
-    letter-spacing: -0.02em;
+  .services__more:hover { box-shadow: var(--shadow-lg); }
+  .services__more-glow {
+    position: absolute;
+    inset: auto;
+    top: 50%;
+    left: 50%;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--brand-orange) 35%, transparent), transparent 70%);
+    transform: translate(-50%, -50%);
+    opacity: 0.7;
+    pointer-events: none;
   }
   .services__more-count {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    position: relative;
     font-family: var(--font-heading);
     font-weight: 800;
     font-size: var(--text-5xl);
     color: var(--brand-orange);
     letter-spacing: -0.04em;
+    line-height: 1;
   }
-  .services__more:hover :global(.arrow) { transform: translateX(6px); }
-  .services__more :global(.arrow) { transition: transform var(--dur-fast) var(--ease-out); color: #fff; }
+  .services__more-title {
+    position: relative;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-lg);
+    letter-spacing: -0.01em;
+    color: #fff;
+  }
+  .services__more-cta {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    margin-top: var(--space-2);
+  }
+  .services__more-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px dashed rgba(255, 255, 255, 0.35);
+    animation: services-more-spin 30s linear infinite;
+  }
+  @keyframes services-more-spin { to { transform: rotate(360deg); } }
+  .services__more :global(.arrow) {
+    color: #fff;
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .services__more:hover :global(.arrow) { transform: translateX(4px); }
 </style>
