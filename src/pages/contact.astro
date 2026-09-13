@@ -20,7 +20,7 @@ const budgets = ['Under Rs. 10,000', 'Rs. 10,000 to 25,000', 'Rs. 25,000 to 50,0
 ---
 
 <Base title="Contact" description="Contact NexGen Digital in Kathmandu. WhatsApp, email or send the form. Available 6 AM to 10 PM every day." headerTone="white">
-  <PageHero eyebrow={t('contact.eyebrow')} title={t('contact.title')} lead={t('contact.lead')} compact>
+  <PageHero eyebrow={t('contact.eyebrow')} eyebrowKey="contact.eyebrow" title={t('contact.title')} titleKey="contact.title" lead={t('contact.lead')} leadKey="contact.lead" compact>
     <div class="btn-row" style="margin-top: var(--space-4)">
       <a class="btn btn--whatsapp btn--lg" href={whatsappUrl()} target="_blank" rel="noopener" data-magnetic><Icon name="whatsapp" size={20} /><T k="cta.whatsapp" /></a>
       <a class="btn btn--outline btn--lg" href={`tel:${site.contact.phone.replace(/\s/g, '')}`}><Icon name="phone" size={18} />{site.contact.phone}</a>
@@ -116,6 +116,7 @@ const budgets = ['Under Rs. 10,000', 'Rs. 10,000 to 25,000', 'Rs. 25,000 to 50,0
   .contact { display: grid; gap: var(--space-6); align-items: start; }
   @media (min-width: 1024px) { .contact { grid-template-columns: 1.4fr 1fr; } }
   .contact__form { padding: var(--space-7); }
+  @media (max-width: 640px) { .contact__form { padding: var(--space-5); } }
   .contact__actions {
     display: flex;
     align-items: center;

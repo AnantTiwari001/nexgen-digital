@@ -11,8 +11,12 @@ interface Props {
   align?: 'left' | 'center';
   tone?: 'orange' | 'black' | 'light';
   compact?: boolean;
+  /** i18n keys for eyebrow/title/lead, so the client language toggle can swap this text too. */
+  eyebrowKey?: string;
+  titleKey?: string;
+  leadKey?: string;
 }
-const { eyebrow, title, lead, script, align = 'left', tone = 'orange', compact = false } = Astro.props;
+const { eyebrow, title, lead, script, align = 'left', tone = 'orange', compact = false, eyebrowKey, titleKey, leadKey } = Astro.props;
 ---
 
 <section class:list={['phero', `phero--${tone}`, `phero--${align}`, { 'phero--compact': compact }]} data-parallax-scope>
@@ -20,10 +24,10 @@ const { eyebrow, title, lead, script, align = 'left', tone = 'orange', compact =
   <div class="phero__mountains" aria-hidden="true"><Mountains /></div>
   <div class="container phero__inner">
     <div class="phero__text">
-      {eyebrow && <p class="eyebrow" data-reveal><slot name="eyebrow">{eyebrow}</slot></p>}
-      {title && <h1 class="phero__title" data-split="immediate" data-split-delay="0.1"><slot name="title">{title}</slot></h1>}
+      {eyebrow && <p class="eyebrow" data-reveal data-i18n={eyebrowKey}><slot name="eyebrow">{eyebrow}</slot></p>}
+      {title && <h1 class="phero__title" data-split="immediate" data-split-delay="0.1" data-i18n={titleKey}><slot name="title">{title}</slot></h1>}
       {script && <p class="script phero__script" data-reveal style="--reveal-delay:400ms">{script}</p>}
-      {lead && <p class="lead" data-reveal style="--reveal-delay:500ms"><slot name="lead">{lead}</slot></p>}
+      {lead && <p class="lead" data-reveal style="--reveal-delay:500ms" data-i18n={leadKey}><slot name="lead">{lead}</slot></p>}
       <div data-reveal style="--reveal-delay:600ms"><slot /></div>
     </div>
     {Astro.slots.has('visual') && <div class="phero__visual" data-reveal="scale" style="--reveal-delay:300ms"><slot name="visual" /></div>}
@@ -45,6 +49,11 @@ const { eyebrow, title, lead, script, align = 'left', tone = 'orange', compact =
     color: var(--fg);
   }
   .phero--compact { padding-top: calc(var(--header-h) + var(--space-6)); padding-bottom: var(--space-6); }
+  @media (max-width: 640px) {
+    /* Keep short-hero pages (e.g. contact, with a form right below) from placing
+       their first controls under the fixed chat launcher in the bottom-right corner. */
+    .phero--compact { padding-bottom: var(--space-4); }
+  }
   .phero__mark {
     position: absolute;
     right: -4%;
