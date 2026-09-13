@@ -44,6 +44,27 @@
   --accent-contrast: #ffffff;
   --focus: #0b0b0b;
 
+  /* Golden hour / dusk gradient — a Kathmandu sunset over the valley's mountain
+     silhouette: deep dusky indigo-purple sky through the brand orange to a warm
+     gold horizon. The recipe is intentionally identical in light and dark mode
+     (declared once here, not repeated in [data-theme='dark']) because the gradient
+     is already dark-toned at the top and reads the same regardless of page theme.
+     Pair it with --dusk-fg / --dusk-fg-muted, not the theme-swapping --fg tokens,
+     for any text placed on top of it so contrast stays correct in both themes. */
+  --dusk-sky-top: #241536;
+  --dusk-sky-upper: #6a2150;
+  --dusk-sky-mid: var(--brand-orange);
+  --dusk-sky-horizon: #ffd27a;
+  --dusk-gradient: linear-gradient(
+    180deg,
+    var(--dusk-sky-top) 0%,
+    var(--dusk-sky-upper) 36%,
+    var(--dusk-sky-mid) 68%,
+    var(--dusk-sky-horizon) 100%
+  );
+  --dusk-fg: #ffffff;
+  --dusk-fg-muted: rgba(255, 255, 255, 0.82);
+
   /* Shadows */
   --shadow-sm: 0 1px 2px rgba(11, 11, 11, 0.06), 0 1px 3px rgba(11, 11, 11, 0.08);
   --shadow-md: 0 8px 24px rgba(11, 11, 11, 0.1);

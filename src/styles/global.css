@@ -190,6 +190,30 @@ button { cursor: pointer; }
 .muted { color: var(--fg-muted); }
 .small { font-size: var(--text-sm); }
 
+/* Golden-hour gradient-fill headline: letters filled with the dusk sky gradient
+   instead of a flat colour, like the sunset-toned signage in the reference posters.
+   Meant for a dark/orange surface (see tokens.css --dusk-gradient) — declare the
+   flat fallback first for browsers without background-clip: text support.
+   Also targets `.word` (the per-word <span> that src/scripts/animations.ts's
+   data-split wraps heading text in) so the fill survives that rewrite; `color` is
+   !important because it must win over a host component's own scoped `color`
+   rule (e.g. PageHero's `.phero__title { color: inherit }`) regardless of CSS
+   source order. */
+.text-gradient-dusk,
+.text-gradient-dusk .word {
+  color: var(--brand-gold) !important;
+}
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .text-gradient-dusk,
+  .text-gradient-dusk .word {
+    background: var(--dusk-gradient);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent !important;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
 /* ---------- Buttons ---------- */
 .btn {
   --btn-bg: var(--accent);

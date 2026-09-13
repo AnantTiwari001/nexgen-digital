@@ -4,10 +4,21 @@ import PageHero from '../components/PageHero.astro';
 import Icon from '../components/Icon.astro';
 import T from '../components/T.astro';
 import FaqList from '../components/FaqList.astro';
+import Signpost from '../components/Signpost.astro';
 import { site, whatsappUrl } from '../config/site';
 import { services } from '../data/services';
 import { generalFaq } from '../data/faq';
 import { t } from '../i18n';
+
+// Real Kathmandu-valley neighbourhoods, Devanagari spellings verified against
+// Nepali-language sources. Distances are rough, decorative (from central Kathmandu),
+// in the spirit of a roadside signpost rather than a precise measurement.
+const kathmanduSignpost = [
+  { devanagari: 'बौद्ध', roman: 'Boudha', distance: '6 km' },
+  { devanagari: 'पाटन', roman: 'Patan', distance: '5 km' },
+  { devanagari: 'ठमेल', roman: 'Thamel', distance: '2 km' },
+  { devanagari: 'बानेश्वर', roman: 'Baneshwor', distance: '3 km' },
+];
 
 const socials = [
   { name: 'facebook', href: site.social.facebook, label: 'Facebook' },
@@ -93,6 +104,10 @@ const budgets = ['Under Rs. 10,000', 'Rs. 10,000 to 25,000', 'Rs. 25,000 to 50,0
             ))}
           </div>
         </div>
+        <div class="contact__signpost">
+          <p class="caps contact__signpost-label"><Icon name="pin" size={14} /> Genuinely in the valley</p>
+          <Signpost items={kathmanduSignpost} />
+        </div>
         <div class="contact__map">
           {site.location.mapEmbedUrl ? (
             <iframe src={site.location.mapEmbedUrl} title="Map" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" />
@@ -136,6 +151,13 @@ const budgets = ['Under Rs. 10,000', 'Rs. 10,000 to 25,000', 'Rs. 25,000 to 50,0
   .contact__status.is-error { background: #fee2e2; color: #991b1b; }
   .contact__status[hidden] { display: none; }
   .contact__info { display: grid; gap: var(--space-5); }
+  .contact__signpost { display: grid; gap: var(--space-3); }
+  .contact__signpost-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    color: var(--accent);
+  }
   .contact__list { list-style: none; padding: 0; margin: 0 0 var(--space-5); display: grid; gap: var(--space-4); }
   .contact__list li { display: flex; gap: var(--space-3); align-items: center; }
   .contact__list a { color: var(--brand-orange); font-weight: 600; }
