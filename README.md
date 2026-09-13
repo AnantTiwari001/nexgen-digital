@@ -125,7 +125,27 @@ node scripts/screenshot.mjs / 1440 900 fold dark ne   # dark mode, Nepali
 
 ## Hosting
 
-Output is `output: 'static'` with the `@astrojs/node` adapter in standalone mode —
-every page is prerendered HTML; only `/api/contact`, `/api/preorder` and `/api/chat`
-run server-side. Deploy `dist/` behind any Node host, or swap the adapter for a
-platform-specific one (Vercel, Netlify, Cloudflare) later without touching page code.
+Output is `output: 'static'` — every page is prerendered HTML; only `/api/contact`,
+`/api/preorder` and `/api/chat` run server-side, as Node serverless functions.
+
+Deployed on **Vercel** via the `@astrojs/vercel` adapter (first-class Astro support,
+generous free tier, and it runs real Node functions — required for `googleapis` and
+`@supabase/supabase-js`, neither of which works on an edge runtime). Import the repo
+at [vercel.com/new](https://vercel.com/new); it auto-detects Astro and the adapter,
+and builds `.vercel/output` on every push. The site runs with zero environment
+variables configured (submissions log to the console instead of sending email or
+storing to Supabase) — set the variables listed in the Storage and Email sections
+above, plus `PUBLIC_SITE_URL`, in the Vercel project settings once real email/storage
+is wanted.
+
+Self-hosting instead of Vercel? Swap the adapter back in `astro.config.mjs` — it's a
+one-line change (`@astrojs/node` is still listed in `package.json`, so no reinstall is
+needed):
+
+```js
+import node from '@astrojs/node';
+// ...
+adapter: node({ mode: 'standalone' }),
+```
+
+Then deploy `dist/` behind any Node host and run `node dist/server/entry.mjs`.

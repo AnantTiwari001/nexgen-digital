@@ -1,6 +1,6 @@
 // @ts-check
 import { defineConfig, envField, fontProviders } from 'astro/config';
-import node from '@astrojs/node';
+import vercel from '@astrojs/vercel';
 import sitemap from '@astrojs/sitemap';
 
 /**
@@ -13,7 +13,11 @@ export default defineConfig({
   site,
   // Every page is prerendered. Only the /api/* endpoints opt out and run on the server.
   output: 'static',
-  adapter: node({ mode: 'standalone' }),
+  // Deployed on Vercel: turns /api/* routes into Node serverless functions (needed for
+  // googleapis + @supabase/supabase-js, which don't run on Vercel's edge runtime).
+  // Self-hosting? Swap this back to `import node from '@astrojs/node'` and
+  // `adapter: node({ mode: 'standalone' })` — that's the only line that needs to change.
+  adapter: vercel(),
   integrations: [sitemap({ filter: (page) => !page.includes('/preorder/thank-you') && !page.includes('/api/') })],
   prefetch: { prefetchAll: true, defaultStrategy: 'viewport' },
   fonts: [
