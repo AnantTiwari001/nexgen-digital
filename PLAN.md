@@ -24,6 +24,7 @@ pre-order flow, testimonials, pricing placeholders, a contact form, and a lead-c
 | Framework | Astro 7 (`output: 'static'`) + `@astrojs/node` standalone | Static pages, server endpoints, host-agnostic |
 | Styling | Plain CSS with design tokens (`src/styles/tokens.css`) | No framework lock-in, easy theming |
 | Animation | GSAP + ScrollTrigger, Lenis smooth scroll | Parallax, reveals, pinned sections |
+| Signature moments | `src/scripts/trace.ts` + `src/styles/trace.css` (plain SVG/CSS, no library) | One glowing traced-line language reused on the hero, two service pages and the stats section, each tied to that page's subject; every trigger fires on load/scroll, never behind a drag or tap. Replaced an earlier tsParticles ember hero (reverted, see git history) that read as decorative noise rather than purposeful |
 | Fonts | Astro Fonts API (Google provider, self-hosted at build): Poppins, Inter, Caveat | Brand type, no runtime Google requests |
 | Storage | Supabase (hosted Postgres) via `@supabase/supabase-js`, console fallback | Generous free tier, built-in dashboard, no admin panel needed |
 | Email | Gmail API via `googleapis` (OAuth2 refresh token) with console fallback | Requested; best-effort notification on top of storage |
