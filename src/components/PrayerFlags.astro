@@ -1,0 +1,97 @@
+---
+/**
+ * A horizontal string of Nepali Buddhist prayer flags (lung ta) — a garland of small
+ * triangular pennants hung from a gently sagging line, cycling the traditional 5 colours
+ * in their fixed order: blue, white, red, green, yellow. Same colour values as the
+ * `.flag-strip` footer accent in src/styles/global.css, for consistency.
+ *
+ * One SVG, currentColor-free (the flags carry their own literal colours — that's the
+ * point), hand-placed along a quadratic-bezier sag so the flags hang from the curve, not a
+ * straight line. Each flag gets a slow, staggered, barely-there sway — off entirely under
+ * prefers-reduced-motion.
+ */
+interface Props {
+  class?: string;
+  width?: number;
+}
+const { class: className, width = 1200 } = Astro.props;
+
+const HEIGHT = 72;
+const COLORS = ['#1d3557', '#ffffff', '#e63946', '#2a9d8f', '#f4d35e']; // blue, white, red, green, yellow
+const COUNT = 16;
+const INSET = width * 0.02;
+const STRING_Y = 14;
+const SAG = 26; // how far the string droops at its midpoint
+
+// Quadratic bezier: P0 (left anchor), P1 (control, pulls the midpoint down), P2 (right anchor).
+const p0 = { x: INSET, y: STRING_Y };
+const p1 = { x: width / 2, y: STRING_Y + SAG * 2 };
+const p2 = { x: width - INSET, y: STRING_Y };
+const bezier = (t: number) => {
+  const mt = 1 - t;
+  return {
+    x: mt * mt * p0.x + 2 * mt * t * p1.x + t * t * p2.x,
+    y: mt * mt * p0.y + 2 * mt * t * p1.y + t * t * p2.y,
+  };
+};
+
+const flagW = 20;
+const flagH = 28;
+const flags = Array.from({ length: COUNT }, (_, i) => {
+  const t = (i + 0.5) / COUNT;
+  const { x, y } = bezier(t);
+  return {
+    x: Math.round(x * 10) / 10,
+    y: Math.round(y * 10) / 10,
+    color: COLORS[i % COLORS.length],
+    dur: (3.6 + (i % 4) * 0.35).toFixed(2), // 3.6–4.65s, varies so flags don't sync
+    delay: ((i * 0.37) % 2.4).toFixed(2), // staggered start, wraps within a couple of seconds
+    dir: i % 2 === 0 ? 1 : -1, // alternate lean direction for a less mechanical breeze
+  };
+});
+---
+
+<svg
+  class:list={['prayer-flags', className]}
+  viewBox={`0 0 ${width} ${HEIGHT}`}
+  role="img"
+  aria-label="String of Nepali prayer flags"
+>
+  <path
+    class="prayer-flags__string"
+    fill="none"
+    d={`M${p0.x},${p0.y} Q${p1.x},${p1.y} ${p2.x},${p2.y}`}
+  />
+  {flags.map((f) => (
+    <g class="prayer-flags__flag" transform={`translate(${f.x} ${f.y})`}>
+      <g class="prayer-flags__sway" style={`--dur:${f.dur}s; --delay:${f.delay}s; --dir:${f.dir};`}>
+        <path d={`M0,0 L${-flagW / 2},${flagH} L${flagW / 2},${flagH} Z`} fill={f.color} />
+      </g>
+    </g>
+  ))}
+</svg>
+
+<style>
+  .prayer-flags {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  .prayer-flags__string {
+    stroke: var(--fg-muted, #6b6b6b);
+    stroke-width: 2;
+    opacity: 0.6;
+  }
+  .prayer-flags__sway {
+    transform-origin: 0 0;
+    animation: prayer-flag-sway var(--dur) ease-in-out var(--delay) infinite;
+  }
+  @keyframes prayer-flag-sway {
+    0%, 100% { transform: rotate(calc(var(--dir) * -1.5deg)); }
+    50% { transform: rotate(calc(var(--dir) * 1.5deg)); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .prayer-flags__sway { animation: none; }
+  }
+</style>

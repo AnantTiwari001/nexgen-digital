@@ -2,6 +2,7 @@
 import Icon from '../Icon.astro';
 import T from '../T.astro';
 import Mountains from '../Mountains.astro';
+import KathmanduSkyline from '../KathmanduSkyline.astro';
 import QrStand from '../QrStand.astro';
 import { site, whatsappUrl } from '../../config/site';
 import { services } from '../../data/services';
@@ -17,6 +18,7 @@ const chips = ['social-media-management', 'ai-video-production', 'meta-ads', 'we
     <div class="hero__glow"></div>
     <div class="hero__mountains hero__mountains--far"><Mountains /></div>
     <div class="hero__mountains hero__mountains--near"><Mountains /></div>
+    <div class="hero__skyline"><KathmanduSkyline /></div>
     <div class="hero__grain"></div>
   </div>
 
@@ -126,6 +128,13 @@ const chips = ['social-media-management', 'ai-video-production', 'meta-ads', 'we
   .hero__mountains--near {
     opacity: 0.22;
     bottom: -8%;
+  }
+  .hero__skyline {
+    position: absolute;
+    inset: auto 0 0 0;
+    bottom: -4%;
+    color: #0b0b0b;
+    opacity: 0.16;
   }
   .hero__grain {
     position: absolute;
