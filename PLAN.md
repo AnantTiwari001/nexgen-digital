@@ -24,6 +24,7 @@ pre-order flow, testimonials, pricing placeholders, a contact form, and a lead-c
 | Framework | Astro 7 (`output: 'static'`) + `@astrojs/node` standalone | Static pages, server endpoints, host-agnostic |
 | Styling | Plain CSS with design tokens (`src/styles/tokens.css`) | No framework lock-in, easy theming |
 | Animation | GSAP + ScrollTrigger, Lenis smooth scroll | Parallax, reveals, pinned sections |
+| Particles | `@tsparticles/slim` (tree-shaken), lazy-loaded, idle-started | Hero-only "Embers" field, chosen live from a 3-concept demo; skipped elsewhere to avoid decorative noise |
 | Fonts | Astro Fonts API (Google provider, self-hosted at build): Poppins, Inter, Caveat | Brand type, no runtime Google requests |
 | Storage | Supabase (hosted Postgres) via `@supabase/supabase-js`, console fallback | Generous free tier, built-in dashboard, no admin panel needed |
 | Email | Gmail API via `googleapis` (OAuth2 refresh token) with console fallback | Requested; best-effort notification on top of storage |
