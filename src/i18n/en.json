@@ -53,6 +53,10 @@
   "services.problem": "The problem",
   "services.mostPopular": "Most popular",
   "services.choose": "Choose",
+  "services.examples": "Recent results",
+  "services.examplesLead": "A look at the kind of outcomes this service is built to produce. The examples below are illustrative placeholders, swapped for real client case studies as work is delivered.",
+  "services.whyUs": "Why NexGen",
+  "services.testimonial": "Client story",
 
   "product.eyebrow": "Flagship product",
   "product.preorderBadge": "Pre-order open now",

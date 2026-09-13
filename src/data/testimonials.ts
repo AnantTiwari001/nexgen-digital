@@ -62,3 +62,6 @@ export const testimonials: Testimonial[] = [
     placeholder: true,
   },
 ];
+
+/** First testimonial matching a service by name, if one exists yet. */
+export const testimonialForService = (serviceName: string) => testimonials.find((t) => t.service === serviceName);

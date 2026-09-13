@@ -11,6 +11,7 @@ import ServiceCard from '../../components/ServiceCard.astro';
 import Process from '../../components/sections/Process.astro';
 import CtaBand from '../../components/sections/CtaBand.astro';
 import { categories, getService, servicePages } from '../../data/services';
+import { testimonialForService } from '../../data/testimonials';
 import { site, whatsappUrl } from '../../config/site';
 import { t } from '../../i18n';
 
@@ -20,6 +21,14 @@ const { service } = Astro.props;
 const category = categories.find((c) => c.id === service.category)!;
 const related = service.related.map((r) => getService(r)!).filter(Boolean);
 const wa = whatsappUrl(`Hi NexGen Digital, I am interested in ${service.name}.`);
+const testimonial = testimonialForService(service.name);
+const initials = (name: string) =>
+  name
+    .split(' ')
+    .map((n) => n[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
 
 const serviceLd = {
   '@context': 'https://schema.org',
@@ -90,7 +99,73 @@ const serviceLd = {
     </div>
   </section>
 
+  <section class="section section--soft svc-examples">
+    <div class="container">
+      <SectionHead eyebrow="services.examples" lead="services.examplesLead">
+        <span slot="title">Recent {service.shortName ?? service.name} results</span>
+      </SectionHead>
+    </div>
+    <div class="svc-examples__scroller" data-reveal>
+      <div class="svc-examples__track container">
+        {service.examples.map((ex, i) => (
+          <article class="ex-card card card--hover" data-tilt="6" style={`--i:${i}`}>
+            <span class="ex-card__badge caps">Sample result</span>
+            <span class="pill pill--soft">{ex.tag}</span>
+            <p class="ex-card__stat">{ex.stat}</p>
+            <h3 class="ex-card__title">{ex.title}</h3>
+            <p class="ex-card__desc muted">{ex.description}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
   <Process steps={service.process} />
+
+  <section class="section svc-why">
+    <div class="container svc-why__grid">
+      <SectionHead eyebrow="services.whyUs">
+        <span slot="title">Why choose NexGen for <span class="hl">{service.name}</span></span>
+        <span slot="lead">{service.whyUs.lead}</span>
+      </SectionHead>
+      <ul class="svc-why__list" data-reveal-group>
+        {service.whyUs.points.map((p) => (
+          <li class="svc-why__point" data-reveal>
+            <span class="icon-tile"><Icon name="check" size={20} /></span>
+            <div>
+              <h3>{p.title}</h3>
+              <p class="muted">{p.text}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  {testimonial && (
+    <section class="section section--muted svc-testimonial">
+      <div class="container container--narrow">
+        <SectionHead eyebrow="services.testimonial" align="center">
+          <span slot="title">What clients say about <span class="hl">{service.name}</span></span>
+        </SectionHead>
+        <article class="tspot card" data-reveal="scale">
+          <Icon name="quote" size={36} class="tspot__quote" />
+          <div class="tspot__stars" aria-label={`${testimonial.rating} out of 5 stars`}>
+            {Array.from({ length: testimonial.rating }).map(() => <Icon name="star" size={16} />)}
+          </div>
+          <p class="tspot__text">“{testimonial.quote}”</p>
+          <footer class="tspot__foot">
+            <span class="tspot__avatar">{testimonial.avatar ? <img src={testimonial.avatar} alt="" /> : initials(testimonial.business)}</span>
+            <span>
+              <strong>{testimonial.name}</strong>, {testimonial.role}<br />
+              <span class="small muted">{testimonial.business} · {testimonial.location}</span>
+            </span>
+          </footer>
+          {testimonial.placeholder && <p class="small muted tspot__note"><T k="testimonials.placeholder" /></p>}
+        </article>
+      </div>
+    </section>
+  )}
 
   <section class="section" id="pricing">
     <div class="container">
@@ -190,4 +265,121 @@ const serviceLd = {
   }
   .svc-deliverables svg { color: var(--accent); flex: none; }
   .svc-pricing { align-items: stretch; padding-top: var(--space-4); }
+
+  /* ---- Example / case-study gallery ---- */
+  .svc-examples__scroller {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    padding-bottom: var(--space-3);
+  }
+  .svc-examples__scroller::-webkit-scrollbar { display: none; }
+  .svc-examples__track {
+    display: flex;
+    gap: var(--space-5);
+  }
+  .ex-card {
+    position: relative;
+    flex: 0 0 min(84vw, 340px);
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+  .ex-card__badge {
+    position: absolute;
+    top: var(--space-5);
+    right: var(--space-6);
+    color: var(--fg-subtle);
+    font-size: var(--text-xs);
+  }
+  .ex-card__stat {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: var(--text-2xl);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--accent);
+    margin: 0;
+  }
+  .ex-card__title {
+    font-size: var(--text-lg);
+    margin: 0;
+  }
+  .ex-card__desc {
+    margin: 0;
+    font-size: var(--text-sm);
+    flex: 1;
+  }
+
+  /* ---- Why choose NexGen ---- */
+  .svc-why__grid {
+    display: grid;
+    gap: var(--space-7);
+  }
+  @media (min-width: 900px) {
+    .svc-why__grid { grid-template-columns: 1fr 1fr; align-items: start; }
+  }
+  .svc-why__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-5);
+    align-content: start;
+  }
+  .svc-why__point {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+  }
+  .svc-why__point h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
+  .svc-why__point p { margin: 0; font-size: var(--text-sm); }
+
+  /* ---- Matching testimonial spotlight ---- */
+  .tspot {
+    position: relative;
+    max-width: 720px;
+    margin-inline: auto;
+    text-align: center;
+    padding: var(--space-8) var(--space-6);
+  }
+  .tspot :global(.tspot__quote) {
+    color: var(--accent-soft);
+    margin: 0 auto var(--space-4);
+  }
+  .tspot__stars {
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+    color: #f5a623;
+    margin-bottom: var(--space-4);
+  }
+  .tspot__text {
+    font-size: var(--text-xl);
+    line-height: 1.5;
+    margin: 0 0 var(--space-5);
+  }
+  .tspot__foot {
+    display: inline-flex;
+    gap: var(--space-3);
+    align-items: center;
+    text-align: left;
+  }
+  .tspot__avatar {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--brand-black);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    flex: none;
+    overflow: hidden;
+  }
+  .tspot__avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .tspot__note { margin: var(--space-4) 0 0; }
 </style>
