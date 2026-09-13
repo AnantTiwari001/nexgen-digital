@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { answer } from '../../server/chatbot';
 import { attributionRows, layout, notifyAddress, sendMail, table } from '../../server/mailer';
+import { insertRow } from '../../server/db';
 import { json, rateLimit, readBody, str } from '../../server/http';
 import { dictionaries } from '../../i18n';
 
@@ -17,7 +18,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   const lang = (str(body.lang, 5) === 'ne' ? 'ne' : 'en') as 'en' | 'ne';
   const t = (k: string) => dictionaries[lang][k] ?? dictionaries.en[k];
 
-  // Lead capture: email the transcript to the team
+  // Lead capture: a visitor left contact details. Store first, email second.
   if (body.lead && typeof body.lead === 'object') {
     const lead = body.lead as Record<string, unknown>;
     const name = str(lead.name, 120);
@@ -26,6 +27,17 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 
     const history = Array.isArray(body.history) ? (body.history as Turn[]).slice(-30) : [];
     const transcript = history.map((h) => `${h.role === 'user' ? 'Visitor' : 'Bot'}: ${str(h.text, 600)}`).join('\n');
+    const page = str(body.page, 400);
+    const attribution = body.attribution ?? null;
+
+    await insertRow('chat_leads', {
+      name,
+      contact,
+      transcript: transcript || null,
+      page: page || null,
+      lang,
+      attribution,
+    });
 
     await sendMail({
       to: notifyAddress(),
@@ -35,10 +47,10 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
         table([
           ['Name', name],
           ['Contact', contact],
-          ['Page', str(body.page, 400)],
+          ['Page', page],
           ['Language', lang],
           ['Transcript', transcript || '(no messages)'],
-          ...attributionRows(body.attribution),
+          ...attributionRows(attribution),
         ]),
       ),
     });
@@ -47,5 +59,19 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 
   const message = str(body.message, 500);
   if (!message) return json({ answer: t('chat.fallback'), matched: false }, 400);
-  return json(answer(message, lang));
+  const result = answer(message, lang);
+
+  // Log every question the assistant is asked — the raw material for improving
+  // src/data/faq.ts and for the future analytics/attribution surface.
+  void insertRow('chat_messages', {
+    message,
+    answer: result.answer,
+    matched: result.matched,
+    knowledge_id: result.id ?? null,
+    lang,
+    page: str(body.page, 400) || null,
+    attribution: body.attribution ?? null,
+  });
+
+  return json(result);
 };

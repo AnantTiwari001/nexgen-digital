@@ -331,7 +331,12 @@ const suggestions = knowledge.filter((k) => ['services', 'pricing', 'qr', 'start
         const res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message, lang: document.documentElement.getAttribute('data-lang') || 'en' }),
+          body: JSON.stringify({
+            message,
+            lang: document.documentElement.getAttribute('data-lang') || 'en',
+            page: location.href,
+            attribution: getAttribution(),
+          }),
         });
         const data = await res.json();
         t.remove();

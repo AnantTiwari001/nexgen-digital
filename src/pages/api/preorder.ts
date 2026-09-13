@@ -1,12 +1,15 @@
 import type { APIRoute } from 'astro';
 import { attributionRows, layout, notifyAddress, sendMail, table } from '../../server/mailer';
+import { insertRow } from '../../server/db';
 import { isBot, isEmail, isPhone, json, parseAttribution, rateLimit, readBody, str } from '../../server/http';
 import { product } from '../../data/product';
 import { site } from '../../config/site';
 
 export const prerender = false;
 
-const ref = () => `NX-${Date.now().toString(36).toUpperCase().slice(-6)}`;
+// Timestamp + random suffix: short, readable, and collision-safe enough for the
+// `reference` unique constraint in supabase/schema.sql.
+const ref = () => `NX-${Date.now().toString(36).toUpperCase().slice(-5)}${Math.random().toString(36).slice(2, 4).toUpperCase()}`;
 
 export const POST: APIRoute = async ({ request, clientAddress }) => {
   if (!rateLimit(request, clientAddress, 5)) return json({ ok: false, error: 'Too many requests. Please try again in a minute.' }, 429);
@@ -56,6 +59,34 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   const reference = ref();
   const tier = product.tiers.find((t) => t.name === d.plan)!;
   const payment = product.options.paymentMethods.find((m) => m.id === d.paymentMethod)!;
+
+  // Store first — this is the source of truth. Email below is a best-effort heads-up.
+  const stored = await insertRow('preorders', {
+    reference,
+    business_name: d.businessName,
+    business_type: d.businessType,
+    address: d.address || null,
+    city: d.city,
+    google_maps: d.googleMaps || null,
+    instagram: d.instagram || null,
+    facebook: d.facebook || null,
+    tiktok: d.tiktok || null,
+    website: d.website || null,
+    contact_name: d.contactName,
+    role: d.role || null,
+    phone: d.phone,
+    email: d.email,
+    plan: d.plan,
+    quantity: d.quantity,
+    finish: d.finish || null,
+    notes: d.notes || null,
+    payment_method: d.paymentMethod,
+    billing_name: d.billingName || null,
+    pan: d.pan || null,
+    lang: d.lang,
+    page: d.page || null,
+    attribution: attribution ?? null,
+  });
 
   const rows: [string, unknown][] = [
     ['Reference', reference],
@@ -113,5 +144,5 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     ),
   });
 
-  return json({ ok: internal.ok, reference, skipped: internal.skipped });
+  return json({ ok: stored.ok || internal.ok, reference, stored: stored.ok, skipped: internal.skipped });
 };

@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { attributionRows, layout, notifyAddress, sendMail, table } from '../../server/mailer';
+import { insertRow } from '../../server/db';
 import { isBot, isEmail, isPhone, json, parseAttribution, rateLimit, readBody, str } from '../../server/http';
 import { site } from '../../config/site';
 
@@ -30,6 +31,21 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   if (data.phone && !isPhone(data.phone)) errors.phone = 'That phone number does not look right.';
   if (data.message.length < 5) errors.message = 'Tell us a little about your goal.';
   if (Object.keys(errors).length) return json({ ok: false, errors }, 400);
+
+  // Store first — this is the source of truth. Email below is a best-effort heads-up
+  // and must never cause a submitted lead to be lost if sending fails.
+  const stored = await insertRow('contact_submissions', {
+    name: data.name,
+    business: data.business || null,
+    email: data.email || null,
+    phone: data.phone || null,
+    service: data.service || null,
+    budget: data.budget || null,
+    message: data.message,
+    lang: data.lang,
+    page: data.page || null,
+    attribution: attribution ?? null,
+  });
 
   const subject = `New enquiry: ${data.name}${data.business ? ` (${data.business})` : ''}${data.service ? ` · ${data.service}` : ''}`;
   const rows: [string, unknown][] = [
@@ -66,5 +82,5 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     });
   }
 
-  return json({ ok: internal.ok, skipped: internal.skipped });
+  return json({ ok: stored.ok || internal.ok, stored: stored.ok, skipped: internal.skipped });
 };

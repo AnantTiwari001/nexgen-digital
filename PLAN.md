@@ -25,8 +25,9 @@ pre-order flow, testimonials, pricing placeholders, a contact form, and a lead-c
 | Styling | Plain CSS with design tokens (`src/styles/tokens.css`) | No framework lock-in, easy theming |
 | Animation | GSAP + ScrollTrigger, Lenis smooth scroll | Parallax, reveals, pinned sections |
 | Fonts | Astro Fonts API (Google provider, self-hosted at build): Poppins, Inter, Caveat | Brand type, no runtime Google requests |
-| Email | Gmail API via `googleapis` (OAuth2 refresh token) with console fallback | Requested; swappable through one module |
-| Chatbot | Rule-based FAQ engine + lead capture + email notification | No external AI dependency in v1 |
+| Storage | Supabase (hosted Postgres) via `@supabase/supabase-js`, console fallback | Generous free tier, built-in dashboard, no admin panel needed |
+| Email | Gmail API via `googleapis` (OAuth2 refresh token) with console fallback | Requested; best-effort notification on top of storage |
+| Chatbot | Rule-based FAQ engine + lead capture, all messages logged | No external AI dependency in v1 |
 | i18n | Dictionary JSON + `data-i18n` attributes swapped on client | Single static build, URL param and toggle |
 
 ## Structure

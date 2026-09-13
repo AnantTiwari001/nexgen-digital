@@ -65,6 +65,10 @@ export default defineConfig({
       GMAIL_REFRESH_TOKEN: envField.string({ context: 'server', access: 'secret', optional: true }),
       GMAIL_SENDER: envField.string({ context: 'server', access: 'secret', optional: true }),
       NOTIFY_EMAIL: envField.string({ context: 'server', access: 'secret', optional: true }),
+      // Storage (Supabase). Optional: without them, submissions are logged to the console
+      // instead of persisted. See supabase/schema.sql for the tables this expects.
+      SUPABASE_URL: envField.string({ context: 'server', access: 'secret', optional: true }),
+      SUPABASE_SERVICE_ROLE_KEY: envField.string({ context: 'server', access: 'secret', optional: true }),
     },
   },
   build: { inlineStylesheets: 'auto' },

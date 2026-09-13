@@ -44,6 +44,41 @@ Edit `scripts/generate-logo.mjs` to change the X-mark geometry, spacing or colou
 then re-run. Outputs go to `public/brand/*.svg`, `public/favicon.svg` and
 `src/generated/logo-paths.json` (used by `src/components/Logo.astro`).
 
+## Storage (Supabase)
+
+Every contact enquiry, pre-order and chat lead is written to Supabase (hosted
+Postgres, free tier: 500MB database, unlimited API requests, 5GB bandwidth/month,
+two projects) via `src/server/db.ts`. Storage happens before email — the database is
+the source of truth; email (below) is just a best-effort notification on top, so a
+lead is never lost if sending fails.
+
+Without credentials configured, submissions are logged to the server console instead
+of written, so the site keeps working with zero setup in development.
+
+1. Create a free project at [supabase.com](https://supabase.com).
+2. In **Project Settings > API**, copy the **Project URL** and the **service_role**
+   secret key (not the `anon`/public key — the service role key is required so the
+   server can write while keeping the tables closed to the browser).
+3. Open the **SQL Editor**, paste the contents of [supabase/schema.sql](./supabase/schema.sql),
+   and run it once. This creates four tables with Row Level Security enabled and no
+   public policies, so nothing is readable or writable except via the service role key:
+   - `contact_submissions` — the contact form
+   - `preorders` — AI Smart Reviews QR Stand pre-orders
+   - `chat_leads` — visitors who left contact details in the chat widget
+   - `chat_messages` — every question asked to the chat assistant, matched or not
+     (useful for spotting gaps in `src/data/faq.ts`, and doubles as the seed of the
+     future analytics/attribution surface)
+4. Fill in `.env`:
+   ```
+   SUPABASE_URL=
+   SUPABASE_SERVICE_ROLE_KEY=
+   ```
+5. Browse and manage submissions any time in the Supabase dashboard's **Table Editor**
+   — no admin panel needed. Each table has a `status` column (`contact_submissions`
+   and `chat_leads` default to `new`; `preorders` adds `confirmed` / `produced` /
+   `delivered` / `cancelled`) to track follow-up by hand until a proper admin view
+   exists.
+
 ## Email (Gmail API)
 
 Contact, pre-order and chat-lead notifications send through the Gmail API
