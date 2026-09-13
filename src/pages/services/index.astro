@@ -12,7 +12,7 @@ import { site } from '../../config/site';
 ---
 
 <Base title="Services" description="Digital marketing services in Nepal: social media management, content, Meta and Google ads, AI video and graphics, websites, strategy and the Smart Reviews QR stand." headerTone="white">
-  <PageHero eyebrow={t('services.eyebrow')} title={t('services.allTitle')} lead={t('services.allLead')} script={site.phrases.scriptHero}>
+  <PageHero eyebrow={t('services.eyebrow')} eyebrowKey="services.eyebrow" title={t('services.allTitle')} titleKey="services.allTitle" lead={t('services.allLead')} leadKey="services.allLead" script={site.phrases.scriptHero}>
     <nav class="cat-nav" aria-label="Service categories">
       {categories.map((c) => (
         <a href={`#${c.id}`} class="pill pill--glass"><Icon name={c.icon} size={16} /><span data-i18n={`cat.${c.id}.name`}>{c.name}</span></a>

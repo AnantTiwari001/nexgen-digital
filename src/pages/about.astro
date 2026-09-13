@@ -16,7 +16,7 @@ const initials = (name: string) => name.split(' ').map((n) => n[0]).join('').sli
 ---
 
 <Base title="About" description="NexGen Digital is a Kathmandu-based digital growth agency combining local talent with AI tools to help Nepali businesses, brands and creators grow." headerTone="white">
-  <PageHero eyebrow={t('about.eyebrow')} title={t('about.title')} lead={story.intro} script={site.phrases.scriptHero}>
+  <PageHero eyebrow={t('about.eyebrow')} eyebrowKey="about.eyebrow" title={t('about.title')} titleKey="about.title" lead={story.intro} script={site.phrases.scriptHero}>
     <div slot="visual" class="about-hero__visual">
       <div class="about-hero__card card card--glass" data-float="10">
         <Logo variant="stacked" height={80} tone="white" />

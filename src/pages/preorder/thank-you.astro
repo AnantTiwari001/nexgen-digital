@@ -16,9 +16,9 @@ import { site, whatsappUrl } from '../../config/site';
         <p class="ty__ref" data-ty-ref hidden>Reference: <strong data-ty-ref-value></strong></p>
         <h2 class="ty__h"><T k="preorder.thanks.next" /></h2>
         <ol class="ty__list">
-          <li><span>1</span><T k="preorder.thanks.1" /></li>
-          <li><span>2</span><T k="preorder.thanks.2" /></li>
-          <li><span>3</span><T k="preorder.thanks.3" /></li>
+          <li><span class="ty__list-num">1</span><T k="preorder.thanks.1" /></li>
+          <li><span class="ty__list-num">2</span><T k="preorder.thanks.2" /></li>
+          <li><span class="ty__list-num">3</span><T k="preorder.thanks.3" /></li>
         </ol>
         <div class="btn-row">
           <a class="btn btn--white" href={whatsappUrl('Hi NexGen Digital, I just placed a QR stand pre-order.')} target="_blank" rel="noopener"><Icon name="whatsapp" size={18} />WhatsApp</a>
@@ -42,7 +42,7 @@ import { site, whatsappUrl } from '../../config/site';
   .ty__h { font-size: var(--text-xl); margin-top: var(--space-6); color: #fff; }
   .ty__list { list-style: none; padding: 0; margin: 0 0 var(--space-6); display: grid; gap: var(--space-3); }
   .ty__list li { display: flex; gap: var(--space-3); align-items: center; }
-  .ty__list span {
+  .ty__list-num {
     display: grid;
     place-items: center;
     width: 32px;
