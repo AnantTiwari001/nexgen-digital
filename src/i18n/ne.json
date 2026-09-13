@@ -53,6 +53,10 @@
   "services.problem": "समस्या",
   "services.mostPopular": "सबैभन्दा लोकप्रिय",
   "services.choose": "छान्नुहोस्",
+  "services.examples": "हालैका नतिजाहरू",
+  "services.examplesLead": "यो सेवाले ल्याउने नतिजाको एक झलक। तलका उदाहरणहरू नमूना मात्र हुन्, वास्तविक काम सुरु भएपछि साँचो client case study ले बदल्नेछ।",
+  "services.whyUs": "किन NexGen",
+  "services.testimonial": "Client अनुभव",
 
   "product.eyebrow": "मुख्य product",
   "product.preorderBadge": "Pre-order खुला छ",

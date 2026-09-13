@@ -64,6 +64,19 @@ export const services: Service[] = [
       { q: 'Can you post in Nepali?', a: 'Yes. We write in English, Nepali, or the natural mix most Nepali audiences prefer.' },
       { q: 'How soon will I see results?', a: 'Engagement usually improves within the first month. Follower growth and leads build over three months of consistent posting.' },
     ],
+    examples: [
+      { title: 'Dormant cafe page rebuilt', stat: '3.1x more weekly engagement in 60 days', description: 'A Lalitpur cafe Instagram page had gone quiet for months; a content calendar and reel cadence rebuilt an active audience.', tag: 'Food and Beverage', placeholder: true },
+      { title: 'Faster inbox response for a clinic', stat: '40% faster reply time on Messenger and Instagram DMs', description: 'Standard response templates and business-hours coverage turned a slow inbox into a lead channel.', tag: 'Healthcare', placeholder: true },
+      { title: 'A real content calendar for a retail store', stat: '20+ posts every month with zero missed weeks', description: 'Moved a clothing retailer from posting only when remembered to a planned, on-brand monthly calendar.', tag: 'Retail', placeholder: true },
+    ],
+    whyUs: {
+      lead: 'Managing social media well is not the same as designing a calendar template once. It means showing up every day with judgement: knowing which reel format works this month, replying before a comment turns into a complaint, and keeping one voice across three platforms.',
+      points: [
+        { title: 'We run pages, not just design posts', text: 'Design studios hand over creatives and move on. We plan the calendar, publish it, and watch the inbox, the full job, not only the visuals.' },
+        { title: 'Built around Nepali platform behaviour', text: 'Posting times, tone and format come from how Kathmandu and Pokhara audiences actually scroll, not a generic global playbook.' },
+        { title: 'Reports you can act on', text: 'A monthly report in plain language: what worked, what did not, and the specific change for next month.' },
+      ],
+    },
     related: ['content-creation', 'social-media-marketing', 'followers-growth'],
     seo: {
       title: 'Social Media Management in Nepal',
@@ -115,6 +128,19 @@ export const services: Service[] = [
       { q: 'What is a good starting budget in Nepal?', a: 'Many local businesses see useful results from Rs. 15,000 to 30,000 per month in ad spend. We will recommend a budget based on your goal.' },
       { q: 'Can you run campaigns for events or launches?', a: 'Yes. Short, high-impact campaigns for launches, festivals and events are a common request.' },
     ],
+    examples: [
+      { title: 'A Dashain launch campaign', stat: '4.6x return on ad spend over a two-week festival push', description: 'A multi-creative Meta campaign timed to a festival sale, tested across five hooks before scaling the winner.', tag: 'Festival Campaign', placeholder: true },
+      { title: 'Full-funnel gym membership push', stat: '215 qualified sign-up leads in one quarter', description: 'Awareness, retargeting and WhatsApp click campaigns worked as one system instead of a single boosted post.', tag: 'Fitness', placeholder: true },
+      { title: 'Creator collaboration for a footwear brand', stat: '3 creator partnerships, 92,000 combined reach', description: 'Paid social paired with Nepali micro-creators built trust that ads alone could not.', tag: 'Retail', placeholder: true },
+    ],
+    whyUs: {
+      lead: 'Anyone can press boost. Turning attention into a customer needs a clear objective, a tested creative, and a place for that person to land, so every campaign we run is built around an outcome, not reach for its own sake.',
+      points: [
+        { title: 'We test before we spend big', text: 'Every campaign launches with several creative variants. Budget only scales once we know which hook and offer actually convert.' },
+        { title: 'Full-funnel, not a single boosted post', text: 'Awareness, retargeting and conversion work together, so someone who saw an ad once is not forgotten after they scroll past.' },
+        { title: 'Weekly numbers, not a black box', text: 'Spend, results and cost per result shared weekly, so you always know what the budget bought.' },
+      ],
+    },
     related: ['meta-ads', 'social-media-management', 'ai-video-production'],
     seo: {
       title: 'Social Media Marketing & Advertising in Nepal',
@@ -163,6 +189,19 @@ export const services: Service[] = [
       { q: 'Do you come to our location for shoots?', a: 'Yes, within the Kathmandu valley. Outside the valley we plan remote shoots or work with your photos and videos.' },
       { q: 'Who owns the content?', a: 'You do. Everything we create for you is yours to use anywhere.' },
     ],
+    examples: [
+      { title: 'A monthly content library for a bakery', stat: '24 ready-to-post pieces delivered a week ahead, every month', description: 'Batched shoot days and a content pillar system replaced last-minute scrambling for content.', tag: 'Food and Beverage', placeholder: true },
+      { title: 'Bilingual caption rewrite', stat: '2.3x more saves after switching to natural Nepali-English captions', description: 'Captions rewritten in the mixed tone local audiences actually use, instead of stiff formal copy.', tag: 'Copywriting', placeholder: true },
+      { title: 'Shoot direction for a handicrafts brand', stat: '40+ usable shots from a single half-day shoot', description: 'A planned shot list and on-site direction turned one shoot into three months of content.', tag: 'Handicrafts', placeholder: true },
+    ],
+    whyUs: {
+      lead: 'Content is the first thing that slips when a business gets busy. We build a repeatable system, pillars, batching and a delivery rhythm, so the page never goes quiet again.',
+      points: [
+        { title: 'Batched, not scrambled', text: 'A month of content produced ahead of time in planned shoot and design batches, so nothing gets rushed out the night before it is due.' },
+        { title: 'Writers who think in both languages', text: 'Captions written the way customers actually talk, not translated word for word from a template.' },
+        { title: 'Everything delivered is yours', text: 'Every post, reel and design file we make belongs to you, with no lock-in and no re-buying your own content later.' },
+      ],
+    },
     related: ['social-media-management', 'ai-graphics-design', 'ai-video-production'],
     seo: {
       title: 'Content Creation Services in Nepal',
@@ -210,6 +249,19 @@ export const services: Service[] = [
       { q: 'Do you sell followers?', a: 'No. We only grow audiences through content, ads, and collaborations that comply with platform rules.' },
       { q: 'How many followers can I expect?', a: 'It depends on budget, niche and content. We share realistic targets after the audit instead of promising a number.' },
     ],
+    examples: [
+      { title: 'Targeted follower campaign for a salon', stat: '2,400 new targeted followers in 45 days', description: 'Follower-objective ads aimed at a defined local radius replaced generic boosting.', tag: 'Beauty and Wellness', placeholder: true },
+      { title: 'Giveaway with two local creators', stat: '1,900 entries, 68% still following after 30 days', description: 'A structured giveaway with clear entry rules brought people who stayed, not only prize hunters.', tag: 'Engagement Sprint', placeholder: true },
+      { title: 'Profile fix before spending on ads', stat: 'Follow-through rate up from 4% to 11%', description: 'Bio, highlights and pinned post rebuilt so profile visits actually turned into follows.', tag: 'Profile Optimisation', placeholder: true },
+    ],
+    whyUs: {
+      lead: 'Bought followers wreck reach and credibility. Real growth is slower to promise but it is the only kind that buys from you, so every tactic here is built to attract people who stay.',
+      points: [
+        { title: 'No bots, no shortcuts', text: 'Every follower comes from a targeted ad, a collaboration or content that earned the attention, and stays platform-compliant so the account is never at risk.' },
+        { title: 'The profile gets fixed first', text: 'A visitor who lands on a weak profile will not follow no matter how good the ad was, so bio, highlights and pinned posts are reviewed before any spend.' },
+        { title: 'Planned for retention, not just a spike', text: 'A giveaway can bring a thousand followers in a week. Content and community are what keep them past week two.' },
+      ],
+    },
     related: ['social-media-management', 'social-media-marketing', 'content-creation'],
     seo: {
       title: 'Grow Real Followers in Nepal',
@@ -260,6 +312,19 @@ export const services: Service[] = [
       { q: 'Can you run ads from my own ad account?', a: 'Yes, and we recommend it. You keep ownership of the account, data and payment method.' },
       { q: 'How do I pay Meta from Nepal?', a: 'We help you set up a supported payment method. Options are explained during onboarding.' },
     ],
+    examples: [
+      { title: 'Pixel and Conversions API rebuild', stat: '31% lower cost per lead after proper tracking', description: 'Replaced boosted posts with a pixel-tracked campaign structure and lookalike audiences.', tag: 'Lead Generation', placeholder: true },
+      { title: 'Click-to-WhatsApp funnel', stat: '180+ WhatsApp conversations in the first month', description: 'Click-to-chat ads matched how customers actually prefer to enquire and buy.', tag: 'Click to Chat', placeholder: true },
+      { title: 'Creative testing for an online store', stat: '5 creatives tested, winning ad cut cost per purchase by 27%', description: 'Video, carousel and static variants tested head to head before scaling the budget.', tag: 'E-commerce', placeholder: true },
+    ],
+    whyUs: {
+      lead: 'Boosting reaches people, not necessarily the right ones. Real Meta advertising means pixel tracking, proper audience structure and creative built for the feed, the difference between spending and investing.',
+      points: [
+        { title: 'Tracking set up correctly from day one', text: 'Meta Pixel and Conversions API installed properly, so campaigns optimise for leads and sales instead of clicks.' },
+        { title: 'Built for how Nepal buys', text: 'Click-to-WhatsApp and Messenger campaigns fit the way local customers prefer to enquire, not only a generic shop-now button.' },
+        { title: 'Daily eyes on the account', text: 'Campaigns are monitored and adjusted daily, never set up once and left to run alone.' },
+      ],
+    },
     related: ['google-ads', 'social-media-marketing', 'ai-video-production'],
     seo: {
       title: 'Meta Ads Management in Nepal',
@@ -308,6 +373,19 @@ export const services: Service[] = [
       { q: 'Does Google Ads work for small businesses in Nepal?', a: 'Yes, especially for services people search for: clinics, education, travel, real estate, repairs and B2B.' },
       { q: 'How is Google Ads different from SEO?', a: 'Ads give immediate placement for a cost per click. SEO builds free rankings over months. Many clients use both.' },
     ],
+    examples: [
+      { title: 'Local search for a dental clinic', stat: '3.4x more booked consultations in 90 days', description: 'Search and Google Maps campaigns targeted at near-me intent for a Baneshwor clinic.', tag: 'Healthcare', placeholder: true },
+      { title: 'Trekking gear search cleanup', stat: '22% lower cost per click after negative keyword cleanup', description: 'Keyword research and a negative keyword list removed irrelevant clicks eating the budget.', tag: 'Retail and Travel', placeholder: true },
+      { title: 'Call tracking for a real estate agency', stat: '140 tracked phone enquiries in one quarter', description: 'Call and form conversion tracking gave a real cost-per-lead number for the first time.', tag: 'Real Estate', placeholder: true },
+    ],
+    whyUs: {
+      lead: 'SEO can take months to show results. Google Ads puts a business in front of people typing exactly what they want to buy, today, but only if the account is structured, tracked and managed properly.',
+      points: [
+        { title: 'Built around real intent', text: 'Campaigns are structured around what people actually search for locally, including near-me and Google Maps intent, not only broad keywords.' },
+        { title: 'Every call and form counted', text: 'Conversion tracking on calls, forms and chats means we know exactly what is working, not guessing from click volume.' },
+        { title: 'Weekly refinement, not a launch-and-leave account', text: 'Negative keywords, bids and ad copy are refined weekly so budget stops leaking to irrelevant clicks.' },
+      ],
+    },
     related: ['meta-ads', 'website-design-development', 'marketing-advertising'],
     seo: {
       title: 'Google Ads Management in Nepal',
@@ -360,6 +438,19 @@ export const services: Service[] = [
       { q: 'Will it look like AI?', a: 'Our editors direct every video so it feels authentic. We also blend in your real photos, products and footage when available.' },
       { q: 'Do you film on location too?', a: 'Yes, within Kathmandu valley for an additional fee. Many clients combine a short shoot with AI-generated scenes.' },
     ],
+    examples: [
+      { title: 'Four-day festival promo turnaround', stat: '60-second promo delivered in 4 working days', description: 'AI-generated scenes and human editing produced a launch video in a fraction of a traditional shoot timeline.', tag: 'Retail Launch', placeholder: true },
+      { title: 'Reel series for a trekking gear brand', stat: '3.2x more engagement per reel than static posts', description: 'Eight AI-assisted reels with Nepali voice-over built a consistent short-form presence.', tag: 'Outdoor and Travel', placeholder: true },
+      { title: 'Business intro video for a clinic', stat: 'One video reused across ads, website and WhatsApp', description: 'A single 60-second intro produced once and repurposed across three channels.', tag: 'Healthcare', placeholder: true },
+    ],
+    whyUs: {
+      lead: 'Traditional video needs a crew, a studio day and a budget most businesses cannot spare. AI-assisted production compresses that timeline to days, directed by editors so it never looks like a shortcut.',
+      points: [
+        { title: 'AI accelerates, humans direct', text: 'Every video is scripted, storyboarded and edited by a person. AI speeds up production, it does not replace judgement about what looks right for a brand.' },
+        { title: 'Built for the platform it will run on', text: 'Vertical for reels, square for feed, wide for YouTube, exported and captioned for where it will actually be watched.' },
+        { title: 'Days, not weeks', text: 'Most short videos are delivered in three to five working days, so a launch or festival window is never missed.' },
+      ],
+    },
     related: ['ai-graphics-design', 'content-creation', 'meta-ads'],
     seo: {
       title: 'AI Video Production in Nepal',
@@ -409,6 +500,19 @@ export const services: Service[] = [
       { q: 'Do you design logos?', a: 'Yes. Full brand identity kits and logo refreshes are part of our Brand Kit package.' },
       { q: 'Can I get editable files?', a: 'Yes. Source files are delivered for Brand Kit and Pack customers, and on request for single designs.' },
     ],
+    examples: [
+      { title: 'Same-day festival offer creative', stat: 'Delivered in under 24 hours during peak Dashain demand', description: 'A last-minute festival offer poster designed and exported for social and print in one day.', tag: 'Seasonal Offer', placeholder: true },
+      { title: 'Brand kit for a cafe chain', stat: '12-piece brand system rolled out across 3 outlet locations', description: 'One consistent colour, type and template system replaced mismatched menus and signage.', tag: 'Brand Identity', placeholder: true },
+      { title: 'Menu redesign for a restaurant', stat: 'Print and digital menu finished in 2 revisions', description: 'AI-assisted concept exploration gave the owner five directions to choose from before final design.', tag: 'Print and Menu Design', placeholder: true },
+    ],
+    whyUs: {
+      lead: 'Festival offers and launch announcements cannot wait a week for design. AI-assisted concepting means more directions to choose from, finished by hand, without slowing delivery down.',
+      points: [
+        { title: 'More directions, same timeline', text: 'AI exploration means several concepts to choose from, instead of a single first idea from one designer.' },
+        { title: 'A system, not a one-off design', text: 'Every piece is built against a brand kit, colour, type and templates, so nothing looks like it came from a different designer each time.' },
+        { title: 'Same-week delivery when it matters', text: 'Most social creatives are ready in 24 to 48 hours, built for the pace Nepali festivals and promotions actually move at.' },
+      ],
+    },
     related: ['ai-video-production', 'content-creation', 'website-design-development'],
     seo: {
       title: 'AI Graphics Design in Nepal',
@@ -462,6 +566,19 @@ export const services: Service[] = [
       { q: 'How long does it take?', a: 'Landing pages take 1 to 2 weeks. Business sites 3 to 5 weeks. E-commerce 6 to 10 weeks depending on catalogue size.' },
       { q: 'Can you redesign my existing site?', a: 'Yes. We can redesign on top of your existing content or migrate to a new platform.' },
     ],
+    examples: [
+      { title: 'Resort booking site rebuild', stat: '2x more WhatsApp booking clicks after launch', description: 'A slow, outdated resort site rebuilt fast and static-first with a prominent WhatsApp button.', tag: 'Hospitality', placeholder: true },
+      { title: 'Local SEO foundation for a clinic', stat: 'Page load under 1.5 seconds on 4G', description: 'A static-first build and clean metadata gave a real PageSpeed and local search foundation.', tag: 'Healthcare', placeholder: true },
+      { title: 'E-commerce catalogue launch', stat: '120 products live with eSewa and Khalti at launch', description: 'A full product catalogue and Nepali payment options shipped in one coordinated build.', tag: 'E-commerce', placeholder: true },
+    ],
+    whyUs: {
+      lead: 'A slow or outdated website costs trust before a customer ever calls. We build static-first sites that load fast, rank cleanly and make it effortless to get in touch.',
+      points: [
+        { title: 'Built to convert, not only to look good', text: 'Every page is structured around a clear next step, a call, a WhatsApp message or a form, not just a portfolio of screens.' },
+        { title: 'Fast by default', text: 'Modern static-first builds that score well on Google PageSpeed, which matters more on the mobile networks most visitors use in Nepal.' },
+        { title: 'You own everything', text: 'Domain and hosting registered in your name, with training so you are never stuck waiting on a developer for a small text change.' },
+      ],
+    },
     related: ['google-ads', 'ai-graphics-design', 'marketing-advertising'],
     seo: {
       title: 'Website Design & Development in Kathmandu, Nepal',
@@ -504,6 +621,18 @@ export const services: Service[] = [
       { name: 'Stand + Care', price: '6,999', period: 'first year', highlight: true, features: ['Everything in Stand', 'Payment links', 'Scan analytics', 'Link updates anytime'] },
     ],
     faqs: [{ q: 'Is this available now?', a: 'The product is in pre-order. Early orders get priority setup and delivery from the first batch.' }],
+    examples: [
+      { title: 'Counter stand for a cafe', stat: '3.5x more Google reviews in the first month', description: 'A single QR stand at the till made leaving a review a ten-second tap instead of a forgotten intention.', tag: 'Food and Beverage', placeholder: true },
+      { title: 'Salon reviews and rebooking', stat: '48 new Google reviews in 6 weeks', description: 'Reviews, social follows and rebooking links combined on one scannable card at reception.', tag: 'Beauty and Wellness', placeholder: true },
+    ],
+    whyUs: {
+      lead: 'Happy customers rarely leave a review without being asked at the right moment. A stand at the counter with one clear scan makes it effortless, and every review lifts ranking and trust.',
+      points: [
+        { title: 'One scan, several outcomes', text: 'Reviews, social follows, payments and contact live on the same smart page, instead of separate stickers and signs.' },
+        { title: 'Built for the counter, not a drawer', text: 'A branded acrylic stand designed to actually stay visible next to the till, not get buried under the register.' },
+        { title: 'Simple insights', text: 'Scans and taps tracked in a simple dashboard, so it is clear the stand is actually being used.' },
+      ],
+    },
     related: ['google-ads', 'social-media-management'],
     seo: {
       title: 'AI Smart Reviews QR Stand for Nepal Businesses',
@@ -544,6 +673,19 @@ export const services: Service[] = [
       { name: 'Fractional CMO', price: '50,000', period: '/month', highlight: true, features: ['Ongoing strategy', 'Team coordination', 'Monthly reviews', 'Vendor management'] },
     ],
     faqs: [{ q: 'Do you handle offline advertising too?', a: 'Yes. We plan and coordinate print, outdoor, radio and event sponsorships alongside digital, and design the creatives.' }],
+    examples: [
+      { title: '90-day plan for a multi-branch salon', stat: 'One plan replaced five uncoordinated vendors', description: 'A single channel plan and budget allocation across social, ads and offline for a growing chain.', tag: 'Growth Planning', placeholder: true },
+      { title: 'Positioning reset for a new cafe brand', stat: 'Messaging tested across 3 audience segments before launch', description: 'Clarified who the cafe was actually for before a rupee was spent on ads.', tag: 'Positioning', placeholder: true },
+      { title: 'A year of campaigns mapped for a retailer', stat: 'Every festival and sale planned a full year ahead', description: 'Dashain, Tihar and New Year campaigns planned months in advance instead of assembled at the last minute.', tag: 'Campaign Planning', placeholder: true },
+    ],
+    whyUs: {
+      lead: 'Posting, boosting and printing flyers without a plan means nobody can tell you what is actually working. A strategy gives every rupee a job before it is spent.',
+      points: [
+        { title: 'Research before recommendations', text: 'Positioning and channel plans are built on a real audit of the market and competitors, not assumptions.' },
+        { title: 'A plan your team can run, or we can', text: 'The 90-day plan is detailed enough to hand to your own team, or we can deliver it end to end.' },
+        { title: 'One partner across every channel', text: 'Digital and offline, print, radio, events, coordinated by one strategist instead of several vendors pulling in different directions.' },
+      ],
+    },
     related: ['social-media-marketing', 'google-ads', 'custom-solutions'],
     seo: {
       title: 'Marketing Strategy Consulting in Nepal',
@@ -579,6 +721,19 @@ export const services: Service[] = [
     ],
     pricing: [{ name: 'Custom', price: 'Quote', features: ['Scoped to your goal', 'Fixed price or retainer', 'Clear milestones'] }],
     faqs: [{ q: 'How do I start?', a: 'Message us on WhatsApp or use the contact form with a short description. We reply within one business day.' }],
+    examples: [
+      { title: 'WhatsApp catalogue automation for a boutique', stat: 'Auto-replies handled 70% of routine questions', description: 'A WhatsApp Business catalogue and auto-reply flow freed up staff time during peak hours.', tag: 'WhatsApp Automation', placeholder: true },
+      { title: 'QR menu system for a restaurant chain', stat: 'Contactless menus live across 4 locations in one week', description: 'One QR menu system replaced reprinting paper menus every time a price changed.', tag: 'QR and Digital Menus', placeholder: true },
+      { title: 'Event promotion for a creator meetup', stat: '600+ RSVPs driven through one coordinated campaign', description: 'Email, social and creator outreach coordinated around a single event date.', tag: 'Event Marketing', placeholder: true },
+    ],
+    whyUs: {
+      lead: 'Standard packages do not fit every business. A hotel, a school and a clothing brand each need something different, so the exact build is scoped around the goal instead of forced into a template.',
+      points: [
+        { title: 'Scoped to the actual problem', text: 'A short call and a written proposal before anything is built, so the approach, timeline and price are clear up front.' },
+        { title: 'Delivered in milestones', text: 'Custom builds ship in stages with feedback along the way, not as one big reveal at the end.' },
+        { title: 'Support after launch', text: 'We stay available once it is live, automations, menus and campaigns need small adjustments as a business changes.' },
+      ],
+    },
     related: ['marketing-advertising', 'website-design-development'],
     seo: {
       title: 'Custom Digital Solutions in Nepal',

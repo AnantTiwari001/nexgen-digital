@@ -85,6 +85,32 @@ export interface Faq {
   a: string;
 }
 
+/**
+ * Short, placeholder-labelled proof point for a service page: a headline
+ * result, the scenario it came from, and a category tag. Always mark
+ * `placeholder: true` until replaced with a real client case study.
+ */
+export interface CaseStudyExample {
+  title: string;
+  /** Headline result/stat, e.g. "3.2x more engagement in 60 days" */
+  stat: string;
+  /** One-line scenario description */
+  description: string;
+  tag: string;
+  placeholder?: boolean;
+}
+
+export interface WhyUsPoint {
+  title: string;
+  text: string;
+}
+
+/** "Why choose NexGen for this service" copy, specific to each service. */
+export interface ServiceWhyUs {
+  lead: string;
+  points: WhyUsPoint[];
+}
+
 export interface Service {
   slug: string;
   name: string;
@@ -100,6 +126,8 @@ export interface Service {
   problem: { title: string; text: string };
   benefits: Benefit[];
   deliverables: string[];
+  examples: CaseStudyExample[];
+  whyUs: ServiceWhyUs;
   process: ProcessStep[];
   pricing: PricingTier[];
   faqs: Faq[];
