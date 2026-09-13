@@ -15,8 +15,10 @@ interface Props {
   eyebrowKey?: string;
   titleKey?: string;
   leadKey?: string;
+  /** Extra class on the <h1>, e.g. a one-off treatment like `text-gradient-dusk` for a single page. */
+  titleClass?: string;
 }
-const { eyebrow, title, lead, script, align = 'left', tone = 'orange', compact = false, eyebrowKey, titleKey, leadKey } = Astro.props;
+const { eyebrow, title, lead, script, align = 'left', tone = 'orange', compact = false, eyebrowKey, titleKey, leadKey, titleClass } = Astro.props;
 ---
 
 <section class:list={['phero', `phero--${tone}`, `phero--${align}`, { 'phero--compact': compact }]} data-parallax-scope>
@@ -25,7 +27,7 @@ const { eyebrow, title, lead, script, align = 'left', tone = 'orange', compact =
   <div class="container phero__inner">
     <div class="phero__text">
       {eyebrow && <p class="eyebrow" data-reveal data-i18n={eyebrowKey}><slot name="eyebrow">{eyebrow}</slot></p>}
-      {title && <h1 class="phero__title" data-split="immediate" data-split-delay="0.1" data-i18n={titleKey}><slot name="title">{title}</slot></h1>}
+      {title && <h1 class:list={['phero__title', titleClass]} data-split="immediate" data-split-delay="0.1" data-i18n={titleKey}><slot name="title">{title}</slot></h1>}
       {script && <p class="script phero__script" data-reveal style="--reveal-delay:400ms">{script}</p>}
       {lead && <p class="lead" data-reveal style="--reveal-delay:500ms" data-i18n={leadKey}><slot name="lead">{lead}</slot></p>}
       <div data-reveal style="--reveal-delay:600ms"><slot /></div>

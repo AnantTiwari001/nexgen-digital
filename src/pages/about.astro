@@ -8,15 +8,26 @@ import Mountains from '../components/Mountains.astro';
 import Marquee from '../components/sections/Marquee.astro';
 import Stats from '../components/sections/Stats.astro';
 import CtaBand from '../components/sections/CtaBand.astro';
+import Signpost from '../components/Signpost.astro';
 import { story, values, team, milestones } from '../data/team';
 import { site } from '../config/site';
 import { t } from '../i18n';
 
 const initials = (name: string) => name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase();
+
+// Real Kathmandu-valley neighbourhoods, Devanagari spellings verified against
+// Nepali-language sources. Distances are rough, decorative (from central Kathmandu),
+// in the spirit of a roadside signpost rather than a precise measurement.
+const kathmanduSignpost = [
+  { devanagari: 'बौद्ध', roman: 'Boudha', distance: '6 km' },
+  { devanagari: 'पाटन', roman: 'Patan', distance: '5 km' },
+  { devanagari: 'ठमेल', roman: 'Thamel', distance: '2 km' },
+  { devanagari: 'बानेश्वर', roman: 'Baneshwor', distance: '3 km' },
+];
 ---
 
 <Base title="About" description="NexGen Digital is a Kathmandu-based digital growth agency combining local talent with AI tools to help Nepali businesses, brands and creators grow." headerTone="white">
-  <PageHero eyebrow={t('about.eyebrow')} eyebrowKey="about.eyebrow" title={t('about.title')} titleKey="about.title" lead={story.intro} script={site.phrases.scriptHero}>
+  <PageHero eyebrow={t('about.eyebrow')} eyebrowKey="about.eyebrow" title={t('about.title')} titleKey="about.title" lead={story.intro} script={site.phrases.scriptHero} tone="black" titleClass="text-gradient-dusk">
     <div slot="visual" class="about-hero__visual">
       <div class="about-hero__card card card--glass" data-float="10">
         <Logo variant="stacked" height={80} tone="white" />
@@ -43,6 +54,7 @@ const initials = (name: string) => name.split(' ').map((n) => n[0]).join('').sli
           <p>{site.location.addressLine}</p>
           <p class="caps">{site.location.serviceArea}</p>
         </div>
+        <Signpost items={kathmanduSignpost} />
         <ol class="milestones">
           {milestones.map((m) => (
             <li><span class="milestones__year">{m.year}</span><span>{m.title}</span></li>
@@ -92,6 +104,18 @@ const initials = (name: string) => name.split(' ').map((n) => n[0]).join('').sli
   </section>
 
   <Stats />
+
+  <section class="section about-dusk" data-parallax-scope>
+    <div class="about-dusk__mtn" data-parallax="0.08" aria-hidden="true"><Mountains /></div>
+    <div class="container about-dusk__inner">
+      <p class="caps about-dusk__eyebrow" data-reveal><Icon name="sun" size={14} /> {site.location.city}, {site.location.country}</p>
+      <h2 class="about-dusk__headline" data-split>{site.phrases.localBusiness}</h2>
+      <p class="lead about-dusk__lead" data-reveal style="--reveal-delay:150ms">
+        From Boudha to Patan, Thamel to Baneshwor — this valley is home, not a client list. Every project we ship watches the same sunset over the same hills.
+      </p>
+    </div>
+  </section>
+
   <CtaBand />
 </Base>
 
@@ -152,4 +176,46 @@ const initials = (name: string) => name.split(' ').map((n) => n[0]).join('').sli
   .member h3 { font-size: var(--text-lg); margin-bottom: var(--space-1); }
   .member__role { color: var(--accent); font-weight: 600; font-size: var(--text-sm); margin-bottom: var(--space-3); }
   .member p:last-child { margin: 0; }
+
+  /* Golden-hour band: the dusk gradient as a full-bleed background, with a
+     mountain silhouette (reused Mountains.astro, no photographic imagery) and
+     light foreground text for contrast in both themes — see tokens.css. */
+  .about-dusk {
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    background: var(--dusk-gradient);
+    color: var(--dusk-fg);
+  }
+  .about-dusk__mtn {
+    position: absolute;
+    inset: auto 0 -6% 0;
+    color: #050505;
+    opacity: 0.92;
+    pointer-events: none;
+  }
+  .about-dusk__inner {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: var(--space-4);
+  }
+  .about-dusk__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    color: var(--dusk-fg);
+    opacity: 0.85;
+  }
+  .about-dusk__headline {
+    margin: 0;
+    color: var(--dusk-fg);
+    font-size: var(--text-4xl);
+  }
+  .about-dusk__headline :global(.word) { display: inline-block; }
+  .about-dusk__lead {
+    margin: 0;
+    color: var(--dusk-fg-muted);
+    max-width: 62ch;
+  }
 </style>
