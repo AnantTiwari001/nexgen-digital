@@ -1,0 +1,105 @@
+---
+/**
+ * Layered Kathmandu skyline silhouette — companion to Mountains.astro, built the same way:
+ * opacity-layered shapes in one viewBox, currentColor fill, optional per-layer parallax.
+ * Reads as tiered pagoda temple roofs plus a Boudhanath-style stupa spire — kept graphic
+ * and simple, a silhouette rather than an illustration.
+ */
+interface Props {
+  class?: string;
+  layers?: boolean;
+}
+const { class: className, layers = false } = Astro.props;
+
+type Tier = { w: number; h: number };
+
+/**
+ * A pagoda roof: flat rectangular roof slabs stacked on cx, resting on baseY and shrinking
+ * upward. A thin gap between each slab reads as the eave line under the roof above — without
+ * it the stack reads as a solid stepped pyramid rather than a tiered temple roof.
+ */
+function pagoda(cx: number, baseY: number, tiers: Tier[], finial: Tier): string {
+  const gap = 4;
+  let y = baseY;
+  const parts: string[] = [];
+  tiers.forEach((t, i) => {
+    if (i > 0) y -= gap;
+    y -= t.h;
+    parts.push(`<rect x="${(cx - t.w / 2).toFixed(1)}" y="${y.toFixed(1)}" width="${t.w}" height="${t.h}"/>`);
+  });
+  y -= gap + finial.h;
+  parts.push(`<rect x="${(cx - finial.w / 2).toFixed(1)}" y="${y.toFixed(1)}" width="${finial.w}" height="${finial.h}"/>`);
+  return parts.join('');
+}
+
+/** Boudhanath-style stupa: a wide dome, a square harmika, and a spire of stacked rings tapering to a finial spike. */
+function stupa(cx: number, baseY: number): string {
+  const domeRx = 108;
+  const domeRy = 64;
+  const harmika: Tier = { w: 44, h: 26 };
+  const rings: Tier[] = [
+    { w: 34, h: 11 },
+    { w: 29, h: 11 },
+    { w: 24, h: 10 },
+    { w: 19, h: 10 },
+    { w: 15, h: 9 },
+    { w: 11, h: 9 },
+  ];
+  const domeTop = baseY - domeRy;
+  const parts: string[] = [`<path d="M${cx - domeRx},${baseY} A ${domeRx} ${domeRy} 0 0 1 ${cx + domeRx},${baseY} Z"/>`];
+  let y = domeTop - harmika.h;
+  parts.push(`<rect x="${(cx - harmika.w / 2).toFixed(1)}" y="${y.toFixed(1)}" width="${harmika.w}" height="${harmika.h}"/>`);
+  for (const r of rings) {
+    y -= r.h;
+    parts.push(`<rect x="${(cx - r.w / 2).toFixed(1)}" y="${y.toFixed(1)}" width="${r.w}" height="${r.h}" rx="${r.h / 2}"/>`);
+  }
+  parts.push(`<path d="M${(cx - 5).toFixed(1)},${y.toFixed(1)} L${cx},${(y - 22).toFixed(1)} L${(cx + 5).toFixed(1)},${y.toFixed(1)} Z"/>`);
+  return parts.join('');
+}
+
+const band = (top: number) => `<rect x="0" y="${top}" width="1440" height="${320 - top}"/>`;
+
+// Back: distant, faint — a low haze line with a few plain building blocks (no temples; keeps
+// the pagodas/stupa as the only "readable" silhouettes, the rest is just depth texture).
+const back = `${band(308)}
+  <rect x="70" y="284" width="36" height="24"/>
+  <rect x="420" y="278" width="44" height="30"/>
+  <rect x="850" y="288" width="30" height="20"/>
+  <rect x="1300" y="282" width="40" height="26"/>`;
+
+// Mid: two smaller pagodas at different positions/heights, off to either side of centre.
+const mid = `${band(296)}
+  ${pagoda(380, 296, [
+    { w: 112, h: 24 },
+    { w: 82, h: 20 },
+    { w: 56, h: 17 },
+  ], { w: 9, h: 13 })}
+  ${pagoda(1150, 296, [
+    { w: 90, h: 22 },
+    { w: 60, h: 18 },
+  ], { w: 8, h: 11 })}`;
+
+// Front: closest, full opacity — the tallest pagoda plus the stupa, dead centre and tallest.
+const front = `${band(284)}
+  ${pagoda(170, 284, [
+    { w: 150, h: 28 },
+    { w: 114, h: 24 },
+    { w: 82, h: 20 },
+    { w: 54, h: 16 },
+  ], { w: 10, h: 14 })}
+  ${stupa(720, 284)}`;
+---
+
+<svg class:list={['skyline', className]} viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+  <g data-layer="back" data-parallax={layers ? '0.06' : undefined} fill="currentColor" opacity="0.45" set:html={back} />
+  <g data-layer="mid" data-parallax={layers ? '0.12' : undefined} fill="currentColor" opacity="0.7" set:html={mid} />
+  <g data-layer="front" data-parallax={layers ? '0.2' : undefined} fill="currentColor" set:html={front} />
+</svg>
+
+<style>
+  .skyline {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+</style>

@@ -6,6 +6,7 @@ import ServicesGrid from '../components/sections/ServicesGrid.astro';
 import ProductSpotlight from '../components/sections/ProductSpotlight.astro';
 import Process from '../components/sections/Process.astro';
 import WhyUs from '../components/sections/WhyUs.astro';
+import PrayerFlags from '../components/PrayerFlags.astro';
 import Stats from '../components/sections/Stats.astro';
 import Testimonials from '../components/sections/Testimonials.astro';
 import PricingTeaser from '../components/sections/PricingTeaser.astro';
@@ -46,8 +47,20 @@ const localBusinessLd = {
   <ProductSpotlight />
   <Process />
   <WhyUs />
+  <div class="prayer-flags-band">
+    <PrayerFlags />
+  </div>
   {site.features.stats && <Stats />}
   {site.features.testimonials && <Testimonials />}
   {site.features.pricingPage && <PricingTeaser />}
   <CtaBand />
 </Base>
+
+<style>
+  .prayer-flags-band {
+    width: 100%;
+    padding-block: var(--space-4);
+    background: var(--bg-muted);
+    overflow: hidden;
+  }
+</style>
