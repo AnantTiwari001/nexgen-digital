@@ -15,7 +15,7 @@ const isNumeric = /^\d/.test(tier.price);
 const ctaHref = href ?? whatsappUrl(`Hi NexGen Digital, I am interested in the ${tier.name} plan${context ? ` for ${context}` : ''}.`);
 ---
 
-<div class:list={['price', { 'price--hl': tier.highlight }]} data-reveal style={`--reveal-delay:${index * 90}ms`}>
+<div class:list={['price', { 'price--hl': tier.highlight }]} data-reveal data-tilt="5" style={`--reveal-delay:${index * 90}ms`}>
   {tier.highlight && <span class="price__badge"><T k="services.mostPopular" /></span>}
   <h3 class="price__name">{tier.name}</h3>
   <div class="price__amount">

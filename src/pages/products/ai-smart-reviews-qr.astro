@@ -124,23 +124,20 @@ const productLd = {
     </div>
   </section>
 
-  <section class="section section--muted audience-section">
-    <div class="container audience-grid">
-      <div class="audience-photo" data-reveal="left" data-tilt="4">
-        <Image src={patanSquare} alt="A courtyard temple in Patan Durbar Square, Kathmandu" width={720} height={860} quality={82} />
-        <span class="audience-photo__credit">Patan Durbar Square, Kathmandu</span>
+  <section class="section audience-section" data-parallax-scope>
+    <Image class="audience-section__photo" src={patanSquare} alt="A courtyard temple in Patan Durbar Square, Kathmandu" width={1800} height={1000} quality={78} data-parallax="0.08" />
+    <div class="audience-section__wash" aria-hidden="true"></div>
+    <div class="container audience-section__inner">
+      <SectionHead eyebrow="product.forWho" align="center">
+        <span slot="title" class="audience-section__title">Nepal's local businesses, one scan away from growth</span>
+      </SectionHead>
+      <div class="audience" data-reveal-group>
+        {product.audience.map((a) => (
+          <span class="audience__pill pill pill--glass" data-reveal><Icon name="pin" size={14} />{a}</span>
+        ))}
       </div>
-      <div data-reveal="right">
-        <SectionHead eyebrow="product.forWho">
-          <span slot="title">Nepal's local businesses, one scan away from growth</span>
-        </SectionHead>
-        <div class="audience" data-reveal-group>
-          {product.audience.map((a) => (
-            <span class="audience__pill pill" data-reveal><Icon name="pin" size={14} />{a}</span>
-          ))}
-        </div>
-        <p class="ne audience__ne" data-reveal>नेपालका café, restaurant, salon, clinic, hotel र local business का लागि।</p>
-      </div>
+      <p class="ne audience__ne" data-reveal>नेपालका café, restaurant, salon, clinic, hotel र local business का लागि।</p>
+      <span class="audience-section__credit">Patan Durbar Square, Kathmandu</span>
     </div>
   </section>
 
@@ -299,44 +296,58 @@ const productLd = {
   .qlinks__item > svg:last-child { margin-left: auto; }
   .feat h3 { font-size: var(--text-lg); margin: var(--space-4) 0 var(--space-2); }
   .feat p { margin: 0; font-size: var(--text-sm); }
-  .audience-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-8);
-    align-items: center;
-  }
-  @media (min-width: 900px) {
-    .audience-grid { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr); }
-  }
-  .audience-photo {
+  /* Full-bleed photo background with the brand's dusk-gradient wash, same pattern
+     as the About page's golden-hour band — a real place behind the message,
+     not a photo boxed off to one side competing with the text. */
+  .audience-section {
     position: relative;
-    border-radius: var(--radius-lg);
     overflow: hidden;
-    box-shadow: var(--shadow-lg);
-    transform-style: preserve-3d;
+    text-align: center;
+    background: var(--dusk-gradient);
+    color: var(--dusk-fg);
   }
-  .audience-photo :global(img) {
+  .audience-section :global(.audience-section__photo) {
+    position: absolute;
+    inset: 0;
     width: 100%;
-    height: auto;
-    aspect-ratio: 720 / 860;
+    height: 100%;
     object-fit: cover;
   }
-  .audience-photo__credit {
+  .audience-section__wash {
     position: absolute;
-    left: var(--space-4);
-    bottom: var(--space-4);
+    inset: 0;
+    background: var(--dusk-gradient);
+    opacity: 0.78;
+    mix-blend-mode: multiply;
+  }
+  .audience-section__inner {
+    position: relative;
+    display: grid;
+    justify-items: center;
+  }
+  .audience-section :global(.eyebrow) { color: var(--dusk-fg); }
+  .audience-section__title { color: var(--dusk-fg); }
+  .audience-section :global(.lead) { color: var(--dusk-fg-muted); }
+  .audience {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+  }
+  .audience__pill { color: #fff; }
+  .audience__ne { margin-top: var(--space-5); font-size: var(--text-lg); color: var(--dusk-fg-muted); }
+  .audience-section__credit {
+    margin-top: var(--space-6);
     padding: 0.4em 0.85em;
     border-radius: var(--radius-pill);
-    background: rgba(11, 11, 11, 0.55);
-    color: #fff;
+    background: rgba(11, 11, 11, 0.4);
+    color: rgba(255, 255, 255, 0.85);
     font-family: var(--font-heading);
     font-size: var(--text-xs);
     font-weight: 600;
     backdrop-filter: blur(4px);
   }
-  .audience { display: flex; flex-wrap: wrap; gap: var(--space-2); }
-  .audience__pill { background: var(--bg-elev); }
-  .audience__ne { margin-top: var(--space-5); font-size: var(--text-lg); color: var(--fg-muted); }
   .perks { margin-bottom: var(--space-7); }
   .perk {
     display: flex;

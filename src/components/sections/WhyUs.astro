@@ -29,7 +29,7 @@ const points: { icon: IconName; n: number }[] = [
     </div>
     <div class="why__grid" data-reveal-group>
       {points.map((p) => (
-        <div class="why__card" data-reveal>
+        <div class="why__card" data-reveal data-tilt="5">
           <span class="icon-tile icon-tile--black icon-tile--round"><Icon name={p.icon} /></span>
           <h3><T k={`why.${p.n}.title`} /></h3>
           <p><T k={`why.${p.n}.text`} /></p>

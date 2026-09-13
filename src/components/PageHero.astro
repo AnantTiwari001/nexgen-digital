@@ -1,6 +1,7 @@
 ---
 /** Inner-page hero: bold orange surface, eyebrow, title, lead, optional visual slot. */
 import Mountains from './Mountains.astro';
+import KathmanduSkyline from './KathmanduSkyline.astro';
 import Logo from './Logo.astro';
 
 interface Props {
@@ -24,6 +25,7 @@ const { eyebrow, title, lead, script, align = 'left', tone = 'orange', compact =
 <section class:list={['phero', `phero--${tone}`, `phero--${align}`, { 'phero--compact': compact }]} data-parallax-scope>
   <div class="phero__mark" data-parallax="0.12" aria-hidden="true"><Logo variant="mark" height={420} tone="white" /></div>
   <div class="phero__mountains" aria-hidden="true"><Mountains /></div>
+  <div class="phero__skyline" aria-hidden="true"><KathmanduSkyline /></div>
   <div class="container phero__inner">
     <div class="phero__text">
       {eyebrow && <p class="eyebrow" data-reveal data-i18n={eyebrowKey}><slot name="eyebrow">{eyebrow}</slot></p>}
@@ -32,7 +34,7 @@ const { eyebrow, title, lead, script, align = 'left', tone = 'orange', compact =
       {lead && <p class="lead" data-reveal style="--reveal-delay:500ms" data-i18n={leadKey}><slot name="lead">{lead}</slot></p>}
       <div data-reveal style="--reveal-delay:600ms"><slot /></div>
     </div>
-    {Astro.slots.has('visual') && <div class="phero__visual" data-reveal="scale" style="--reveal-delay:300ms"><slot name="visual" /></div>}
+    {Astro.slots.has('visual') && <div class="phero__visual" data-reveal="scale" data-tilt="4" style="--reveal-delay:300ms"><slot name="visual" /></div>}
   </div>
 </section>
 
@@ -74,6 +76,15 @@ const { eyebrow, title, lead, script, align = 'left', tone = 'orange', compact =
   }
   .phero--black .phero__mountains { color: #fff; opacity: 0.06; }
   .phero--light .phero__mountains { color: var(--brand-orange); opacity: 0.08; }
+  .phero__skyline {
+    position: absolute;
+    inset: auto 0 -8% 0;
+    color: #0b0b0b;
+    opacity: 0.16;
+    pointer-events: none;
+  }
+  .phero--black .phero__skyline { color: #fff; opacity: 0.07; }
+  .phero--light .phero__skyline { color: var(--brand-orange); opacity: 0.09; }
   .phero__inner {
     position: relative;
     display: grid;

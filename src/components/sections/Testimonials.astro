@@ -20,7 +20,7 @@ const initials = (name: string) =>
   <div class="testimonials__scroller" data-reveal>
     <div class="testimonials__track container">
       {testimonials.map((t, i) => (
-        <article class:list={['tcard', { 'tcard--video': t.video !== undefined }]} style={`--i:${i}`}>
+        <article class:list={['tcard', { 'tcard--video': t.video !== undefined }]} data-tilt="4" style={`--i:${i}`}>
           {t.video !== undefined && (
             <div class="tcard__video">
               {t.video ? (

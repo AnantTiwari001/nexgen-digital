@@ -21,7 +21,7 @@ const icons: IconName[] = ['search', 'doc', 'sparkles', 'trend'];
     )}
     <ol class="process__list" data-reveal-group>
       {(steps ?? [1, 2, 3, 4].map((n) => ({ key: n }))).map((s, i) => (
-        <li class="process__step" data-reveal>
+        <li class="process__step" data-reveal data-tilt="5">
           <span class="process__num">{String(i + 1).padStart(2, '0')}</span>
           <span class="process__icon"><Icon name={icons[i % icons.length]} /></span>
           {'key' in s ? (
