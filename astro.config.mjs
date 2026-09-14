@@ -76,4 +76,11 @@ export default defineConfig({
     },
   },
   build: { inlineStylesheets: 'auto' },
+  // Dev-server only: lets tunneled hosts (ngrok, etc.) reach `astro dev` without
+  // Vite's host-header check blocking the request. Has no effect on the built site.
+  vite: {
+    server: {
+      allowedHosts: true,
+    },
+  },
 });
