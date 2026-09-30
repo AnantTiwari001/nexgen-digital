@@ -3,7 +3,7 @@
 // Supabase keys are Worker secrets, set in the dashboard or with `npx wrangler secret put`.
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "nexgen-digital",
+  "name": "nextgen-digital",
   "compatibility_date": "2026-09-30",
   "compatibility_flags": ["nodejs_compat"],
   "observability": { "enabled": true }
