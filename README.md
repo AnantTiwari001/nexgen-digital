@@ -147,7 +147,7 @@ binding is involved. Project settings live in [wrangler.jsonc](./wrangler.jsonc)
 
 **Deploy from GitHub (recommended).** In the Cloudflare dashboard: **Workers & Pages →
 Create → Import a repository**, pick this repo, and keep the project name
-`nexgen-digital` (it must match `name` in `wrangler.jsonc`). Build command
+`nextgen-digital` (it must match `name` in `wrangler.jsonc`). Build command
 `npm run build`, deploy command `npx wrangler deploy`. Every push to `main` then deploys;
 other branches get preview URLs.
 
