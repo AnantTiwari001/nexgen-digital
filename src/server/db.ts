@@ -9,8 +9,8 @@
  *
  * Without SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY configured, rows are logged to
  * the console instead of written, so the site (and forms) keep working in
- * development with zero setup. Email notifications (src/server/mailer.ts) are a
- * separate, best-effort heads-up — this module is the source of truth.
+ * development with zero setup. Team alerts come from Supabase itself: a scheduled job
+ * posts every new row to ntfy (supabase/notifications.sql).
  */
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } from 'astro:env/server';

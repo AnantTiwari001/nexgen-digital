@@ -25,3 +25,8 @@ pnpm-debug.log*
 .idea/
 .shots/
 .claude/worktrees/
+
+# cloudflare
+.wrangler/
+.dev.vars*
+supabase/.temp/

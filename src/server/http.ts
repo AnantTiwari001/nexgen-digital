@@ -34,10 +34,13 @@ export class ValidationError extends Error {
   }
 }
 
-/* In-memory rate limit per IP. Good enough for a single Node instance. */
+/* In-memory rate limit per IP. Each Cloudflare Worker isolate keeps its own buckets, so this
+ * stops a single noisy client rather than a distributed flood. cf-connecting-ip comes first:
+ * Cloudflare sets it itself, while x-forwarded-for keeps whatever the client sent. */
 const buckets = new Map<string, number[]>();
 export function rateLimit(request: Request, clientAddress: string | undefined, limit = 10, windowMs = 60_000) {
-  const ip = request.headers.get('x-forwarded-for')?.split(',')[0].trim() || clientAddress || 'unknown';
+  const ip =
+    request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for')?.split(',')[0].trim() || clientAddress || 'unknown';
   const now = Date.now();
   const hits = (buckets.get(ip) || []).filter((t) => now - t < windowMs);
   hits.push(now);

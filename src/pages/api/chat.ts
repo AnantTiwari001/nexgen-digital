@@ -1,6 +1,5 @@
 import type { APIRoute } from 'astro';
 import { answer } from '../../server/chatbot';
-import { attributionRows, layout, notifyAddress, sendMail, table } from '../../server/mailer';
 import { insertRow } from '../../server/db';
 import { json, rateLimit, readBody, str } from '../../server/http';
 import { dictionaries } from '../../i18n';
@@ -18,7 +17,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   const lang = (str(body.lang, 5) === 'ne' ? 'ne' : 'en') as 'en' | 'ne';
   const t = (k: string) => dictionaries[lang][k] ?? dictionaries.en[k];
 
-  // Lead capture: a visitor left contact details. Store first, email second.
+  // Lead capture: a visitor left contact details. Supabase's ntfy job alerts the team.
   if (body.lead && typeof body.lead === 'object') {
     const lead = body.lead as Record<string, unknown>;
     const name = str(lead.name, 120);
@@ -39,21 +38,6 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       attribution,
     });
 
-    await sendMail({
-      to: notifyAddress(),
-      subject: `Chat lead: ${name} (${contact})`,
-      html: layout(
-        'New chat lead',
-        table([
-          ['Name', name],
-          ['Contact', contact],
-          ['Page', page],
-          ['Language', lang],
-          ['Transcript', transcript || '(no messages)'],
-          ...attributionRows(attribution),
-        ]),
-      ),
-    });
     return json({ answer: t('chat.leadSent'), matched: true, id: 'lead' });
   }
 

@@ -21,13 +21,13 @@ pre-order flow, testimonials, pricing placeholders, a contact form, and a lead-c
 
 | Concern | Choice | Why |
 | --- | --- | --- |
-| Framework | Astro 7 (`output: 'static'`) + `@astrojs/node` standalone | Static pages, server endpoints, host-agnostic |
+| Framework | Astro 7 (`output: 'static'`) + `@astrojs/cloudflare` | Static pages served as assets, `/api/*` in a Cloudflare Worker; free plan allows commercial use. `@astrojs/node` is the one-line self-hosting fallback |
 | Styling | Plain CSS with design tokens (`src/styles/tokens.css`) | No framework lock-in, easy theming |
 | Animation | GSAP + ScrollTrigger, Lenis smooth scroll | Parallax, reveals, pinned sections |
 | Signature moments | `src/scripts/trace.ts` + `src/styles/trace.css` (plain SVG/CSS, no library) | One glowing traced-line language reused on the hero, two service pages and the stats section, each tied to that page's subject; every trigger fires on load/scroll, never behind a drag or tap. Replaced an earlier tsParticles ember hero (reverted, see git history) that read as decorative noise rather than purposeful |
 | Fonts | Astro Fonts API (Google provider, self-hosted at build): Poppins, Inter, Caveat | Brand type, no runtime Google requests |
 | Storage | Supabase (hosted Postgres) via `@supabase/supabase-js`, console fallback | Generous free tier, built-in dashboard, no admin panel needed |
-| Email | Gmail API via `googleapis` (OAuth2 refresh token) with console fallback | Requested; best-effort notification on top of storage |
+| Notifications | ntfy, sent by a pg_cron job inside Supabase every 10 minutes (`supabase/notifications.sql`) | Push alerts on the team's phones with no email setup; the site only writes rows. No customer emails: the thank-you screens say the team follows up by WhatsApp or phone |
 | Chatbot | Rule-based FAQ engine + lead capture, all messages logged | No external AI dependency in v1 |
 | i18n | Dictionary JSON + `data-i18n` attributes swapped on client | Single static build, URL param and toggle |
 
@@ -48,7 +48,7 @@ src/
   layouts/Base.astro      head, fonts, SEO, analytics, header, footer, chat widget, scripts
   components/             Logo, Header, Footer, Hero, sections, cards, forms, ChatWidget, toggles
   scripts/                client: animations, i18n, theme, utm, chat, forms
-  server/                 mailer (Gmail), validation, rate limit, chatbot engine
+  server/                 storage (Supabase), validation, rate limit, chatbot engine
   pages/                  routes (see below)
 scripts/generate-logo.mjs builds SVG logos from Poppins outlines into public/brand/
 public/brand/             logo-horizontal.svg, logo-stacked.svg, logo-mark.svg, favicon
@@ -84,5 +84,5 @@ public/brand/             logo-horizontal.svg, logo-stacked.svg, logo-mark.svg, 
 
 - Nepali translation covers navigation, hero, CTAs, service names and section headings in v1; untranslated keys fall back to English.
 - Pre-order stores no card data. Payment preference (eSewa, Khalti, bank transfer, cash) is collected as a choice only.
-- Gmail sending uses a Google Cloud OAuth client with a refresh token (see `.env.example`). Without credentials, emails are logged to the console.
-- Hosting is out of scope; `npm run build` then `node dist/server/entry.mjs` runs the site.
+- Team alerts come from Supabase, not the site: pg_cron + pg_net post each new submission to an ntfy topic stored in Supabase Vault.
+- Hosted on Cloudflare Workers (see README → Hosting).

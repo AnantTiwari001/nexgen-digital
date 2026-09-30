@@ -1,9 +1,7 @@
 import type { APIRoute } from 'astro';
-import { attributionRows, layout, notifyAddress, sendMail, table } from '../../server/mailer';
 import { insertRow } from '../../server/db';
 import { isBot, isEmail, isPhone, json, parseAttribution, rateLimit, readBody, str } from '../../server/http';
 import { product } from '../../data/product';
-import { site } from '../../config/site';
 
 export const prerender = false;
 
@@ -57,10 +55,9 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   if (Object.keys(errors).length) return json({ ok: false, errors }, 400);
 
   const reference = ref();
-  const tier = product.tiers.find((t) => t.name === d.plan)!;
-  const payment = product.options.paymentMethods.find((m) => m.id === d.paymentMethod)!;
 
-  // Store first — this is the source of truth. Email below is a best-effort heads-up.
+  // Supabase is the source of truth. A scheduled job there alerts the team on ntfy for
+  // every new row (supabase/notifications.sql), so storing it is all this route does.
   const stored = await insertRow('preorders', {
     reference,
     business_name: d.businessName,
@@ -88,61 +85,5 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     attribution: attribution ?? null,
   });
 
-  const rows: [string, unknown][] = [
-    ['Reference', reference],
-    ['Plan', `${tier.name} (Rs. ${tier.price}${tier.period ? ` ${tier.period}` : ''})`],
-    ['Quantity', d.quantity],
-    ['Finish', d.finish],
-    ['Business', d.businessName],
-    ['Type', d.businessType],
-    ['Address', `${d.address}${d.city ? `, ${d.city}` : ''}`],
-    ['Google Maps', d.googleMaps],
-    ['Instagram', d.instagram],
-    ['Facebook', d.facebook],
-    ['TikTok', d.tiktok],
-    ['Website', d.website],
-    ['Contact', `${d.contactName}${d.role ? ` (${d.role})` : ''}`],
-    ['Phone', d.phone],
-    ['Email', d.email],
-    ['Payment method', payment.label],
-    ['Billing name', d.billingName],
-    ['PAN / VAT', d.pan],
-    ['Notes', d.notes],
-    ['Language', d.lang],
-    ['Page', d.page],
-    ...attributionRows(attribution),
-  ];
-
-  const internal = await sendMail({
-    to: notifyAddress(),
-    replyTo: d.email,
-    subject: `Pre-order ${reference}: ${d.businessName} · ${tier.name} × ${d.quantity}`,
-    html: layout('New pre-order', table(rows)),
-  });
-
-  await sendMail({
-    to: d.email,
-    subject: `Your ${product.name} pre-order is reserved (${reference})`,
-    html: layout(
-      `Namaste ${d.contactName}, you're on the list!`,
-      `<p>Thank you for pre-ordering the <strong>${product.name}</strong> for <strong>${d.businessName}</strong>. Your reference is <strong>${reference}</strong>.</p>
-       <p><strong>No payment has been taken.</strong> We will confirm your details and collect payment by ${payment.label} on delivery or before dispatch.</p>
-       ${table([
-         ['Plan', `${tier.name} (Rs. ${tier.price}${tier.period ? ` ${tier.period}` : ''})`],
-         ['Quantity', d.quantity],
-         ['Finish', d.finish],
-         ['Delivery to', `${d.address}${d.city ? `, ${d.city}` : ''}`],
-       ])}
-       <h3 style="font-family:Poppins,Arial,sans-serif;font-size:16px;margin:20px 0 8px">What happens next</h3>
-       <ol style="padding-left:20px;font-size:14px;line-height:1.7">
-         <li>We confirm your links and design within 2 business days.</li>
-         <li>Your stand is produced in the first batch.</li>
-         <li>Delivery and setup at your counter.</li>
-       </ol>
-       <p>Questions? WhatsApp us at <a href="https://wa.me/${site.contact.whatsapp}">+${site.contact.whatsapp}</a>.</p>
-       <p>Local business, stronger Nepal.<br><strong>NexGen Digital</strong></p>`,
-    ),
-  });
-
-  return json({ ok: stored.ok || internal.ok, reference, stored: stored.ok, skipped: internal.skipped });
+  return json({ ok: stored.ok, reference });
 };
