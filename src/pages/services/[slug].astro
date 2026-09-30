@@ -50,7 +50,7 @@ const serviceLd = {
 
 <Base title={service.seo.title} description={service.seo.description} headerTone="white" jsonLd={[serviceLd]}>
   <PageHero script={service.accentPhrase}>
-    <p class="eyebrow" slot="eyebrow"><a href={`/services#${category.id}`} data-i18n={`cat.${category.id}.name`}>{category.name}</a></p>
+    <a slot="eyebrow" href={`/services#${category.id}`} data-i18n={`cat.${category.id}.name`}>{category.name}</a>
     <span slot="title" data-i18n={`svc.${service.slug}.name`}>{service.name}</span>
     <span slot="lead" data-i18n={`svc.${service.slug}.tagline`}>{service.tagline}</span>
     <div class="btn-row svc-hero__btns">
