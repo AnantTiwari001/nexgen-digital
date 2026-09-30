@@ -1,0 +1,10 @@
+// Cloudflare Workers config. The Astro adapter fills in the entry point and static assets
+// at build time (see dist/server/wrangler.json); only project-level settings live here.
+// Supabase keys are Worker secrets, set in the dashboard or with `npx wrangler secret put`.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "nexgen-digital",
+  "compatibility_date": "2026-09-30",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true }
+}

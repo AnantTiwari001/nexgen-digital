@@ -1,6 +1,6 @@
 // @ts-check
 import { defineConfig, envField, fontProviders } from 'astro/config';
-import vercel from '@astrojs/vercel';
+import cloudflare from '@astrojs/cloudflare';
 import sitemap from '@astrojs/sitemap';
 
 /**
@@ -13,11 +13,14 @@ export default defineConfig({
   site,
   // Every page is prerendered. Only the /api/* endpoints opt out and run on the server.
   output: 'static',
-  // Deployed on Vercel: turns /api/* routes into Node serverless functions (needed for
-  // googleapis + @supabase/supabase-js, which don't run on Vercel's edge runtime).
-  // Self-hosting? Swap this back to `import node from '@astrojs/node'` and
+  // Deployed on Cloudflare Workers: static pages are served as assets, /api/* runs in the
+  // Worker (see wrangler.jsonc). 'compile' optimizes images with Sharp at build time, as
+  // every page using <Image> is prerendered — no Cloudflare Images binding needed.
+  // Self-hosting? Swap this for `import node from '@astrojs/node'` and
   // `adapter: node({ mode: 'standalone' })` — that's the only line that needs to change.
-  adapter: vercel(),
+  adapter: cloudflare({ imageService: 'compile' }),
+  // Nothing uses Astro sessions; without this the adapter provisions an unused KV namespace.
+  session: false,
   integrations: [sitemap({ filter: (page) => !page.includes('/preorder/thank-you') && !page.includes('/api/') })],
   prefetch: { prefetchAll: true, defaultStrategy: 'viewport' },
   fonts: [
@@ -63,14 +66,9 @@ export default defineConfig({
       PUBLIC_SITE_URL: envField.string({ context: 'client', access: 'public', optional: true }),
       PUBLIC_GA_MEASUREMENT_ID: envField.string({ context: 'client', access: 'public', optional: true }),
       PUBLIC_META_PIXEL_ID: envField.string({ context: 'client', access: 'public', optional: true }),
-      // Email delivery (Gmail API). All optional: without them, emails are logged to the console.
-      GMAIL_CLIENT_ID: envField.string({ context: 'server', access: 'secret', optional: true }),
-      GMAIL_CLIENT_SECRET: envField.string({ context: 'server', access: 'secret', optional: true }),
-      GMAIL_REFRESH_TOKEN: envField.string({ context: 'server', access: 'secret', optional: true }),
-      GMAIL_SENDER: envField.string({ context: 'server', access: 'secret', optional: true }),
-      NOTIFY_EMAIL: envField.string({ context: 'server', access: 'secret', optional: true }),
       // Storage (Supabase). Optional: without them, submissions are logged to the console
-      // instead of persisted. See supabase/schema.sql for the tables this expects.
+      // instead of persisted. See supabase/schema.sql for the tables this expects, and
+      // supabase/notifications.sql for the ntfy alerts on new submissions.
       SUPABASE_URL: envField.string({ context: 'server', access: 'secret', optional: true }),
       SUPABASE_SERVICE_ROLE_KEY: envField.string({ context: 'server', access: 'secret', optional: true }),
     },
