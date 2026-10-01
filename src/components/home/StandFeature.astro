@@ -1,0 +1,125 @@
+---
+/**
+ * The QR stand, in full orange. With `product.photo` set it shows the stand on a real
+ * counter; until then it stages the stand and its phone page on a drawn counter top.
+ */
+import Icon from '../Icon.astro';
+import T from '../T.astro';
+import QrStand from '../QrStand.astro';
+import PhoneMockup from '../PhoneMockup.astro';
+import Echo from './Echo.astro';
+import Ridge from './Ridge.astro';
+import { product } from '../../data/product';
+import { t } from '../../i18n';
+---
+
+<section class="standx" id="qr-stand">
+  <div class="container standx__inner">
+    <div class="standx__visual" data-reveal="scale">
+      {product.photo ? (
+        <img class="standx__photo" src={product.photo} alt="The Smart Reviews QR stand on a café counter" loading="lazy" />
+      ) : (
+        <div class="standx__scene">
+          <div class="standx__sun" aria-hidden="true"></div>
+          <div class="standx__counter" aria-hidden="true"></div>
+          <div class="standx__stand"><QrStand size={250} /></div>
+          <div class="standx__phone"><PhoneMockup width={190} /></div>
+          <p class="standx__note">Photo of the stand on a real counter goes here (3:2)</p>
+        </div>
+      )}
+    </div>
+
+    <div class="standx__copy">
+      <p class="pill standx__pill"><span class="dot"></span> <T k="product.preorderBadge" /></p>
+      <T k="product.title" as="h2" class="standx__title" />
+      <Echo text={t('home.stand.echo')} />
+      <T k="product.lead" as="p" class="lead standx__lead" />
+      <ul class="standx__links">
+        {product.links.map((l) => (
+          <li><Icon name={l.icon} size={16} /><span>{l.title}</span></li>
+        ))}
+      </ul>
+      <p class="standx__price"><T k="home.stand.price" /></p>
+      <div class="standx__actions">
+        <a class="btn btn--black btn--lg" href="/preorder" data-magnetic><T k="product.cta" /><Icon name="arrow" size={18} class="arrow" /></a>
+        <a class="standx__more" href={`/products/${product.slug}`}><T k="product.cta2" /><Icon name="arrow" size={16} /></a>
+      </div>
+      <p class="standx__fine"><Icon name="check" size={14} /> <T k="product.noPayment" /> · <T k="product.limited" /></p>
+    </div>
+  </div>
+  <Ridge to="var(--bg)" />
+</section>
+
+<style>
+  .standx {
+    position: relative;
+    background: var(--brand-orange);
+    color: #fff;
+    padding-block: var(--section-y) calc(var(--section-y) + 4rem);
+    overflow: hidden;
+  }
+  .standx__inner { display: grid; gap: var(--space-8); align-items: center; }
+  @media (min-width: 960px) { .standx__inner { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+
+  .standx__photo { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); }
+  .standx__scene {
+    position: relative;
+    aspect-ratio: 3 / 2;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    background: linear-gradient(180deg, #ffb06a 0%, #ff7a2e 55%);
+    box-shadow: 0 30px 70px rgba(80, 20, 0, 0.35);
+  }
+  .standx__sun {
+    position: absolute;
+    right: 8%;
+    top: -18%;
+    width: 60%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffe2a8 0%, rgba(255, 210, 122, 0) 65%);
+  }
+  .standx__counter {
+    position: absolute;
+    inset: 62% 0 0 0;
+    background: linear-gradient(180deg, #5a2c14 0%, #3b1c0c 100%);
+    box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.18);
+  }
+  .standx__stand { position: absolute; left: 12%; bottom: 20%; filter: drop-shadow(0 24px 24px rgba(0, 0, 0, 0.4)); }
+  .standx__phone { position: absolute; right: 10%; bottom: 8%; transform: rotate(6deg); }
+  .standx__note {
+    position: absolute;
+    left: var(--space-4);
+    bottom: var(--space-3);
+    margin: 0;
+    font-size: var(--text-xs);
+    color: rgba(255, 255, 255, 0.7);
+  }
+  @media (max-width: 560px) {
+    .standx__stand :global(.stand) { --stand-w: 150px !important; }
+    .standx__phone :global(.phone) { --phone-w: 120px !important; }
+    .standx__note { display: none; }
+  }
+
+  .standx__pill { background: #fff; color: var(--brand-orange); border: 0; margin-bottom: var(--space-5); }
+  .standx__title { color: #fff; }
+  .standx__copy { --echo: #fff3d6; }
+  .standx__lead { color: rgba(255, 255, 255, 0.92); }
+  .standx__links { list-style: none; padding: 0; margin: var(--space-5) 0; display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .standx__links li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+    padding: 0.45em 0.85em;
+    border-radius: var(--radius-pill);
+    background: rgba(11, 11, 11, 0.16);
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+  .standx__price { font-family: var(--font-heading); font-weight: 800; font-size: var(--text-2xl); margin-bottom: var(--space-5); }
+  .standx__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4) var(--space-6); }
+  .standx__more { display: inline-flex; align-items: center; gap: 0.4em; font-family: var(--font-heading); font-weight: 700; border-bottom: 2px solid rgba(255, 255, 255, 0.5); }
+  .standx__more:hover { border-color: #fff; }
+  .standx__fine { margin: var(--space-5) 0 0; font-size: var(--text-sm); opacity: 0.85; }
+  .standx__fine :global(svg) { display: inline-block; vertical-align: -2px; margin-right: 0.3em; }
+</style>

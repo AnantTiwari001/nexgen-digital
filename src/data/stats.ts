@@ -17,7 +17,8 @@ export const stats: Stat[] = [
   { value: 98, suffix: '%', label: 'Clients who renew', placeholder: true },
 ];
 
-export const trustedBy: { name: string; placeholder?: boolean }[] = [
+/** Client names for the logo row. Set `logo` to an SVG/PNG path in /public to show the real mark. */
+export const trustedBy: { name: string; logo?: string; placeholder?: boolean }[] = [
   { name: 'Himalayan Brew', placeholder: true },
   { name: 'Sunrise Dental', placeholder: true },
   { name: 'Everest Trek Gear', placeholder: true },

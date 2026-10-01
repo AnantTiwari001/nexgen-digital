@@ -14,6 +14,8 @@ export const product = {
   summary:
     'A premium counter stand with one smart QR code. Customers scan and tap to leave a Google review, follow your social accounts, pay, or contact you. Built for Nepal’s cafés, restaurants, salons, clinics, hotels and local shops.',
   accentPhrase: 'One QR, more possibilities',
+  /** Photo of the stand on a real counter (3:2, path in /public). Until set, the homepage stages the illustration. */
+  photo: undefined as string | undefined,
   audience: ['Cafés', 'Restaurants', 'Salons', 'Clinics', 'Hotels', 'Retail shops', 'Gyms', 'Pharmacies'],
 
   /** What one scan opens */

@@ -1,0 +1,92 @@
+---
+/**
+ * The end of the day: dusk sky, a string of prayer flags that leans with how fast you
+ * scroll, one clear ask, and the ridge that drops into the night-sky footer. This is the
+ * only place the flags appear on the homepage.
+ */
+import Icon from '../Icon.astro';
+import T from '../T.astro';
+import PrayerFlags from '../PrayerFlags.astro';
+import Echo from './Echo.astro';
+import Ridge from './Ridge.astro';
+import { site, whatsappUrl } from '../../config/site';
+import { t } from '../../i18n';
+---
+
+<section class="closing" data-closing>
+  <div class="closing__flags" data-closing-flags aria-hidden="true"><PrayerFlags width={1440} /></div>
+  <div class="closing__sun" aria-hidden="true"></div>
+  <div class="container closing__inner">
+    <p class="script closing__script" data-reveal>{site.phrases.dreams}</p>
+    <h2 class="closing__title" data-split><T k="cta.title" /></h2>
+    <Echo text={t('home.cta.echo')} class="closing__echo" />
+    <T k="cta.text" as="p" class="lead closing__lead" />
+    <div class="closing__actions" data-reveal>
+      <a class="btn btn--white btn--lg" href={whatsappUrl()} target="_blank" rel="noopener" data-magnetic><Icon name="whatsapp" size={20} /><T k="cta.whatsapp" /></a>
+      <a class="btn btn--black btn--lg" href="/contact" data-magnetic><Icon name="send" size={18} /><T k="cta.dm" /></a>
+    </div>
+    <p class="caps closing__loc"><Icon name="pin" size={14} /> {site.location.city}, {site.location.country} · {site.phrases.brighter}</p>
+  </div>
+  <Ridge to="var(--night-sky-top)" />
+</section>
+
+<style>
+  .closing {
+    position: relative;
+    background: var(--dusk-gradient);
+    color: var(--dusk-fg);
+    text-align: center;
+    padding-block: calc(var(--section-y) + 3rem) calc(var(--section-y) + 5rem);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .closing__flags {
+    position: absolute;
+    top: 0;
+    left: -2%;
+    right: -2%;
+    z-index: 1;
+  }
+  .closing__flags :global(.prayer-flags__string) { stroke: rgba(255, 255, 255, 0.55); }
+  .closing__sun {
+    position: absolute;
+    left: 50%;
+    bottom: -38%;
+    width: 70vw;
+    max-width: 900px;
+    aspect-ratio: 1;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffe2a8 0%, #ffb454 26%, rgba(255, 90, 0, 0) 66%);
+    z-index: -1;
+  }
+  .closing__inner { position: relative; z-index: 2; display: grid; justify-items: center; gap: var(--space-3); }
+  .closing__script { color: #ffd9b0; font-size: var(--text-2xl); transform: rotate(-2deg); margin: 0; }
+  .closing__title { font-size: var(--text-6xl); color: #fff; margin: 0; }
+  .closing__title :global(.word) { display: inline-block; }
+  .closing :global(.closing__echo) { --echo: #ffe2b8; margin: 0; }
+  .closing__lead { color: var(--dusk-fg-muted); margin: 0 auto var(--space-3); }
+  .closing__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-3); }
+  .closing__loc { display: inline-flex; align-items: center; gap: 0.4em; margin-top: var(--space-5); opacity: 0.9; }
+</style>
+
+<script>
+  import { gsap, ScrollTrigger } from '../../scripts/animations';
+
+  // The flags lean into the scroll: faster scrolling, stronger gust, easing back to still.
+  const flags = document.querySelector<SVGElement>('[data-closing-flags] svg');
+  const section = document.querySelector<HTMLElement>('[data-closing]');
+  if (flags && section && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const wind = { deg: 0 };
+    const apply = () => flags.style.setProperty('--wind', `${wind.deg.toFixed(2)}deg`);
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top bottom',
+      end: 'bottom top',
+      onUpdate: (self) => {
+        const target = gsap.utils.clamp(-16, 16, self.getVelocity() / -110);
+        gsap.to(wind, { deg: target, duration: 0.35, ease: 'power2.out', overwrite: true, onUpdate: apply, onComplete: () => gsap.to(wind, { deg: 0, duration: 1.6, ease: 'elastic.out(1, 0.35)', onUpdate: apply }) });
+      },
+    });
+  }
+</script>

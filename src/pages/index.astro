@@ -1,28 +1,16 @@
 ---
 import Base from '../layouts/Base.astro';
-import Hero from '../components/sections/Hero.astro';
-import Marquee from '../components/sections/Marquee.astro';
-import ServicesGrid from '../components/sections/ServicesGrid.astro';
-import ProductSpotlight from '../components/sections/ProductSpotlight.astro';
-import Process from '../components/sections/Process.astro';
-import WhyUs from '../components/sections/WhyUs.astro';
-import PrayerFlags from '../components/PrayerFlags.astro';
-import Stats from '../components/sections/Stats.astro';
-import Testimonials from '../components/sections/Testimonials.astro';
-import PricingTeaser from '../components/sections/PricingTeaser.astro';
-import CtaBand from '../components/sections/CtaBand.astro';
+import HomeHero from '../components/home/HomeHero.astro';
+import ClientLogos from '../components/home/ClientLogos.astro';
+import WorkReel from '../components/home/WorkReel.astro';
+import ServicesIndex from '../components/home/ServicesIndex.astro';
+import Results from '../components/home/Results.astro';
+import StandFeature from '../components/home/StandFeature.astro';
+import ClientStories from '../components/home/ClientStories.astro';
+import TeamWall from '../components/home/TeamWall.astro';
+import HowWeWork from '../components/home/HowWeWork.astro';
+import ClosingCta from '../components/home/ClosingCta.astro';
 import { site } from '../config/site';
-
-const featured = [
-  'social-media-management',
-  'social-media-marketing',
-  'ai-video-production',
-  'ai-graphics-design',
-  'ai-smart-reviews-qr',
-  'meta-ads',
-  'google-ads',
-  'website-design-development',
-];
 
 const localBusinessLd = {
   '@context': 'https://schema.org',
@@ -40,27 +28,20 @@ const localBusinessLd = {
 };
 ---
 
-<Base headerTone="white" jsonLd={[localBusinessLd]}>
-  <Hero />
-  <Marquee keys={['marquee.a', 'marquee.b', 'marquee.c', 'marquee.d', 'marquee.e']} />
-  <ServicesGrid featured={featured} />
-  <ProductSpotlight />
-  <Process />
-  <WhyUs />
-  <div class="prayer-flags-band">
-    <PrayerFlags />
-  </div>
-  {site.features.stats && <Stats />}
-  {site.features.testimonials && <Testimonials />}
-  {site.features.pricingPage && <PricingTeaser />}
-  <CtaBand />
+<!--
+  The homepage runs from midday to night: orange hero, proof in white and black, the dusk
+  sky at the results, and a night-sky footer. Each section ends in a ridgeline coloured
+  like the section below it (components/home/Ridge.astro).
+-->
+<Base headerTone="white" jsonLd={[localBusinessLd]} footerTone="night">
+  <HomeHero />
+  <ClientLogos />
+  <WorkReel />
+  <ServicesIndex />
+  <Results />
+  {site.features.preorder && <StandFeature />}
+  {site.features.testimonials && <ClientStories />}
+  <TeamWall />
+  <HowWeWork />
+  <ClosingCta />
 </Base>
-
-<style>
-  .prayer-flags-band {
-    width: 100%;
-    padding-block: var(--space-4);
-    background: var(--bg-muted);
-    overflow: hidden;
-  }
-</style>

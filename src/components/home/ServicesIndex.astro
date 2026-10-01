@@ -1,0 +1,127 @@
+---
+/**
+ * Every service as one line of large type with its starting price, grouped by category.
+ * Replaces the card grid: twelve services fit in about one desktop screen, and the list
+ * has no last row to leave half empty.
+ */
+import Icon from '../Icon.astro';
+import T from '../T.astro';
+import Echo from './Echo.astro';
+import Ridge from './Ridge.astro';
+import { categories, services, serviceHref } from '../../data/services';
+import { t } from '../../i18n';
+
+const groups = categories
+  .map((c) => ({ ...c, items: services.filter((s) => s.category === c.id) }))
+  .filter((g) => g.items.length);
+const fromPrice = (price?: string) => (price && price !== 'Custom' && price !== 'Quote' ? price : null);
+---
+
+<section class="svcx" id="services">
+  <div class="container">
+    <div class="svcx__head">
+      <div>
+        <T k="home.services.eyebrow" as="p" class="eyebrow" />
+        <T k="home.services.title" as="h2" />
+        <Echo text={t('home.services.echo')} />
+      </div>
+      <T k="home.services.lead" as="p" class="lead svcx__lead" />
+    </div>
+
+    <div class="svcx__groups">
+      {groups.map((g) => (
+        <div class="svcx__group" data-reveal>
+          <div class="svcx__cat">
+            <span class="icon-tile icon-tile--round svcx__icon"><Icon name={g.icon} /></span>
+            <h3 class="svcx__cat-name" data-i18n={`cat.${g.id}.name`}>{g.name}</h3>
+            <p class="svcx__cat-line">{g.tagline}</p>
+          </div>
+          <ul class="svcx__list">
+            {g.items.map((s) => {
+              const price = fromPrice(s.pricing[0]?.price);
+              return (
+                <li>
+                  <a class="svcx__row" href={serviceHref(s)}>
+                    <span class="svcx__name" data-i18n={`svc.${s.slug}.name`}>{s.name}</span>
+                    <span class="svcx__tagline">{s.tagline}</span>
+                    <span class="svcx__price">{price ? <><T k="common.from" /> <strong>Rs. {price}</strong></> : <T k="services.getQuote" />}</span>
+                    <Icon name="arrow" size={22} class="svcx__arrow" />
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <a class="btn btn--lg svcx__all" href="/services"><T k="home.services.all" /><Icon name="arrow" size={18} class="arrow" /></a>
+  </div>
+  <Ridge to="var(--dusk-sky-top)" />
+</section>
+
+<style>
+  .svcx {
+    position: relative;
+    background: var(--bg);
+    padding-block: var(--section-y) calc(var(--section-y) + 4rem);
+  }
+  .svcx__head {
+    display: grid;
+    gap: var(--space-4) var(--space-8);
+    align-items: end;
+    margin-bottom: var(--space-7);
+  }
+  @media (min-width: 900px) { .svcx__head { grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr); } }
+  .svcx__lead { margin: 0 0 var(--space-5); }
+
+  .svcx__groups { display: grid; border-top: 2px solid var(--fg); }
+  .svcx__group {
+    display: grid;
+    gap: var(--space-4) var(--space-7);
+    padding-block: var(--space-6);
+    border-bottom: 1px solid var(--line);
+  }
+  @media (min-width: 900px) { .svcx__group { grid-template-columns: minmax(0, 0.42fr) minmax(0, 1fr); } }
+  .svcx__cat { display: grid; grid-template-columns: auto 1fr; gap: 2px var(--space-3); align-content: start; align-items: center; }
+  .svcx__icon { width: 44px; height: 44px; grid-row: span 2; }
+  .svcx__icon :global(svg) { width: 22px; height: 22px; }
+  .svcx__cat-name { font-size: var(--text-xl); margin: 0; }
+  .svcx__cat-line { margin: 0; font-size: var(--text-sm); color: var(--fg-muted); }
+
+  .svcx__list { list-style: none; margin: 0; padding: 0; display: grid; }
+  .svcx__list li + li { border-top: 1px solid var(--line); }
+  .svcx__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-areas: 'name price arrow' 'line price arrow';
+    align-items: center;
+    gap: 2px var(--space-5);
+    padding: var(--space-4) var(--space-3);
+    margin-inline: calc(var(--space-3) * -1);
+    border-radius: var(--radius-md);
+    transition: background-color var(--dur-fast);
+  }
+  .svcx__row:hover { background: var(--accent-soft); }
+  .svcx__name {
+    grid-area: name;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: clamp(1.2rem, 0.95rem + 1vw, 1.75rem);
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    transition: color var(--dur-fast);
+  }
+  .svcx__row:hover .svcx__name { color: var(--accent); }
+  .svcx__tagline { grid-area: line; font-size: var(--text-sm); color: var(--fg-muted); }
+  .svcx__price { grid-area: price; font-size: var(--text-sm); color: var(--fg-muted); white-space: nowrap; text-align: right; }
+  .svcx__price strong { color: var(--fg); font-family: var(--font-heading); }
+  .svcx__row :global(.svcx__arrow) { grid-area: arrow; color: var(--accent); transition: transform var(--dur-fast) var(--ease-out); }
+  .svcx__row:hover :global(.svcx__arrow) { transform: translateX(5px); }
+  @media (max-width: 600px) {
+    .svcx__row { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: 'name arrow' 'price arrow'; }
+    .svcx__tagline { display: none; }
+    .svcx__price { text-align: left; }
+  }
+  .svcx__all { margin-top: var(--space-7); }
+</style>

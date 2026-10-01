@@ -1,0 +1,61 @@
+---
+/**
+ * One quiet row of client marks right under the hero, drifting slowly. Real logos come
+ * from `logo` in src/data/stats.ts; until then each name is set as a wordmark in one of a
+ * few type treatments so the row reads as logos, not as a list.
+ */
+import T from '../T.astro';
+import Ridge from './Ridge.astro';
+import { trustedBy } from '../../data/stats';
+
+const styles = ['serif', 'caps', 'heavy', 'script', 'wide'] as const;
+const marks = trustedBy.map((c, i) => ({ ...c, style: styles[i % styles.length] }));
+const anyPlaceholder = trustedBy.some((c) => c.placeholder);
+---
+
+<section class="logos" aria-labelledby="logos-title">
+  <div class="container logos__inner">
+    <p class="caps logos__title" id="logos-title"><T k="home.logos.title" /></p>
+    <div class="marquee logos__marquee" style="--marquee-speed: 46s">
+      <div class="marquee__track">
+        {[...marks, ...marks].map((m, i) => (
+          <span class={`logos__mark logos__mark--${m.style}`} aria-hidden={i >= marks.length ? 'true' : undefined}>
+            {m.logo ? <img src={m.logo} alt={m.name} loading="lazy" /> : m.name}
+          </span>
+        ))}
+      </div>
+    </div>
+    {anyPlaceholder && <p class="logos__note">Sample client names, shown until launch.</p>}
+  </div>
+  <Ridge to="var(--surface-ink)" flip />
+</section>
+
+<style>
+  .logos {
+    position: relative;
+    background: var(--bg);
+    padding-block: var(--space-6) calc(var(--space-7) + clamp(44px, 7vw, 120px));
+  }
+  .logos__inner { display: grid; gap: var(--space-5); justify-items: center; }
+  .logos__title { margin: 0; color: var(--fg-subtle); }
+  .logos__marquee { width: 100%; }
+  .logos__marquee .marquee__track { gap: clamp(2.5rem, 5vw, 4.5rem); padding-right: clamp(2.5rem, 5vw, 4.5rem); align-items: center; }
+  .logos__mark {
+    display: inline-flex;
+    align-items: center;
+    height: 44px;
+    color: var(--fg);
+    opacity: 0.55;
+    white-space: nowrap;
+    transition: opacity var(--dur-fast), color var(--dur-fast);
+  }
+  .logos__mark:hover { opacity: 1; color: var(--accent); }
+  .logos__mark img { height: 100%; width: auto; filter: grayscale(1); }
+  .logos__mark:hover img { filter: none; }
+  .logos__mark--serif { font-family: Georgia, 'Times New Roman', serif; font-size: 1.45rem; font-style: italic; }
+  .logos__mark--caps { font-family: var(--font-heading); font-weight: 600; font-size: 0.95rem; letter-spacing: 0.28em; text-transform: uppercase; }
+  .logos__mark--heavy { font-family: var(--font-heading); font-weight: 800; font-size: 1.35rem; letter-spacing: -0.03em; }
+  .logos__mark--script { font-family: var(--font-accent); font-weight: 700; font-size: 1.9rem; }
+  .logos__mark--wide { font-family: var(--font-body); font-weight: 600; font-size: 1.1rem; letter-spacing: 0.08em; }
+  .logos__note { margin: 0; font-size: var(--text-xs); color: var(--fg-subtle); }
+</style>

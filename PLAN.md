@@ -58,7 +58,7 @@ public/brand/             logo-horizontal.svg, logo-stacked.svg, logo-mark.svg, 
 
 | Route | Content |
 | --- | --- |
-| `/` | Hero (parallax mountains), marquee, services grid, product spotlight, process, stats, testimonials, pricing teaser, CTA |
+| `/` | Midday to night, in ten sections (src/components/home/): hero with rating and a team/work/QR collage, client logos, the work (pinned horizontal reel), services as a priced list, results under the dusk sky, the QR stand, client stories, the team, how we work, closing call with prayer flags into a night-sky footer. Sections meet along ridgelines; each heading has a Nepali echo line. Photo slots show labelled placeholders until real assets are set in src/data |
 | `/services` | Categorised catalogue |
 | `/services/[slug]` | One page per service: hero, benefits, deliverables, recent-results gallery (placeholder case studies), process, why-choose-NexGen, matching testimonial, pricing tiers, FAQ, CTA |
 | `/products/ai-smart-reviews-qr` | Product landing: how it works, features, use cases, tiers, pre-order CTA |

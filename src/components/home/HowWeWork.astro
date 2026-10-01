@@ -1,0 +1,97 @@
+---
+/**
+ * The four-step process in one row, with the matching "why NexGen" point under each
+ * step. The steps are a real sequence, so they keep their numbers and the line that
+ * joins them.
+ */
+import T from '../T.astro';
+import Echo from './Echo.astro';
+import Ridge from './Ridge.astro';
+import { t } from '../../i18n';
+
+// Each step carries the reason it works: process step n, then the why point it proves.
+const steps = [
+  { n: 1, why: 1 },
+  { n: 2, why: 3 },
+  { n: 3, why: 2 },
+  { n: 4, why: 4 },
+];
+---
+
+<section class="howx" id="how">
+  <div class="container">
+    <div class="howx__head">
+      <T k="process.eyebrow" as="p" class="eyebrow" />
+      <T k="process.title" as="h2" class="howx__title" />
+      <Echo text={t('home.how.echo')} />
+    </div>
+    <ol class="howx__steps" data-reveal-group>
+      {steps.map((s) => (
+        <li class="howx__step" data-reveal>
+          <span class="howx__n" aria-hidden="true">{String(s.n).padStart(2, '0')}</span>
+          <T k={`process.${s.n}.title`} as="h3" class="howx__name" />
+          <T k={`process.${s.n}.text`} as="p" class="howx__text" />
+          <p class="howx__why"><T k={`why.${s.why}.title`} /></p>
+        </li>
+      ))}
+    </ol>
+  </div>
+  <Ridge to="var(--dusk-sky-top)" flip />
+</section>
+
+<style>
+  .howx {
+    position: relative;
+    background: var(--surface-ink);
+    color: #fff;
+    padding-block: var(--section-y) calc(var(--section-y) + 3rem);
+  }
+  .howx__head { margin-bottom: var(--space-7); max-width: 760px; }
+  .howx__title { color: #fff; }
+  .howx__steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+  }
+  .howx__step {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: var(--space-2);
+    padding-top: var(--space-6);
+    border-top: 2px solid rgba(255, 255, 255, 0.16);
+  }
+  .howx__step::before {
+    content: '';
+    position: absolute;
+    top: -7px;
+    left: 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--brand-orange);
+    box-shadow: 0 0 0 5px rgba(255, 90, 0, 0.22);
+  }
+  .howx__n {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: clamp(2.6rem, 2rem + 2vw, 3.6rem);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.35);
+  }
+  .howx__name { font-size: var(--text-xl); color: #fff; margin: var(--space-2) 0 0; }
+  .howx__text { margin: 0; color: rgba(255, 255, 255, 0.72); font-size: var(--text-sm); }
+  .howx__why {
+    margin: var(--space-2) 0 0;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: var(--text-sm);
+    color: var(--brand-orange);
+  }
+  .howx__why::before { content: '→ '; }
+</style>

@@ -64,8 +64,10 @@ const flags = Array.from({ length: COUNT }, (_, i) => {
   />
   {flags.map((f) => (
     <g class="prayer-flags__flag" transform={`translate(${f.x} ${f.y})`}>
-      <g class="prayer-flags__sway" style={`--dur:${f.dur}s; --delay:${f.delay}s; --dir:${f.dir};`}>
-        <path d={`M0,0 L${-flagW / 2},${flagH} L${flagW / 2},${flagH} Z`} fill={f.color} />
+      <g class="prayer-flags__wind">
+        <g class="prayer-flags__sway" style={`--dur:${f.dur}s; --delay:${f.delay}s; --dir:${f.dir};`}>
+          <path d={`M0,0 L${-flagW / 2},${flagH} L${flagW / 2},${flagH} Z`} fill={f.color} />
+        </g>
       </g>
     </g>
   ))}
@@ -83,6 +85,12 @@ const flags = Array.from({ length: COUNT }, (_, i) => {
     stroke-width: 2;
     opacity: 0.6;
   }
+  /* A gust: set --wind (an angle) on the svg and every flag leans with it. Stays 0 unless
+     a page drives it, e.g. from scroll speed on the homepage's closing section. */
+  .prayer-flags__wind {
+    transform-origin: 0 0;
+    transform: rotate(var(--wind, 0deg));
+  }
   .prayer-flags__sway {
     transform-origin: 0 0;
     animation: prayer-flag-sway var(--dur) ease-in-out var(--delay) infinite;
@@ -92,6 +100,12 @@ const flags = Array.from({ length: COUNT }, (_, i) => {
     50% { transform: rotate(calc(var(--dir) * 1.5deg)); }
   }
   @media (prefers-reduced-motion: reduce) {
-    .prayer-flags__sway { animation: none; }
+    /* A gust: set --wind (an angle) on the svg and every flag leans with it. Stays 0 unless
+     a page drives it, e.g. from scroll speed on the homepage's closing section. */
+  .prayer-flags__wind {
+    transform-origin: 0 0;
+    transform: rotate(var(--wind, 0deg));
+  }
+  .prayer-flags__sway { animation: none; }
   }
 </style>

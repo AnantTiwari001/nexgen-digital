@@ -1,0 +1,26 @@
+---
+/**
+ * The Nepali echo of a section heading. It sits in the same place, size and colour under
+ * every homepage heading, and hides when the page is switched to Nepali (the heading
+ * itself is Nepali then).
+ */
+interface Props {
+  text: string;
+  class?: string;
+}
+const { text, class: className } = Astro.props;
+---
+
+<p class:list={['echo', className]} lang="ne">{text}</p>
+
+<style>
+  .echo {
+    font-family: var(--font-ne);
+    font-weight: 700;
+    font-size: clamp(1.1rem, 0.95rem + 0.6vw, 1.45rem);
+    line-height: 1.35;
+    color: var(--echo, var(--accent));
+    margin: calc(var(--space-2) * -1) 0 var(--space-5);
+  }
+  :global(html[data-lang='ne']) .echo { display: none; }
+</style>

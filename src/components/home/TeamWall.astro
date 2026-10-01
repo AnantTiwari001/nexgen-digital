@@ -1,0 +1,88 @@
+---
+/**
+ * The team, every portrait shot against the same orange backdrop so the page's colour
+ * and the people become one picture. Photos come from `photo` in src/data/team.ts.
+ */
+import Icon from '../Icon.astro';
+import T from '../T.astro';
+import MediaSlot from '../MediaSlot.astro';
+import Echo from './Echo.astro';
+import Ridge from './Ridge.astro';
+import { team } from '../../data/team';
+import { t } from '../../i18n';
+
+const initials = (name: string) => name.split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase();
+---
+
+<section class="teamx" id="team">
+  <div class="container">
+    <div class="teamx__head">
+      <div>
+        <T k="home.team.eyebrow" as="p" class="eyebrow" />
+        <T k="home.team.title" as="h2" class="teamx__title" />
+        <Echo text={t('home.team.echo')} />
+      </div>
+      <T k="home.team.lead" as="p" class="lead teamx__lead" />
+    </div>
+
+    <ul class="teamx__grid" data-reveal-group>
+      {team.map((m) => (
+        <li class="teamx__person" data-reveal>
+          <MediaSlot ratio="4 / 5" src={m.photo} alt={`${m.name}, ${m.role}`} label="Portrait" spec="4:5 · orange backdrop" initials={initials(m.name)} tone="orange" />
+          <p class="teamx__name">{m.name}</p>
+          <p class="teamx__role">{m.role}</p>
+        </li>
+      ))}
+    </ul>
+
+    <a class="teamx__more" href="/about"><T k="home.team.meet" /><Icon name="arrow" size={16} /></a>
+  </div>
+  <Ridge to="var(--surface-ink)" />
+</section>
+
+<style>
+  .teamx {
+    position: relative;
+    background: var(--brand-orange);
+    color: #fff;
+    padding-block: var(--section-y) calc(var(--section-y) + 4rem);
+    overflow: hidden;
+  }
+  .teamx__head {
+    display: grid;
+    gap: var(--space-4) var(--space-8);
+    align-items: end;
+    margin-bottom: var(--space-7);
+    --echo: #fff3d6;
+  }
+  @media (min-width: 900px) { .teamx__head { grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr); } }
+  .teamx__head :global(.eyebrow) { color: #fff; }
+  .teamx__title { color: #fff; }
+  .teamx__lead { color: rgba(255, 255, 255, 0.92); margin: 0 0 var(--space-5); }
+  .teamx__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-5);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  }
+  @media (max-width: 600px) {
+    .teamx__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5) var(--space-4); }
+    .teamx__name { font-size: var(--text-base); }
+  }
+  .teamx__person :global(.slot) { margin-bottom: var(--space-4); box-shadow: 0 24px 50px rgba(120, 30, 0, 0.3); }
+  .teamx__person p { margin: 0; }
+  .teamx__name { font-family: var(--font-heading); font-weight: 700; font-size: var(--text-xl); }
+  .teamx__role { font-size: var(--text-sm); opacity: 0.85; }
+  .teamx__more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    margin-top: var(--space-7);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+  }
+  .teamx__more:hover { border-color: #fff; }
+</style>

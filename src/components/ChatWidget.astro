@@ -85,6 +85,13 @@ const suggestions = knowledge.filter((k) => ['services', 'pricing', 'qr', 'start
     transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur);
   }
   .chat__fab:hover { transform: translateY(-2px) scale(1.02); }
+  /* Tucked away while the visitor scrolls down to read; back on scroll up or a pause. */
+  .chat__fab { transition: transform var(--dur) var(--ease-out), opacity var(--dur), box-shadow var(--dur); }
+  .chat[data-tucked]:not([data-open]) .chat__fab {
+    transform: translateY(calc(100% + 24px));
+    opacity: 0;
+    pointer-events: none;
+  }
   .chat__fab :global(.chat__fab-close) { display: none; }
   .chat[data-open] .chat__fab :global(.chat__fab-close) { display: block; }
   .chat[data-open] .chat__fab :global(.chat__fab-icon) { display: none; }
@@ -292,6 +299,23 @@ const suggestions = knowledge.filter((k) => ['services', 'pricing', 'qr', 'start
       } else root.removeAttribute('data-open');
     };
     toggle.addEventListener('click', () => setOpen(panel.hidden));
+
+    // Keep the button off the text: hide it while scrolling down, show it on the way back
+    // up or once scrolling stops for a moment.
+    let lastY = window.scrollY;
+    let idle: number | undefined;
+    window.addEventListener(
+      'scroll',
+      () => {
+        const y = window.scrollY;
+        if (y > lastY + 4 && y > 240) root.setAttribute('data-tucked', '');
+        else if (y < lastY - 4) root.removeAttribute('data-tucked');
+        lastY = y;
+        window.clearTimeout(idle);
+        idle = window.setTimeout(() => root.removeAttribute('data-tucked'), 1200);
+      },
+      { passive: true },
+    );
     closeBtn.addEventListener('click', () => setOpen(false));
     document.addEventListener('keydown', (e) => e.key === 'Escape' && !panel.hidden && setOpen(false));
 

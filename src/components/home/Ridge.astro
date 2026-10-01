@@ -1,0 +1,33 @@
+---
+/**
+ * The edge where one homepage section meets the next: the next section's colour rises
+ * into this one as the valley's ridgeline, in two depths. Put it as the last child of a
+ * `position: relative` section and pass the next section's background as `to`.
+ */
+interface Props {
+  to: string;
+  flip?: boolean;
+}
+const { to, flip = false } = Astro.props;
+---
+
+<svg class:list={['ridge', { 'ridge--flip': flip }]} viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true" focusable="false" style={`--ridge:${to}`}>
+  <path class="ridge__far" d="M0 78 L80 52 L150 66 L240 28 L320 58 L410 18 L480 50 L560 34 L650 70 L730 30 L820 62 L900 40 L980 72 L1060 26 L1140 56 L1220 38 L1310 68 L1380 46 L1440 60 L1440 120 L0 120 Z" />
+  <path class="ridge__near" d="M0 104 L70 86 L150 98 L230 74 L310 96 L400 80 L480 100 L560 78 L650 98 L730 84 L820 102 L900 82 L990 100 L1070 86 L1150 104 L1240 80 L1330 98 L1440 88 L1440 121 L0 121 Z" />
+</svg>
+
+<style>
+  .ridge {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    width: 100%;
+    height: clamp(44px, 7vw, 120px);
+    pointer-events: none;
+    z-index: 1;
+  }
+  .ridge--flip { transform: scaleX(-1); }
+  .ridge__far { fill: var(--ridge); opacity: 0.38; }
+  .ridge__near { fill: var(--ridge); }
+</style>
