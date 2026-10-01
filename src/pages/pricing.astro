@@ -7,8 +7,9 @@ import Icon from '../components/Icon.astro';
 import T from '../components/T.astro';
 import CtaBand from '../components/sections/CtaBand.astro';
 import FaqList from '../components/FaqList.astro';
+import Ridge from '../components/home/Ridge.astro';
 import kathmanduSunset from '../assets/kathmandu/kathmandu-valley-sunset.jpg';
-import { categories, servicePages } from '../data/services';
+import { categories, services } from '../data/services';
 import { product } from '../data/product';
 import { t } from '../i18n';
 
@@ -17,6 +18,20 @@ const bundles = [
   { name: 'Local Business Bundle', price: '18,000', period: '/month', features: ['Social Media Management · Starter', 'Google Ads · Local', 'Smart Reviews QR stand included', 'Review response management'], note: 'Ideal for cafés, clinics, salons' },
   { name: 'Brand Bundle', price: '85,000', period: 'one-time', features: ['Brand Kit', 'Business website', '10 social creatives', '2 promo videos'], note: 'Everything to launch a brand' },
 ];
+// One tab per service, grouped by category. The QR stand's tab uses the product's own
+// tiers so its buttons go straight to pre-order.
+const groups = categories
+  .map((c) => ({ ...c, items: services.filter((s) => s.category === c.id) }))
+  .filter((g) => g.items.length);
+const tiersFor = (slug: string) =>
+  slug === product.slug
+    ? product.tiers.map((tier) => ({
+        tier: { ...tier, cta: tier.price === 'Custom' ? 'Talk to us' : 'Pre-order' },
+        href: tier.price === 'Custom' ? '/contact' : `/preorder?plan=${encodeURIComponent(tier.name)}`,
+      }))
+    : (services.find((s) => s.slug === slug)?.pricing ?? []).map((tier) => ({ tier, href: undefined }));
+const first = groups[0].items[0].slug;
+
 const faqs = [
   { q: 'Are these final prices?', a: 'They are starting points. After a short call we send a fixed quote based on your scope, and that quote is what you pay.' },
   { q: 'Is there a contract?', a: 'Monthly services run month to month. We ask for a minimum of three months for social media and ads because results take time to compound.' },
@@ -41,48 +56,49 @@ const faqs = [
     </div>
   </section>
 
-  {categories.map((c, ci) => {
-    const list = servicePages.filter((s) => s.category === c.id);
-    if (!list.length) return null;
-    return (
-      <section class:list={['section', { 'section--muted': ci % 2 === 0 }]} id={c.id}>
-        <div class="container">
-          <div class="section-head" data-reveal>
-            <p class="eyebrow"><Icon name={c.icon} size={16} /> <span data-i18n={`cat.${c.id}.name`}>{c.name}</span></p>
-            <h2>{c.tagline}</h2>
-          </div>
-          {list.map((s) => (
-            <div class="price-block">
-              <div class="price-block__head">
-                <h3><a href={`/services/${s.slug}`} data-i18n={`svc.${s.slug}.name`}>{s.name}</a></h3>
-                <a class="btn btn--sm btn--ghost" href={`/services/${s.slug}`}><T k="services.learnMore" /><Icon name="arrow" size={14} class="arrow" /></a>
-              </div>
-              <div class="grid grid--3 price-block__grid" data-reveal-group>
-                {s.pricing.map((tier, i) => <PricingCard tier={tier} context={s.name} index={i} />)}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-    );
-  })}
-
-  <section class="section" id="product">
+  <section class="section section--muted has-ridge price-tabs" id="by-service">
     <div class="container">
-      <div class="section-head" data-reveal>
-        <p class="eyebrow"><Icon name="qr" size={16} /> <span data-i18n="cat.local.name">Local Business Tools</span></p>
-        <h2>{product.name}</h2>
-        <p class="lead">{product.tagline} <a href="/products/ai-smart-reviews-qr" class="hl">Learn more</a></p>
+      <div class="section-head section-head--center" data-reveal>
+        <p class="eyebrow">By service</p>
+        <h2>Pick a service, see its plans</h2>
+        <p class="lead mx-auto">Three plans for every service. Start small and move up when it's working.</p>
       </div>
-      <div class="grid grid--3" data-reveal-group>
-        {product.tiers.map((tier, i) => (
-          <PricingCard tier={{ ...tier, cta: tier.price === 'Custom' ? 'Talk to us' : 'Pre-order' }} href={tier.price === 'Custom' ? '/contact' : `/preorder?plan=${encodeURIComponent(tier.name)}`} index={i} />
+
+      <div class="price-tabs__bar" role="tablist" aria-label="Services" data-price-tabs>
+        {groups.map((g) => (
+          <div class="price-tabs__group" id={g.id}>
+            <p class="price-tabs__cat"><Icon name={g.icon} size={14} /><span data-i18n={`cat.${g.id}.name`}>{g.name}</span></p>
+            <div class="price-tabs__chips">
+              {g.items.map((s) => (
+                <button type="button" role="tab" class="price-tabs__chip" id={`tab-${s.slug}`} aria-controls={`panel-${s.slug}`} aria-selected={s.slug === first ? 'true' : 'false'} tabindex={s.slug === first ? 0 : -1} data-slug={s.slug}>
+                  <span data-i18n={`svc.${s.slug}.name`}>{s.shortName ?? s.name}</span>
+                </button>
+              ))}
+            </div>
+          </div>
         ))}
       </div>
+
+      {groups.flatMap((g) => g.items).map((s) => (
+        <div class="price-tabs__panel" role="tabpanel" id={`panel-${s.slug}`} aria-labelledby={`tab-${s.slug}`} hidden={s.slug !== first} data-price-panel={s.slug}>
+          <div class="price-tabs__head">
+            <div>
+              <h3 data-i18n={`svc.${s.slug}.name`}>{s.name}</h3>
+              <p class="muted">{s.tagline}</p>
+            </div>
+            <a class="price-tabs__more" href={s.href ?? `/services/${s.slug}`}><T k="services.learnMore" /><Icon name="arrow" size={16} /></a>
+          </div>
+          <div class="grid grid--3 price-tabs__grid">
+            {tiersFor(s.slug).map(({ tier, href }, i) => <PricingCard tier={tier} context={s.name} href={href} index={i} />)}
+          </div>
+        </div>
+      ))}
+      <noscript><style is:inline>[data-price-panel][hidden] { display: block !important; margin-top: 4rem; }</style></noscript>
     </div>
+    <Ridge to="var(--dusk-sky-top)" />
   </section>
 
-  <section class="section pricing-dusk" data-parallax-scope data-trace-band>
+  <section class="section has-ridge pricing-dusk" data-parallax-scope data-trace-band>
     <Image class="pricing-dusk__photo" src={kathmanduSunset} alt="The Himalayas at sunset, seen from the Kathmandu valley" width={1800} height={950} quality={78} data-parallax="0.08" />
     <div class="pricing-dusk__wash" aria-hidden="true"></div>
     <div class="container pricing-dusk__inner">
@@ -96,13 +112,15 @@ const faqs = [
         Every number on this page is a starting point we'll turn into a fixed quote — not a teaser rate that changes once you sign.
       </p>
     </div>
+    <Ridge to="var(--bg-muted)" flip />
   </section>
 
-  <section class="section section--muted">
+  <section class="section section--muted has-ridge">
     <div class="container container--narrow">
       <div class="section-head section-head--center" data-reveal><h2><T k="services.faq" /></h2></div>
       <FaqList items={faqs} />
     </div>
+    <Ridge to="var(--dusk-sky-top)" />
   </section>
 
   <CtaBand />
@@ -110,19 +128,60 @@ const faqs = [
 
 <style>
   .bundles { padding-top: var(--space-4); align-items: stretch; }
-  .price-block { margin-top: var(--space-7); }
-  .price-block__head {
+  /* Services as tabs: chips grouped under their category, one panel of plans at a time. */
+  .price-tabs__bar {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: var(--space-4);
     flex-wrap: wrap;
+    gap: var(--space-4) var(--space-6);
+    justify-content: center;
+    margin-bottom: var(--space-7);
+  }
+  .price-tabs__group { display: grid; gap: var(--space-2); scroll-margin-top: calc(var(--header-h) + var(--space-4)); }
+  .price-tabs__cat {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--fg-subtle);
+  }
+  .price-tabs__chips { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .price-tabs__chip {
+    padding: 0.6em 1.1em;
+    border-radius: var(--radius-pill);
+    border: 1.5px solid var(--line-strong);
+    background: var(--bg-elev);
+    color: var(--fg);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: var(--text-sm);
+    transition: background-color var(--dur-fast), border-color var(--dur-fast), color var(--dur-fast);
+  }
+  .price-tabs__chip:hover { border-color: var(--accent); color: var(--accent); }
+  .price-tabs__chip[aria-selected='true'] { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .price-tabs__head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-4);
     margin-bottom: var(--space-5);
-    padding-bottom: var(--space-3);
+    padding-bottom: var(--space-4);
     border-bottom: 1px solid var(--line);
   }
-  .price-block__head h3 { margin: 0; }
-  .price-block__grid { align-items: stretch; padding-top: var(--space-3); }
+  .price-tabs__head h3 { margin: 0 0 var(--space-1); }
+  .price-tabs__head p { margin: 0; }
+  .price-tabs__more { display: inline-flex; align-items: center; gap: 0.4em; font-family: var(--font-heading); font-weight: 700; color: var(--accent); }
+  .price-tabs__grid { align-items: stretch; padding-top: var(--space-3); }
+  .price-tabs__panel { animation: price-panel-in 0.4s var(--ease-out); }
+  @keyframes price-panel-in {
+    from { opacity: 0; transform: translateY(10px); }
+  }
+  @media (prefers-reduced-motion: reduce) { .price-tabs__panel { animation: none; } }
 
   /* Same full-bleed photo + dusk-gradient wash pattern as About, the product
      page's audience section, and the services index closing band. */
@@ -171,4 +230,42 @@ const faqs = [
 <script>
   import { initTraceBands } from '../scripts/trace';
   initTraceBands();
+
+  // Service tabs: click or arrow keys switch the panel; #slug (or a category id) in the URL
+  // opens that service, so links like /pricing#meta-ads land on the right plans.
+  const bar = document.querySelector<HTMLElement>('[data-price-tabs]');
+  if (bar) {
+    const tabs = Array.from(bar.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+    const select = (tab: HTMLButtonElement, focus = false) => {
+      tabs.forEach((t) => {
+        const on = t === tab;
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+        document.getElementById(`panel-${t.dataset.slug}`)!.hidden = !on;
+      });
+      if (focus) tab.focus();
+    };
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => {
+        select(tab);
+        history.replaceState(null, '', `#${tab.dataset.slug}`);
+      });
+      tab.addEventListener('keydown', (e) => {
+        const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (!step) return;
+        e.preventDefault();
+        select(tabs[(i + step + tabs.length) % tabs.length], true);
+      });
+    });
+    const fromHash = () => {
+      const id = decodeURIComponent(location.hash.slice(1));
+      if (!id) return;
+      const tab = tabs.find((t) => t.dataset.slug === id) ?? document.getElementById(id)?.querySelector<HTMLButtonElement>('[role="tab"]');
+      if (!tab) return;
+      select(tab);
+      document.getElementById('by-service')?.scrollIntoView({ block: 'start' });
+    };
+    fromHash();
+    window.addEventListener('hashchange', fromHash);
+  }
 </script>

@@ -11,6 +11,13 @@ import Ridge from './Ridge.astro';
 import { team } from '../../data/team';
 import { t } from '../../i18n';
 
+interface Props {
+  /** Show the "Meet the team" link (off on the About page itself). */
+  link?: boolean;
+  /** Colour of the section below, for the ridgeline. */
+  ridgeTo?: string;
+}
+const { link = true, ridgeTo = 'var(--surface-ink)' } = Astro.props;
 const initials = (name: string) => name.split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase();
 ---
 
@@ -35,9 +42,9 @@ const initials = (name: string) => name.split(/\s+/).map((w) => w[0]).slice(0, 2
       ))}
     </ul>
 
-    <a class="teamx__more" href="/about"><T k="home.team.meet" /><Icon name="arrow" size={16} /></a>
+    {link && <a class="teamx__more" href="/about"><T k="home.team.meet" /><Icon name="arrow" size={16} /></a>}
   </div>
-  <Ridge to="var(--surface-ink)" />
+  <Ridge to={ridgeTo} />
 </section>
 
 <style>

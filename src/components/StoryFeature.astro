@@ -1,0 +1,57 @@
+---
+/**
+ * One client in their own words: the owner photographed in their shop (or a labelled
+ * photo slot), the quote set large, and who they are. From src/data/testimonials.ts.
+ */
+import Icon from './Icon.astro';
+import MediaSlot from './MediaSlot.astro';
+import type { Testimonial } from '../data/testimonials';
+import { t } from '../i18n';
+
+interface Props {
+  item: Testimonial;
+}
+const { item: q } = Astro.props;
+---
+
+<figure class="story" data-reveal>
+  <MediaSlot ratio="4 / 5" src={q.avatar} alt={`${q.name}, ${q.role} of ${q.business}`} label="Owner in their shop" spec="4:5 · natural light" icon="user" tone="light" class="story__photo" />
+  <div class="story__words">
+    <div class="story__stars" aria-label={`${q.rating} out of 5 stars`}>{Array.from({ length: q.rating }).map(() => <Icon name="star" size={16} />)}</div>
+    <blockquote class="story__quote">{q.quote}</blockquote>
+    <figcaption class="story__who">
+      <strong>{q.name}</strong>, {q.role}
+      <span>{q.business} · {q.location}</span>
+    </figcaption>
+    <p class="story__service">{q.service}{q.placeholder && <> · <span data-i18n="home.stories.sample">{t('home.stories.sample')}</span></>}</p>
+  </div>
+</figure>
+
+<style>
+  .story {
+    margin: 0;
+    display: grid;
+    gap: var(--space-6) var(--space-8);
+    align-items: center;
+  }
+  @media (min-width: 900px) { .story { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); } }
+  .story__words { display: grid; gap: var(--space-4); }
+  .story__stars { display: flex; color: var(--brand-gold); }
+  .story__quote {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.4rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .story__quote::before { content: '“'; color: var(--accent); }
+  .story__quote::after { content: '”'; color: var(--accent); }
+  .story__who { font-size: var(--text-lg); }
+  .story__who span { display: block; font-size: var(--text-sm); color: var(--fg-muted); }
+  .story__service { margin: 0; font-size: var(--text-xs); font-family: var(--font-heading); font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+  @media (max-width: 600px) {
+    .story :global(.slot) { aspect-ratio: 4 / 3 !important; }
+  }
+</style>

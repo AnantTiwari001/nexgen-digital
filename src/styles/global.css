@@ -92,14 +92,22 @@ button { cursor: pointer; }
   padding-block: var(--section-y);
   position: relative;
 }
+/* A section that ends in a Ridge (components/home/Ridge.astro): room for the ridgeline. */
+.has-ridge {
+  padding-bottom: calc(var(--section-y) + clamp(44px, 7vw, 120px));
+}
 .section--tight {
   padding-block: calc(var(--section-y) * 0.6);
 }
 .section--muted { background: var(--bg-muted); }
 .section--soft { background: var(--bg-soft); }
+/* Brand-black band. Uses the ink surface, which stays dark (warm umber) in dark mode so
+   the page keeps its rhythm instead of flipping the band to white. */
 .section--inverse {
-  background: var(--bg-inverse);
-  color: var(--fg-inverse);
+  --bg-inverse: var(--surface-ink);
+  --fg-inverse: #ffffff;
+  background: var(--surface-ink);
+  color: #fff;
 }
 .section--accent {
   background: var(--accent);
@@ -108,6 +116,9 @@ button { cursor: pointer; }
 .section--accent ::selection {
   background: #0b0b0b;
 }
+/* Nepali echo lines (components/home/Echo.astro) take this colour on coloured bands. */
+.section--accent { --echo: #fff3d6; }
+.section--inverse { --echo: var(--brand-orange); }
 .grid {
   display: grid;
   gap: var(--space-5);
@@ -476,6 +487,38 @@ button { cursor: pointer; }
 }
 @media (prefers-reduced-motion: reduce) {
   [data-reveal] { opacity: 1; transform: none; }
+}
+
+/* ---------- Dusk band ----------
+   The evening sky the site uses for proof (results, case studies). Optional valley photo
+   at the horizon via .band-dusk__valley; leave room at the bottom for a Ridge. */
+.band-dusk {
+  --echo: #ffcf9f;
+  position: relative;
+  background: var(--dusk-gradient);
+  color: var(--dusk-fg);
+  padding-block: var(--section-y) calc(var(--section-y) + 5rem);
+  overflow: hidden;
+  isolation: isolate;
+}
+.band-dusk__valley {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 55%;
+  z-index: -1;
+  opacity: 0.32;
+  mix-blend-mode: soft-light;
+  mask-image: linear-gradient(to bottom, transparent, #000 45%);
+}
+.band-dusk__valley img { width: 100%; height: 100%; object-fit: cover; object-position: center 70%; }
+.band-dusk__head { max-width: 760px; margin-bottom: var(--space-7); }
+.band-dusk__head .eyebrow { color: #ffcf9f; }
+.band-dusk__head h2 { color: #fff; }
+.band-dusk__head .lead { color: var(--dusk-fg-muted); margin: 0; }
+.band-dusk__grid {
+  display: grid;
+  gap: var(--space-5);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
 }
 
 /* ---------- Dividers & misc ---------- */

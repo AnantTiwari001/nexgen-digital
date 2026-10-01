@@ -12,6 +12,9 @@ import PricingCard from '../../components/PricingCard.astro';
 import FaqList from '../../components/FaqList.astro';
 import Marquee from '../../components/sections/Marquee.astro';
 import CtaBand from '../../components/sections/CtaBand.astro';
+import Ridge from '../../components/home/Ridge.astro';
+import Echo from '../../components/home/Echo.astro';
+import ReserveDock from '../../components/ReserveDock.astro';
 import patanSquare from '../../assets/kathmandu/patan-durbar-square.jpg';
 import { product } from '../../data/product';
 import { site, whatsappUrl } from '../../config/site';
@@ -29,7 +32,7 @@ const productLd = {
 ---
 
 <Base title={product.seo.title} description={product.seo.description} headerTone="white" jsonLd={[productLd]}>
-  <section class="qhero" data-parallax-scope>
+  <section class="qhero" data-parallax-scope data-dock-after>
     <div class="qhero__bg" data-hero-bg aria-hidden="true">
       <div class="qhero__sun"></div>
       <div class="qhero__mountains"><Mountains /></div>
@@ -38,9 +41,10 @@ const productLd = {
       <div class="qhero__text" data-hero-fade>
         <p class="pill pill--glass" data-reveal><span class="dot"></span> <T k="product.preorderBadge" /></p>
         <h1 class="qhero__title" data-split="immediate" data-split-delay="0.15">
-          <span class="qhero__line ne">ग्राहकले <span class="hl-box">scan</span> गर्छन्,</span>
-          <span class="qhero__line ne"><span class="hl-box">review</span> दिन्छन्।</span>
+          <span class="qhero__line"><T k="product.hero.a" /></span>
+          <span class="qhero__line qhero__line--box"><T k="product.hero.b" /></span>
         </h1>
+        <Echo text={product.nepaliTagline} class="qhero__echo" />
         <p class="qhero__sub" data-reveal style="--reveal-delay:500ms">
           <strong class="qhero__name"><T k="product.title" /></strong><br />
           <T k="product.lead" />
@@ -65,11 +69,12 @@ const productLd = {
         </div>
       </div>
     </div>
+    <Ridge to="var(--brand-black)" />
   </section>
 
   <Marquee items={['Scan · Tap · Review', 'Google Reviews', 'More Trust', 'More Visibility', 'One QR, More Possibilities', 'Local Business, Stronger Nepal']} tone="black" />
 
-  <section class="section" id="how">
+  <section class="section has-ridge" id="how">
     <div class="container">
       <SectionHead eyebrow="services.howItWorks" align="center">
         <span slot="title"><T k="product.title" /> · <T k="services.howItWorks" /></span>
@@ -84,9 +89,10 @@ const productLd = {
         ))}
       </ol>
     </div>
+    <Ridge to="var(--brand-orange)" />
   </section>
 
-  <section class="section section--accent qlinks" data-parallax-scope>
+  <section class="section has-ridge section--accent qlinks" data-parallax-scope>
     <div class="qlinks__mark" data-parallax="0.15" aria-hidden="true"><Logo variant="mark" height={480} tone="white" /></div>
     <div class="container qlinks__grid">
       <div>
@@ -105,9 +111,10 @@ const productLd = {
         ))}
       </ul>
     </div>
+    <Ridge to="var(--bg)" flip />
   </section>
 
-  <section class="section">
+  <section class="section has-ridge">
     <div class="container">
       <SectionHead eyebrow="product.eyebrow" align="center">
         <span slot="title">More reviews. More trust. More visibility.</span>
@@ -122,9 +129,10 @@ const productLd = {
         ))}
       </div>
     </div>
+    <Ridge to="var(--dusk-sky-top)" />
   </section>
 
-  <section class="section audience-section" data-parallax-scope data-trace-band id="audienceBand">
+  <section class="section has-ridge audience-section" data-parallax-scope data-trace-band id="audienceBand">
     <Image class="audience-section__photo" src={patanSquare} alt="A courtyard temple in Patan Durbar Square, Kathmandu" width={1800} height={1000} quality={78} data-parallax="0.08" />
     <div class="audience-section__wash" aria-hidden="true"></div>
     <div class="container audience-section__inner">
@@ -143,9 +151,10 @@ const productLd = {
       <p class="ne audience__ne" data-reveal>नेपालका café, restaurant, salon, clinic, hotel र local business का लागि।</p>
       <span class="audience-section__credit">Patan Durbar Square, Kathmandu</span>
     </div>
+    <Ridge to="var(--bg)" flip />
   </section>
 
-  <section class="section" id="pricing">
+  <section class="section" id="pricing" data-dock-hide>
     <div class="container">
       <SectionHead eyebrow="pricing.eyebrow" lead="services.pricingNote" align="center">
         <span slot="title"><T k="product.perks" /> · <T k="pricing.eyebrow" /></span>
@@ -166,16 +175,18 @@ const productLd = {
     </div>
   </section>
 
-  <section class="section section--muted">
+  <section class="section has-ridge section--muted">
     <div class="container container--narrow">
       <SectionHead eyebrow="services.faq" align="center">
         <span slot="title"><T k="services.faq" /></span>
       </SectionHead>
       <FaqList items={product.faqs} />
     </div>
+    <Ridge to="var(--dusk-sky-top)" />
   </section>
 
-  <CtaBand titleKey="product.cta" textKey="product.lead" whatsappMessage="Hi NexGen Digital, I want to pre-order the AI Smart Reviews QR stand." />
+  <div data-dock-hide><CtaBand titleKey="product.cta" textKey="product.lead" whatsappMessage="Hi NexGen Digital, I want to pre-order the AI Smart Reviews QR stand." /></div>
+  <ReserveDock />
 </Base>
 
 <style>
@@ -185,7 +196,7 @@ const productLd = {
     background: var(--brand-orange);
     color: #fff;
     padding-top: calc(var(--header-h) + var(--space-7));
-    padding-bottom: var(--space-8);
+    padding-bottom: calc(var(--space-8) + clamp(44px, 7vw, 120px));
     min-height: 92svh;
     display: flex;
     align-items: center;
@@ -212,18 +223,27 @@ const productLd = {
   }
   @media (min-width: 1024px) { .qhero__inner { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); } }
   .qhero__title {
-    font-size: clamp(2.4rem, 1.4rem + 3.6vw, 4.2rem);
-    line-height: 1.15;
+    font-size: clamp(2.6rem, 1.4rem + 4vw, 4.6rem);
+    line-height: 1;
     color: #fff;
     margin: var(--space-5) 0 var(--space-4);
-    font-family: var(--font-ne);
-    font-weight: 800;
   }
-  .qhero__line { display: block; }
+  /* Room under each line for descenders; the white box gets its own bottom padding. */
+  .qhero__line { display: block; overflow: hidden; padding-bottom: 0.14em; margin-bottom: -0.06em; }
+  .qhero__line--box :global([data-i18n]) {
+    background: #fff;
+    color: var(--brand-black);
+    padding: 0.02em 0.18em 0.1em;
+    line-height: 1.12;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+  .qhero :global(.qhero__echo) { --echo: #fff3d6; }
   .qhero__title :global(.word) { display: inline-block; }
   .qhero__sub { font-size: var(--text-lg); max-width: 52ch; margin-bottom: var(--space-5); }
   .qhero__name { font-family: var(--font-heading); font-size: var(--text-2xl); display: inline-block; margin-bottom: var(--space-2); }
-  .qhero__np { display: inline-flex; align-items: center; gap: 0.4em; margin-top: var(--space-4); opacity: 0.95; }
+  .qhero__np { margin-top: var(--space-4); opacity: 0.95; }
+  .qhero__np :global(svg) { display: inline-block; vertical-align: -3px; margin-right: 0.3em; }
   .qhero__script { margin-top: var(--space-3); font-size: var(--text-2xl); transform: rotate(-2deg); display: inline-block; }
   .qhero__stage { position: relative; display: grid; place-items: center; min-height: 480px; }
   .qhero :global(.qhero__stand) { position: relative; z-index: 2; margin-right: 18%; }

@@ -9,6 +9,11 @@ import SectionHead from '../../components/SectionHead.astro';
 import PricingCard from '../../components/PricingCard.astro';
 import FaqList from '../../components/FaqList.astro';
 import ServiceCard from '../../components/ServiceCard.astro';
+import WorkPiece from '../../components/WorkPiece.astro';
+import MediaSlot from '../../components/MediaSlot.astro';
+import ResultCard from '../../components/ResultCard.astro';
+import StoryFeature from '../../components/StoryFeature.astro';
+import Ridge from '../../components/home/Ridge.astro';
 import Process from '../../components/sections/Process.astro';
 import CtaBand from '../../components/sections/CtaBand.astro';
 import BeforeAfterReveal from '../../components/sections/BeforeAfterReveal.astro';
@@ -16,6 +21,7 @@ import VideoScrubDemo from '../../components/sections/VideoScrubDemo.astro';
 import patanSquare from '../../assets/kathmandu/patan-durbar-square.jpg';
 import { categories, getService, servicePages } from '../../data/services';
 import { testimonialForService } from '../../data/testimonials';
+import { work } from '../../data/work';
 import { site, whatsappUrl } from '../../config/site';
 import { t } from '../../i18n';
 
@@ -26,13 +32,13 @@ const category = categories.find((c) => c.id === service.category)!;
 const related = service.related.map((r) => getService(r)!).filter(Boolean);
 const wa = whatsappUrl(`Hi NexGen Digital, I am interested in ${service.name}.`);
 const testimonial = testimonialForService(service.name);
-const initials = (name: string) =>
-  name
-    .split(' ')
-    .map((n) => n[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase();
+const sample = work.find((w) => w.service === service.slug);
+// "3.1x more weekly engagement in 60 days" -> metric "3.1×", label "more weekly engagement in 60 days".
+// Results that don't lead with a number keep the whole sentence as the label.
+const splitStat = (stat: string) => {
+  const m = stat.match(/^([\d.,]+\s?[x%]?\+?)\s+(.+)$/i);
+  return m ? { metric: m[1].replace(/x$/i, '×'), label: m[2] } : { metric: undefined, label: stat };
+};
 
 const serviceLd = {
   '@context': 'https://schema.org',
@@ -49,18 +55,23 @@ const serviceLd = {
 ---
 
 <Base title={service.seo.title} description={service.seo.description} headerTone="white" jsonLd={[serviceLd]}>
-  <PageHero script={service.accentPhrase}>
+  <PageHero script={service.accentPhrase} echo={service.nepaliLine}>
     <a slot="eyebrow" href={`/services#${category.id}`} data-i18n={`cat.${category.id}.name`}>{category.name}</a>
     <span slot="title" data-i18n={`svc.${service.slug}.name`}>{service.name}</span>
     <span slot="lead" data-i18n={`svc.${service.slug}.tagline`}>{service.tagline}</span>
-    <div class="btn-row svc-hero__btns">
-      <a class="btn btn--white btn--lg" href="/contact" data-magnetic><T k="services.getQuote" /><Icon name="arrow" size={18} class="arrow" /></a>
-      <a class="btn btn--outline btn--lg" href="#pricing"><T k="services.pricing" /></a>
-      <a class="btn btn--whatsapp btn--lg" href={wa} target="_blank" rel="noopener"><Icon name="whatsapp" size={20} />WhatsApp</a>
+    <div class="svc-hero__btns">
+      <a class="btn btn--white btn--lg" href={wa} target="_blank" rel="noopener" data-magnetic><Icon name="whatsapp" size={20} /><T k="cta.whatsapp" /></a>
+      <a class="svc-hero__link" href="#pricing"><T k="services.pricing" /><Icon name="arrow" size={18} class="svc-hero__down" /></a>
     </div>
-    {service.nepaliLine && <p class="ne svc-hero__ne">{service.nepaliLine}</p>}
-    <div slot="visual" class="svc-hero__icon" data-float="14">
-      <Icon name={service.icon} size={140} />
+    <div slot="visual" class="svc-hero__visual">
+      {sample ? (
+        <WorkPiece item={sample} />
+      ) : (
+        <div class="svc-hero__frame">
+          <MediaSlot ratio="4 / 5" label={`${service.shortName ?? service.name} work sample`} spec="4:5 · client piece" tone="orange" />
+          <span class="svc-hero__badge"><Icon name={service.icon} size={28} /></span>
+        </div>
+      )}
     </div>
   </PageHero>
 
@@ -82,12 +93,12 @@ const serviceLd = {
   {service.beforeAfter && <BeforeAfterReveal data={service.beforeAfter} />}
   {service.videoDemo && <VideoScrubDemo data={service.videoDemo} />}
 
-  <section class="section section--muted">
+  <section class="section section--muted svc-get">
     <div class="container">
       <SectionHead eyebrow="services.whatYouGet">
         <span slot="title">{service.tagline}</span>
       </SectionHead>
-      <div class="grid grid--2 svc-benefits" data-reveal-group>
+      <div class="svc-benefits" data-reveal-group>
         {service.benefits.map((b) => (
           <div class="card card--hover svc-benefit" data-reveal>
             <span class="icon-tile"><Icon name={b.icon ?? 'check'} /></span>
@@ -104,27 +115,24 @@ const serviceLd = {
         ))}
       </ul>
     </div>
+    <Ridge to="var(--dusk-sky-top)" />
   </section>
 
-  <section class="section section--soft svc-examples">
+  <section class="band-dusk svc-results">
     <div class="container">
-      <SectionHead eyebrow="services.examples" lead="services.examplesLead">
-        <span slot="title">Recent {service.shortName ?? service.name} results</span>
-      </SectionHead>
-    </div>
-    <div class="svc-examples__scroller" data-reveal>
-      <div class="svc-examples__track container">
-        {service.examples.map((ex, i) => (
-          <article class="ex-card card card--hover" data-tilt="6" style={`--i:${i}`}>
-            <span class="ex-card__badge caps">Sample result</span>
-            <span class="pill pill--soft">{ex.tag}</span>
-            <p class="ex-card__stat">{ex.stat}</p>
-            <h3 class="ex-card__title">{ex.title}</h3>
-            <p class="ex-card__desc muted">{ex.description}</p>
-          </article>
-        ))}
+      <div class="band-dusk__head" data-reveal>
+        <p class="eyebrow"><T k="services.examples" /></p>
+        <h2>Recent {service.shortName ?? service.name} results</h2>
+        <T k="services.examplesLead" as="p" class="lead" />
+      </div>
+      <div class="band-dusk__grid" data-reveal-group>
+        {service.examples.map((ex) => {
+          const { metric, label } = splitStat(ex.stat);
+          return <ResultCard media={false} metric={metric} metricLabel={label} client={ex.title} meta={ex.tag} summary={ex.description} placeholder={ex.placeholder} />;
+        })}
       </div>
     </div>
+    <Ridge to="var(--surface-ink)" flip />
   </section>
 
   <Process steps={service.process} />
@@ -151,25 +159,11 @@ const serviceLd = {
 
   {testimonial && (
     <section class="section section--muted svc-testimonial">
-      <div class="container container--narrow">
-        <SectionHead eyebrow="services.testimonial" align="center">
+      <div class="container">
+        <SectionHead eyebrow="services.testimonial">
           <span slot="title">What clients say about <span class="hl">{service.name}</span></span>
         </SectionHead>
-        <article class="tspot card" data-reveal="scale">
-          <Icon name="quote" size={36} class="tspot__quote" />
-          <div class="tspot__stars" aria-label={`${testimonial.rating} out of 5 stars`}>
-            {Array.from({ length: testimonial.rating }).map(() => <Icon name="star" size={16} />)}
-          </div>
-          <p class="tspot__text">“{testimonial.quote}”</p>
-          <footer class="tspot__foot">
-            <span class="tspot__avatar">{testimonial.avatar ? <img src={testimonial.avatar} alt="" /> : initials(testimonial.business)}</span>
-            <span>
-              <strong>{testimonial.name}</strong>, {testimonial.role}<br />
-              <span class="small muted">{testimonial.business} · {testimonial.location}</span>
-            </span>
-          </footer>
-          {testimonial.placeholder && <p class="small muted tspot__note"><T k="testimonials.placeholder" /></p>}
-        </article>
+        <StoryFeature item={testimonial} />
       </div>
     </section>
   )}
@@ -177,7 +171,7 @@ const serviceLd = {
   <section class="section" id="pricing">
     <div class="container">
       <SectionHead eyebrow="services.pricing" lead="services.pricingNote" align="center">
-        <span slot="title"><span data-i18n={`svc.${service.slug}.name`}>{service.name}</span> · <T k="pricing.title" /></span>
+        <span slot="title" data-i18n={`svc.${service.slug}.name`}>{service.name}</span>
       </SectionHead>
       <div class="grid grid--3 svc-pricing" data-reveal-group>
         {service.pricing.map((tier, i) => (
@@ -233,19 +227,46 @@ const serviceLd = {
 </Base>
 
 <style>
-  .svc-hero__btns { margin-top: var(--space-5); }
-  .svc-hero__ne { margin-top: var(--space-5); font-size: var(--text-lg); opacity: 0.92; }
-  .svc-hero__icon {
+  .svc-hero__btns { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4) var(--space-6); margin-top: var(--space-5); }
+  .svc-hero__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+    padding-bottom: 2px;
+  }
+  .svc-hero__link:hover { border-color: #fff; }
+  .svc-hero__link :global(.svc-hero__down) { transform: rotate(90deg); }
+  .svc-hero__visual { --h: clamp(320px, 42vw, 440px); --piece-result: #fff3d6; color: #fff; display: grid; justify-items: center; }
+  .svc-hero__frame {
+    position: relative;
+    width: min(320px, 80vw);
+    padding: 8px;
+    background: #fff;
+    border-radius: calc(var(--radius-lg) + 6px);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.28);
+    transform: rotate(-3deg);
+  }
+  .svc-hero__frame :global(.slot) { border-radius: var(--radius-lg); }
+  .svc-hero__badge {
+    position: absolute;
+    right: -18px;
+    bottom: 28px;
     display: grid;
     place-items: center;
-    width: 260px;
-    height: 260px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.14);
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
+    background: var(--brand-black);
+    color: #fff;
+    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.3);
   }
+  .svc-benefits { display: grid; gap: var(--space-5); grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); }
+  @media (min-width: 720px) { .svc-benefits { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .svc-get { padding-bottom: calc(var(--section-y) + clamp(44px, 7vw, 120px)); }
+  .svc-results { padding-bottom: calc(var(--section-y) + clamp(44px, 7vw, 120px)); }
   .svc-intro {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -290,53 +311,6 @@ const serviceLd = {
   .svc-deliverables svg { color: var(--accent); flex: none; }
   .svc-pricing { align-items: stretch; padding-top: var(--space-4); }
 
-  /* ---- Example / case-study gallery ---- */
-  .svc-examples__scroller {
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    padding-bottom: var(--space-3);
-  }
-  .svc-examples__scroller::-webkit-scrollbar { display: none; }
-  .svc-examples__track {
-    display: flex;
-    gap: var(--space-5);
-  }
-  .ex-card {
-    position: relative;
-    flex: 0 0 min(84vw, 340px);
-    scroll-snap-align: start;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-3);
-  }
-  .ex-card__badge {
-    position: absolute;
-    top: var(--space-5);
-    right: var(--space-6);
-    color: var(--fg-subtle);
-    font-size: var(--text-xs);
-  }
-  .ex-card__stat {
-    font-family: var(--font-heading);
-    font-weight: 800;
-    font-size: var(--text-2xl);
-    line-height: 1.15;
-    letter-spacing: -0.02em;
-    color: var(--accent);
-    margin: 0;
-  }
-  .ex-card__title {
-    font-size: var(--text-lg);
-    margin: 0;
-  }
-  .ex-card__desc {
-    margin: 0;
-    font-size: var(--text-sm);
-    flex: 1;
-  }
-
   /* ---- Why choose NexGen ---- */
   .svc-why__grid {
     display: grid;
@@ -361,52 +335,6 @@ const serviceLd = {
   }
   .svc-why__point h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
   .svc-why__point p { margin: 0; font-size: var(--text-sm); }
-
-  /* ---- Matching testimonial spotlight ---- */
-  .tspot {
-    position: relative;
-    max-width: 720px;
-    margin-inline: auto;
-    text-align: center;
-    padding: var(--space-8) var(--space-6);
-  }
-  .tspot :global(.tspot__quote) {
-    color: var(--accent-soft);
-    margin: 0 auto var(--space-4);
-  }
-  .tspot__stars {
-    display: flex;
-    justify-content: center;
-    gap: 2px;
-    color: #f5a623;
-    margin-bottom: var(--space-4);
-  }
-  .tspot__text {
-    font-size: var(--text-xl);
-    line-height: 1.5;
-    margin: 0 0 var(--space-5);
-  }
-  .tspot__foot {
-    display: inline-flex;
-    gap: var(--space-3);
-    align-items: center;
-    text-align: left;
-  }
-  .tspot__avatar {
-    display: grid;
-    place-items: center;
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    background: var(--brand-black);
-    color: #fff;
-    font-family: var(--font-heading);
-    font-weight: 700;
-    flex: none;
-    overflow: hidden;
-  }
-  .tspot__avatar img { width: 100%; height: 100%; object-fit: cover; }
-  .tspot__note { margin: var(--space-4) 0 0; }
 
   /* Full-bleed photo + dusk-gradient wash — same pattern as About, the product
      page's audience section, and the services index/pricing closing bands. */

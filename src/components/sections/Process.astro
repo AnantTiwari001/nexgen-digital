@@ -19,7 +19,7 @@ const icons: IconName[] = ['search', 'doc', 'sparkles', 'trend'];
     ) : (
       <SectionHead eyebrow="process.eyebrow" title="process.title" />
     )}
-    <ol class="process__list" data-reveal-group>
+    <ol class="process__list" data-reveal-group style={`--steps:${steps?.length ?? 4}`}>
       {(steps ?? [1, 2, 3, 4].map((n) => ({ key: n }))).map((s, i) => (
         <li class="process__step" data-reveal data-tilt="5">
           <span class="process__num">{String(i + 1).padStart(2, '0')}</span>
@@ -49,6 +49,9 @@ const icons: IconName[] = ['search', 'doc', 'sparkles', 'trend'];
     display: grid;
     gap: var(--space-4);
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  }
+  @media (min-width: 1100px) {
+    .process__list { grid-template-columns: repeat(var(--steps, 4), minmax(0, 1fr)); }
     counter-reset: step;
   }
   .process__step {

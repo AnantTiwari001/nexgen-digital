@@ -1,0 +1,86 @@
+---
+/**
+ * One piece of client work at its native shape (reel in a phone, post, ad, website in a
+ * browser frame) with who it was for and what it did. Height comes from `--h` on a parent.
+ */
+import MediaSlot from './MediaSlot.astro';
+import type { WorkItem, WorkKind } from '../data/work';
+import { t } from '../i18n';
+
+interface Props {
+  item: WorkItem;
+  link?: boolean;
+}
+const { item: w, link = true } = Astro.props;
+const frame: Record<WorkKind, { ratio: string; spec: string; icon: 'play' | 'image' }> = {
+  reel: { ratio: '9 / 16', spec: '9:16 · 6–10s loop', icon: 'play' },
+  post: { ratio: '4 / 5', spec: '4:5 post', icon: 'image' },
+  ad: { ratio: '1 / 1', spec: '1:1 ad creative', icon: 'image' },
+  website: { ratio: '16 / 10', spec: '16:10 screenshot', icon: 'image' },
+};
+const f = frame[w.kind];
+const Tag = link ? 'a' : 'div';
+---
+
+<Tag class:list={['piece', `piece--${w.kind}`]} href={link ? `/services/${w.service}` : undefined}>
+  <div class="piece__media" style={`aspect-ratio:${f.ratio}`}>
+    {w.kind === 'website' && <span class="piece__chrome" aria-hidden="true"><i></i><i></i><i></i></span>}
+    <MediaSlot ratio={f.ratio} src={w.media} video={w.video} alt={`${w.title} for ${w.client}`} label={w.client} spec={f.spec} icon={f.icon} />
+  </div>
+  <div class="piece__caption">
+    <p class="piece__meta">
+      <span class="piece__kind" data-i18n={`home.work.kind.${w.kind}`}>{t(`home.work.kind.${w.kind}`)}</span>
+      {w.placeholder && <span class="piece__sample" data-i18n="home.work.sample">{t('home.work.sample')}</span>}
+    </p>
+    <p class="piece__client">{w.client} <span>· {w.area}</span></p>
+    <p class="piece__result">{w.result}</p>
+  </div>
+</Tag>
+
+<style>
+  .piece { display: grid; gap: var(--space-4); color: inherit; }
+  .piece__media {
+    position: relative;
+    height: var(--h, 400px);
+    max-width: 100%;
+    transition: transform var(--dur) var(--ease-out);
+  }
+  a.piece:hover .piece__media { transform: translateY(-6px); }
+  .piece__media :global(.slot) { height: 100%; }
+  .piece--reel .piece__media {
+    padding: 7px;
+    background: #000;
+    border-radius: 30px;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
+  }
+  .piece--reel .piece__media :global(.slot) { border-radius: 24px; border: 0; }
+  .piece--website .piece__media {
+    padding: 30px 8px 8px;
+    background: #1f1f1f;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
+  }
+  .piece--website .piece__media :global(.slot) { border-radius: var(--radius-sm); }
+  .piece__chrome { position: absolute; top: 11px; left: 14px; display: flex; gap: 6px; }
+  .piece__chrome i { width: 9px; height: 9px; border-radius: 50%; background: rgba(255, 255, 255, 0.25); }
+
+  .piece__caption { display: grid; gap: 4px; max-width: 34ch; }
+  .piece__caption p { margin: 0; }
+  .piece__meta { display: flex; gap: var(--space-2); align-items: center; }
+  .piece__kind,
+  .piece__sample {
+    font-family: var(--font-heading);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .piece__kind { color: var(--brand-orange); }
+  .piece__sample { padding: 2px 8px; border-radius: var(--radius-pill); border: 1px solid color-mix(in srgb, currentColor 30%, transparent); opacity: 0.75; }
+  .piece__client { font-family: var(--font-heading); font-weight: 700; font-size: var(--text-lg); }
+  .piece__client span { font-family: var(--font-body); font-weight: 400; font-size: var(--text-sm); opacity: 0.6; }
+  .piece__result { color: var(--piece-result, var(--brand-gold)); font-weight: 600; }
+  @media (max-width: 899px) {
+    .piece--website .piece__media { height: calc(var(--h, 400px) * 0.7); }
+  }
+</style>

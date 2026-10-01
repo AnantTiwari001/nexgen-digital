@@ -4,14 +4,10 @@ import Icon from './Icon.astro';
 import T from './T.astro';
 import Mountains from './Mountains.astro';
 import KathmanduSkyline from './KathmanduSkyline.astro';
+import Ridge from './home/Ridge.astro';
 import { site, whatsappUrl } from '../config/site';
 import { servicePages } from '../data/services';
 
-interface Props {
-  /** 'night' continues the homepage's dusk into a night sky with stars over the skyline. */
-  tone?: 'default' | 'night';
-}
-const { tone = 'default' } = Astro.props;
 const year = new Date().getFullYear();
 const socials = [
   { name: 'facebook', href: site.social.facebook, label: 'Facebook' },
@@ -22,8 +18,10 @@ const socials = [
 ] as const;
 ---
 
-<footer class:list={['footer', { 'footer--night': tone === 'night' }]}>
-  {tone === 'night' && <div class="footer__stars" aria-hidden="true"></div>}
+<!-- Every page ends at night: the footer's ridgeline rises into whatever section comes before it. -->
+<footer class="footer">
+  <div class="footer__ridge" aria-hidden="true"><Ridge to="var(--night-sky-top)" /></div>
+  <div class="footer__stars" aria-hidden="true"></div>
   <div class="footer__mountains" aria-hidden="true"><Mountains /></div>
   <div class="footer__skyline" aria-hidden="true"><KathmanduSkyline /></div>
   <div class="container footer__grid">
@@ -88,22 +86,34 @@ const socials = [
 
 <style>
   .footer {
+    --fg-inverse: #f6efe8;
     position: relative;
-    background: var(--bg-inverse);
+    background: linear-gradient(180deg, var(--night-sky-top) 0%, var(--night-sky) 100%);
     color: var(--fg-inverse);
     padding-top: var(--space-9);
-    overflow: hidden;
+    /* Clip sideways only, so the ridgeline can rise above the footer's top edge. */
+    overflow-x: clip;
+  }
+  .footer__ridge {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 100%;
+    height: clamp(44px, 7vw, 120px);
+    pointer-events: none;
   }
   .footer__mountains {
     position: absolute;
     inset: auto 0 0 0;
-    opacity: 0.08;
+    opacity: 0.12;
+    color: #3a2257;
     pointer-events: none;
   }
   .footer__skyline {
     position: absolute;
     inset: auto 0 0 0;
-    opacity: 0.1;
+    opacity: 0.55;
+    color: #000;
     pointer-events: none;
   }
   .footer__grid {
@@ -121,7 +131,7 @@ const socials = [
     .footer__grid { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.3fr); }
     .footer__brand { grid-column: auto; }
   }
-  .footer :global(.logo) { --logo-word: var(--fg-inverse); }
+  .footer :global(.logo) { --logo-word: #fff; }
   .footer__tagline {
     margin-top: var(--space-4);
     color: var(--fg-inverse);
@@ -188,15 +198,7 @@ const socials = [
   }
   .footer__bottom p { margin: 0; display: inline-flex; align-items: center; gap: 0.4em; }
 
-  /* Night: the sky the homepage's dusk ends in, the same in light and dark themes. */
-  .footer--night {
-    --fg-inverse: #f6efe8;
-    background: linear-gradient(180deg, var(--night-sky-top) 0%, var(--night-sky) 100%);
-    color: var(--fg-inverse);
-  }
-  .footer--night :global(.logo) { --logo-word: #fff; }
-  .footer--night .footer__skyline { opacity: 0.55; color: #000; }
-  .footer--night .footer__mountains { opacity: 0.12; color: #3a2257; }
+  /* Night sky, the same in light and dark themes. */
   .footer__stars {
     position: absolute;
     inset: 0 0 35% 0;

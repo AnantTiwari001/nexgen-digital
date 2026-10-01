@@ -17,8 +17,6 @@ interface Props {
   /** JSON-LD objects to embed */
   jsonLd?: Record<string, unknown>[];
   bodyClass?: string;
-  /** 'night' ends the page in the homepage's night-sky footer */
-  footerTone?: 'default' | 'night';
 }
 
 const {
@@ -29,7 +27,6 @@ const {
   headerTone = 'auto',
   jsonLd = [],
   bodyClass,
-  footerTone = 'default',
 } = Astro.props;
 
 const fullTitle = title ? site.seo.titleTemplate.replace('%s', title) : site.seo.defaultTitle;
@@ -112,7 +109,7 @@ const organizationLd = {
     <main id="main">
       <slot />
     </main>
-    <Footer tone={footerTone} />
+    <Footer />
     {site.features.chatWidget && <ChatWidget />}
     <script src="../scripts/main.ts"></script>
   </body>

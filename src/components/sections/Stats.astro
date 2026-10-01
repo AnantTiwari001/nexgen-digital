@@ -2,11 +2,17 @@
 import SectionHead from '../SectionHead.astro';
 import T from '../T.astro';
 import Logo from '../Logo.astro';
+import Ridge from '../home/Ridge.astro';
 import { stats, trustedBy } from '../../data/stats';
+interface Props {
+  /** Colour of the section below, for a closing ridgeline. */
+  ridgeTo?: string;
+}
+const { ridgeTo } = Astro.props;
 const anyPlaceholder = stats.some((s) => s.placeholder);
 ---
 
-<section class="section section--tight stats">
+<section class:list={['section section--tight stats', { 'has-ridge': ridgeTo }]}>
   <div class="container">
     <SectionHead eyebrow="stats.eyebrow" title="stats.title" align="center" />
     <div class="stats__grid" data-reveal-group>
@@ -51,6 +57,7 @@ const anyPlaceholder = stats.some((s) => s.placeholder);
       </div>
     </div>
   </div>
+  {ridgeTo && <Ridge to={ridgeTo} />}
 </section>
 
 <style>
@@ -79,7 +86,8 @@ const anyPlaceholder = stats.some((s) => s.placeholder);
     font-weight: 600;
     color: var(--fg-muted);
   }
-  .stats__note { margin-top: var(--space-4); }
+  /* Sits above the tilted chart card, whose 3D lean reaches up toward it. */
+  .stats__note { position: relative; z-index: 2; margin-top: var(--space-4); }
   .stats__logos {
     margin-top: var(--space-7);
     opacity: 0.6;
@@ -97,7 +105,7 @@ const anyPlaceholder = stats.some((s) => s.placeholder);
 
   /* ---- Growth chart: the traced-line system tied to an actual result ---- */
   .gl-stage {
-    margin-top: var(--space-7);
+    margin-top: var(--space-8);
     max-width: 520px;
     margin-inline: auto;
     perspective: 900px;

@@ -3,6 +3,9 @@
 import Mountains from './Mountains.astro';
 import KathmanduSkyline from './KathmanduSkyline.astro';
 import Logo from './Logo.astro';
+import Echo from './home/Echo.astro';
+import Ridge from './home/Ridge.astro';
+import { echoFor } from '../i18n';
 
 interface Props {
   eyebrow?: string;
@@ -18,8 +21,13 @@ interface Props {
   leadKey?: string;
   /** Extra class on the <h1>, e.g. a one-off treatment like `text-gradient-dusk` for a single page. */
   titleClass?: string;
+  /** Nepali echo under the title; defaults to the title key's Nepali translation. */
+  echo?: string;
+  /** Colour of the section below, which rises into the hero as a ridgeline. */
+  ridgeTo?: string;
 }
-const { eyebrow, title, lead, script, align = 'left', tone = 'orange', compact = false, eyebrowKey, titleKey, leadKey, titleClass } = Astro.props;
+const { eyebrow, title, lead, script, align = 'left', tone = 'orange', compact = false, eyebrowKey, titleKey, leadKey, titleClass, echo, ridgeTo = 'var(--bg)' } = Astro.props;
+const echoText = echo ?? echoFor(titleKey);
 ---
 
 <section class:list={['phero', `phero--${tone}`, `phero--${align}`, { 'phero--compact': compact }]} data-parallax-scope>
@@ -30,12 +38,14 @@ const { eyebrow, title, lead, script, align = 'left', tone = 'orange', compact =
     <div class="phero__text">
       {(eyebrow || Astro.slots.has('eyebrow')) && <p class="eyebrow" data-reveal data-i18n={eyebrowKey}><slot name="eyebrow">{eyebrow}</slot></p>}
       {(title || Astro.slots.has('title')) && <h1 class:list={['phero__title', titleClass]} data-split="immediate" data-split-delay="0.1" data-i18n={titleKey}><slot name="title">{title}</slot></h1>}
+      {echoText && <Echo text={echoText} class="phero__echo" />}
       {script && <p class="script phero__script" data-reveal style="--reveal-delay:400ms">{script}</p>}
       {(lead || Astro.slots.has('lead')) && <p class="lead" data-reveal style="--reveal-delay:500ms" data-i18n={leadKey}><slot name="lead">{lead}</slot></p>}
       <div data-reveal style="--reveal-delay:600ms"><slot /></div>
     </div>
     {Astro.slots.has('visual') && <div class="phero__visual" data-reveal="scale" data-tilt="4" style="--reveal-delay:300ms"><slot name="visual" /></div>}
   </div>
+  <Ridge to={ridgeTo} />
 </section>
 
 <style>
@@ -43,20 +53,23 @@ const { eyebrow, title, lead, script, align = 'left', tone = 'orange', compact =
     position: relative;
     overflow: hidden;
     padding-top: calc(var(--header-h) + var(--space-8));
-    padding-bottom: var(--space-8);
+    padding-bottom: calc(var(--space-8) + clamp(44px, 7vw, 120px));
     background: var(--brand-orange);
     color: #fff;
+    --echo: #fff3d6;
   }
+  .phero--black { --echo: var(--brand-orange); }
+  .phero--light { --echo: var(--accent); }
   .phero--black { background: var(--brand-black); }
   .phero--light {
     background: var(--bg-soft);
     color: var(--fg);
   }
-  .phero--compact { padding-top: calc(var(--header-h) + var(--space-6)); padding-bottom: var(--space-6); }
+  .phero--compact { padding-top: calc(var(--header-h) + var(--space-6)); padding-bottom: calc(var(--space-6) + clamp(44px, 7vw, 120px)); }
   @media (max-width: 640px) {
     /* Keep short-hero pages (e.g. contact, with a form right below) from placing
        their first controls under the fixed chat launcher in the bottom-right corner. */
-    .phero--compact { padding-bottom: var(--space-4); }
+    .phero--compact { padding-bottom: calc(var(--space-4) + 44px); }
   }
   .phero__mark {
     position: absolute;

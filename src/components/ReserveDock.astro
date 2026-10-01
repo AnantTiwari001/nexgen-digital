@@ -1,0 +1,73 @@
+---
+/**
+ * A small "reserve" card pinned to the bottom-left while the visitor reads the product
+ * story. Appears once the hero has scrolled away; hides again over the sections that
+ * already have the full pre-order buttons (marked with data-dock-hide).
+ */
+import Icon from './Icon.astro';
+import T from './T.astro';
+import { product } from '../data/product';
+
+const from = product.tiers.find((t) => /^\d/.test(t.price));
+---
+
+<aside class="dock" data-dock aria-label="Reserve the QR stand" hidden>
+  <span class="dock__icon"><Icon name="qr" size={22} /></span>
+  <span class="dock__text">
+    <strong>{product.shortName}</strong>
+    {from && <span>From Rs. {from.price} · <T k="product.noPayment" /></span>}
+  </span>
+  <a class="btn btn--sm dock__btn" href="/preorder"><T k="product.cta" /></a>
+</aside>
+
+<style>
+  .dock {
+    position: fixed;
+    left: max(16px, env(safe-area-inset-left));
+    bottom: max(16px, env(safe-area-inset-bottom));
+    z-index: 110;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    max-width: min(440px, calc(100vw - 104px));
+    padding: var(--space-2) var(--space-2) var(--space-2) var(--space-3);
+    border-radius: var(--radius-pill);
+    background: var(--bg-elev);
+    color: var(--fg);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(0);
+    opacity: 1;
+    transition: transform var(--dur) var(--ease-out), opacity var(--dur);
+  }
+  .dock[data-away] { transform: translateY(calc(100% + 24px)); opacity: 0; pointer-events: none; }
+  .dock__icon { display: grid; place-items: center; width: 40px; height: 40px; flex: none; border-radius: 50%; background: var(--accent-soft); color: var(--accent); }
+  .dock__text { display: grid; min-width: 0; line-height: 1.25; font-size: var(--text-xs); color: var(--fg-muted); }
+  .dock__text strong { font-family: var(--font-heading); font-size: var(--text-sm); color: var(--fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dock__text span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dock__btn { flex: none; }
+  @media (max-width: 420px) {
+    .dock__icon { display: none; }
+  }
+</style>
+
+<script>
+  const dock = document.querySelector<HTMLElement>('[data-dock]');
+  const hero = document.querySelector('[data-dock-after]');
+  if (dock && hero) {
+    dock.hidden = false;
+    dock.setAttribute('data-away', '');
+    let pastHero = false;
+    const covering = new Set<Element>();
+    const update = () => dock.toggleAttribute('data-away', !pastHero || covering.size > 0);
+    new IntersectionObserver(([e]) => {
+      pastHero = !e.isIntersecting && e.boundingClientRect.top < 0;
+      update();
+    }).observe(hero);
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => (e.isIntersecting ? covering.add(e.target) : covering.delete(e.target)));
+      update();
+    });
+    document.querySelectorAll('[data-dock-hide], footer').forEach((el) => io.observe(el));
+  }
+</script>

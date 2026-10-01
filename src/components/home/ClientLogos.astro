@@ -8,12 +8,17 @@ import T from '../T.astro';
 import Ridge from './Ridge.astro';
 import { trustedBy } from '../../data/stats';
 
+interface Props {
+  /** Colour of the section below, for the ridgeline; false when it continues the same surface. */
+  ridgeTo?: string | false;
+}
+const { ridgeTo = 'var(--surface-ink)' } = Astro.props;
 const styles = ['serif', 'caps', 'heavy', 'script', 'wide'] as const;
 const marks = trustedBy.map((c, i) => ({ ...c, style: styles[i % styles.length] }));
 const anyPlaceholder = trustedBy.some((c) => c.placeholder);
 ---
 
-<section class="logos" aria-labelledby="logos-title">
+<section class:list={['logos', { 'logos--flat': !ridgeTo }]} aria-labelledby="logos-title">
   <div class="container logos__inner">
     <p class="caps logos__title" id="logos-title"><T k="home.logos.title" /></p>
     <div class="marquee logos__marquee" style="--marquee-speed: 46s">
@@ -27,7 +32,7 @@ const anyPlaceholder = trustedBy.some((c) => c.placeholder);
     </div>
     {anyPlaceholder && <p class="logos__note">Sample client names, shown until launch.</p>}
   </div>
-  <Ridge to="var(--surface-ink)" flip />
+  {ridgeTo && <Ridge to={ridgeTo} flip />}
 </section>
 
 <style>
@@ -36,6 +41,7 @@ const anyPlaceholder = trustedBy.some((c) => c.placeholder);
     background: var(--bg);
     padding-block: var(--space-6) calc(var(--space-7) + clamp(44px, 7vw, 120px));
   }
+  .logos--flat { padding-bottom: var(--space-4); }
   .logos__inner { display: grid; gap: var(--space-5); justify-items: center; }
   .logos__title { margin: 0; color: var(--fg-subtle); }
   .logos__marquee { width: 100%; }

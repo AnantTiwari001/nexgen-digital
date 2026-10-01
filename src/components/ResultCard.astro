@@ -1,0 +1,115 @@
+---
+/**
+ * One result, made for the dusk sky: the number printed large, then who, which service and
+ * what was done. With `media` it sits on the client's photo (or a labelled photo slot);
+ * without, the number heads a plain card.
+ */
+import Icon from './Icon.astro';
+import T from './T.astro';
+import MediaSlot from './MediaSlot.astro';
+import { t } from '../i18n';
+
+interface Props {
+  metric?: string;
+  metricLabel: string;
+  client?: string;
+  meta?: string;
+  summary?: string;
+  photo?: string;
+  href?: string;
+  placeholder?: boolean;
+  media?: boolean;
+}
+const { metric, metricLabel, client, meta, summary, photo, href, placeholder, media = true } = Astro.props;
+---
+
+<article class:list={['rcard', { 'rcard--plain': !media }]} data-reveal>
+  {media ? (
+    <div class="rcard__media">
+      <MediaSlot ratio="4 / 5" src={photo} alt={client ?? ''} label="Client photo" spec="4:5 · owner or venue" />
+      <p class="rcard__metric">{metric && <strong>{metric}</strong>}<span>{metricLabel}</span></p>
+      {placeholder && <span class="rcard__sample" data-i18n="home.results.sample">{t('home.results.sample')}</span>}
+    </div>
+  ) : (
+    <div class="rcard__top">
+      {placeholder && <span class="rcard__sample rcard__sample--inline" data-i18n="home.results.sample">{t('home.results.sample')}</span>}
+      <p class="rcard__metric rcard__metric--plain">{metric && <strong>{metric}</strong>}<span>{metricLabel}</span></p>
+    </div>
+  )}
+  <div class="rcard__body">
+    {client && <p class="rcard__client">{client}</p>}
+    {meta && <p class="rcard__meta">{meta}</p>}
+    {summary && <p class="rcard__summary">{summary}</p>}
+    {href && <a class="rcard__link" href={href}><T k="home.results.read" /><Icon name="arrow" size={16} /></a>}
+  </div>
+</article>
+
+<style>
+  .rcard {
+    display: grid;
+    align-content: start;
+    background: rgba(11, 6, 20, 0.42);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: calc(var(--radius-lg) + 6px);
+    padding: 8px;
+    color: var(--dusk-fg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .rcard__media { position: relative; }
+  .rcard__media::after {
+    content: '';
+    position: absolute;
+    inset: 40% 0 0 0;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    background: linear-gradient(to bottom, transparent, rgba(11, 6, 20, 0.85));
+    pointer-events: none;
+  }
+  .rcard__metric {
+    position: absolute;
+    left: var(--space-5);
+    right: var(--space-5);
+    bottom: var(--space-4);
+    z-index: 1;
+    margin: 0;
+    display: grid;
+    gap: 2px;
+  }
+  .rcard__metric strong {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: clamp(3.2rem, 2.4rem + 3vw, 4.8rem);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    color: var(--brand-gold);
+  }
+  .rcard__metric span { font-weight: 600; color: #fff; }
+  .rcard__top { display: grid; gap: var(--space-4); padding: var(--space-5) var(--space-4) 0; }
+  .rcard__metric--plain { position: static; }
+  .rcard__metric--plain span { font-family: var(--font-heading); font-size: var(--text-lg); line-height: 1.25; }
+  .rcard__sample {
+    position: absolute;
+    top: var(--space-3);
+    left: var(--space-3);
+    z-index: 1;
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+    background: rgba(0, 0, 0, 0.55);
+    font-family: var(--font-heading);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .rcard__sample--inline { position: static; justify-self: start; }
+  .rcard__body { display: grid; gap: var(--space-2); padding: var(--space-5) var(--space-4) var(--space-4); }
+  .rcard__body p { margin: 0; }
+  .rcard__client { font-family: var(--font-heading); font-weight: 700; font-size: var(--text-xl); }
+  .rcard__meta { font-size: var(--text-sm); color: #ffcf9f; }
+  .rcard__summary { color: var(--dusk-fg-muted); font-size: var(--text-sm); }
+  .rcard__link { display: inline-flex; align-items: center; gap: 0.4em; margin-top: var(--space-2); font-family: var(--font-heading); font-weight: 700; color: #fff; }
+  .rcard__link:hover { color: var(--brand-gold); }
+  @media (max-width: 600px) {
+    .rcard__media :global(.slot) { aspect-ratio: 4 / 3 !important; }
+  }
+</style>

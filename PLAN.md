@@ -54,6 +54,26 @@ scripts/generate-logo.mjs builds SVG logos from Poppins outlines into public/bra
 public/brand/             logo-horizontal.svg, logo-stacked.svg, logo-mark.svg, favicon
 ```
 
+## Design system: loud, local, proven
+
+The October 2026 design sprint (branch homepage-v2) set four rules every page follows:
+
+- **Proof next to every claim.** Work, results, stories, logos and team come from `src/data/`
+  (`work.ts`, `testimonials.ts`, `stats.ts`, `team.ts`). `MediaSlot` shows a photo or video at its
+  final ratio, or a labelled placeholder naming the shot until the real asset is set. Anything
+  flagged `placeholder` is labelled "Sample" on the page.
+- **A day over the valley.** Pages open in midday orange, show proof under the dusk sky
+  (`.band-dusk`, `ResultCard`), close at dusk with prayer flags (`CtaBand`, the only place the flags
+  appear) and end at night (`Footer`).
+- **Ridgelines, not straight edges.** Where one colour meets the next, `home/Ridge.astro` draws the
+  valley's silhouette in the next section's colour; add `.has-ridge` for the room it needs. The
+  footer carries its own, so every page ends on one.
+- **Devanagari has one job.** `home/Echo.astro` puts a Nepali line under headings, in the same place,
+  size and colour. `SectionHead`, `PageHero` and `CtaBand` take it from the title key's Nepali
+  translation automatically; it hides when the page is in Nepali.
+
+Dark mode keeps the rhythm: brand-black bands use `--surface-ink`, which becomes warm umber.
+
 ## Routes
 
 | Route | Content |

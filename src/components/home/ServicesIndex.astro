@@ -11,6 +11,13 @@ import Ridge from './Ridge.astro';
 import { categories, services, serviceHref } from '../../data/services';
 import { t } from '../../i18n';
 
+interface Props {
+  /** Show the section heading (off when the page hero already introduces the list). */
+  head?: boolean;
+  /** Colour of the section below, for the ridgeline. */
+  ridgeTo?: string;
+}
+const { head = true, ridgeTo = 'var(--dusk-sky-top)' } = Astro.props;
 const groups = categories
   .map((c) => ({ ...c, items: services.filter((s) => s.category === c.id) }))
   .filter((g) => g.items.length);
@@ -19,18 +26,18 @@ const fromPrice = (price?: string) => (price && price !== 'Custom' && price !== 
 
 <section class="svcx" id="services">
   <div class="container">
-    <div class="svcx__head">
+    {head && <div class="svcx__head">
       <div>
         <T k="home.services.eyebrow" as="p" class="eyebrow" />
         <T k="home.services.title" as="h2" />
         <Echo text={t('home.services.echo')} />
       </div>
       <T k="home.services.lead" as="p" class="lead svcx__lead" />
-    </div>
+    </div>}
 
     <div class="svcx__groups">
       {groups.map((g) => (
-        <div class="svcx__group" data-reveal>
+        <div class="svcx__group" id={g.id} data-reveal>
           <div class="svcx__cat">
             <span class="icon-tile icon-tile--round svcx__icon"><Icon name={g.icon} /></span>
             <h3 class="svcx__cat-name" data-i18n={`cat.${g.id}.name`}>{g.name}</h3>
@@ -57,7 +64,7 @@ const fromPrice = (price?: string) => (price && price !== 'Custom' && price !== 
 
     <a class="btn btn--lg svcx__all" href="/services"><T k="home.services.all" /><Icon name="arrow" size={18} class="arrow" /></a>
   </div>
-  <Ridge to="var(--dusk-sky-top)" />
+  <Ridge to={ridgeTo} />
 </section>
 
 <style>
@@ -77,6 +84,7 @@ const fromPrice = (price?: string) => (price && price !== 'Custom' && price !== 
 
   .svcx__groups { display: grid; border-top: 2px solid var(--fg); }
   .svcx__group {
+    scroll-margin-top: calc(var(--header-h) + var(--space-4));
     display: grid;
     gap: var(--space-4) var(--space-7);
     padding-block: var(--space-6);

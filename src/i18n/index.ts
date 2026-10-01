@@ -23,6 +23,16 @@ export function t(key: string, lang: Lang = defaultLang): string {
   return key;
 }
 
+/**
+ * The Nepali echo of a heading: its Nepali translation, shown under the English heading
+ * (see components/home/Echo.astro). Undefined when there is no distinct Nepali version.
+ */
+export function echoFor(key?: string): string | undefined {
+  if (!key) return undefined;
+  const ne = dictionaries.ne[key];
+  return ne && ne !== dictionaries.en[key] ? ne : undefined;
+}
+
 /** Keys in `ne` that are missing from `en`, for sanity checks. */
 export function missingKeys(): string[] {
   return Object.keys(dictionaries.ne).filter((k) => !(k in dictionaries.en) && !k.startsWith('svc.') && !k.startsWith('cat.'));

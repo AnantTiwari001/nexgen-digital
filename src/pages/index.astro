@@ -9,7 +9,7 @@ import StandFeature from '../components/home/StandFeature.astro';
 import ClientStories from '../components/home/ClientStories.astro';
 import TeamWall from '../components/home/TeamWall.astro';
 import HowWeWork from '../components/home/HowWeWork.astro';
-import ClosingCta from '../components/home/ClosingCta.astro';
+import CtaBand from '../components/sections/CtaBand.astro';
 import { site } from '../config/site';
 
 const localBusinessLd = {
@@ -33,7 +33,7 @@ const localBusinessLd = {
   sky at the results, and a night-sky footer. Each section ends in a ridgeline coloured
   like the section below it (components/home/Ridge.astro).
 -->
-<Base headerTone="white" jsonLd={[localBusinessLd]} footerTone="night">
+<Base headerTone="white" jsonLd={[localBusinessLd]}>
   <HomeHero />
   <ClientLogos />
   <WorkReel />
@@ -43,5 +43,5 @@ const localBusinessLd = {
   {site.features.testimonials && <ClientStories />}
   <TeamWall />
   <HowWeWork />
-  <ClosingCta />
+  <CtaBand />
 </Base>

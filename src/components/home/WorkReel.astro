@@ -7,19 +7,13 @@
  */
 import Icon from '../Icon.astro';
 import T from '../T.astro';
-import MediaSlot from '../MediaSlot.astro';
+import WorkPiece from '../WorkPiece.astro';
 import Echo from './Echo.astro';
 import Ridge from './Ridge.astro';
-import { work, type WorkKind } from '../../data/work';
+import { work } from '../../data/work';
 import { whatsappUrl } from '../../config/site';
 import { t } from '../../i18n';
 
-const frame: Record<WorkKind, { ratio: string; spec: string; icon: 'play' | 'image' }> = {
-  reel: { ratio: '9 / 16', spec: '9:16 · 6–10s loop', icon: 'play' },
-  post: { ratio: '4 / 5', spec: '4:5 post', icon: 'image' },
-  ad: { ratio: '1 / 1', spec: '1:1 ad creative', icon: 'image' },
-  website: { ratio: '16 / 10', spec: '16:10 screenshot', icon: 'image' },
-};
 ---
 
 <section class="work" id="work" data-hscroll>
@@ -34,27 +28,11 @@ const frame: Record<WorkKind, { ratio: string; spec: string; icon: 'play' | 'ima
 
   <div class="work__viewport">
     <ol class="work__track" data-hscroll-track>
-      {work.map((w) => {
-        const f = frame[w.kind];
-        return (
-          <li class={`work__item work__item--${w.kind}`}>
-            <a class="work__link" href={`/services/${w.service}`}>
-              <div class="work__media" style={`aspect-ratio:${f.ratio}`}>
-                {w.kind === 'website' && <span class="work__chrome" aria-hidden="true"><i></i><i></i><i></i></span>}
-                <MediaSlot ratio={f.ratio} src={w.media} video={w.video} alt={`${w.title} for ${w.client}`} label={`${w.client}`} spec={f.spec} icon={f.icon} />
-              </div>
-              <div class="work__caption">
-                <p class="work__meta">
-                  <span class="work__kind" data-i18n={`home.work.kind.${w.kind}`}>{t(`home.work.kind.${w.kind}`)}</span>
-                  {w.placeholder && <span class="work__sample" data-i18n="home.work.sample">{t('home.work.sample')}</span>}
-                </p>
-                <p class="work__client">{w.client} <span>· {w.area}</span></p>
-                <p class="work__result">{w.result}</p>
-              </div>
-            </a>
-          </li>
-        );
-      })}
+      {work.map((w) => (
+        <li class="work__item">
+          <WorkPiece item={w} />
+        </li>
+      ))}
       <li class="work__item work__item--next">
         <a class="work__next" href={whatsappUrl('Hi NexGen Digital, I would like work like this for my business.')} target="_blank" rel="noopener">
           <span class="script">Your brand next?</span>
@@ -107,48 +85,6 @@ const frame: Record<WorkKind, { ratio: string; spec: string; icon: 'play' | 'ima
     align-items: flex-start;
   }
   .work__item { scroll-snap-align: start; }
-  .work__link { display: grid; gap: var(--space-4); color: inherit; }
-  .work__media {
-    position: relative;
-    height: var(--h);
-    transition: transform var(--dur) var(--ease-out);
-  }
-  .work__link:hover .work__media { transform: translateY(-6px); }
-  .work__media :global(.slot) { height: 100%; }
-  .work__item--reel .work__media {
-    padding: 7px;
-    background: #000;
-    border-radius: 30px;
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
-  }
-  .work__item--reel .work__media :global(.slot) { border-radius: 24px; border: 0; }
-  .work__item--website .work__media {
-    padding: 30px 8px 8px;
-    background: #1f1f1f;
-    border-radius: var(--radius-lg);
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
-  }
-  .work__item--website .work__media :global(.slot) { border-radius: var(--radius-sm); }
-  .work__chrome { position: absolute; top: 11px; left: 14px; display: flex; gap: 6px; }
-  .work__chrome i { width: 9px; height: 9px; border-radius: 50%; background: rgba(255, 255, 255, 0.25); }
-
-  .work__caption { display: grid; gap: 4px; max-width: 34ch; }
-  .work__caption p { margin: 0; }
-  .work__meta { display: flex; gap: var(--space-2); align-items: center; }
-  .work__kind,
-  .work__sample {
-    font-family: var(--font-heading);
-    font-size: var(--text-xs);
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-  }
-  .work__kind { color: var(--brand-orange); }
-  .work__sample { padding: 2px 8px; border-radius: var(--radius-pill); border: 1px solid rgba(255, 255, 255, 0.25); color: rgba(255, 255, 255, 0.65); }
-  .work__client { font-family: var(--font-heading); font-weight: 700; font-size: var(--text-lg); }
-  .work__client span { font-family: var(--font-body); font-weight: 400; font-size: var(--text-sm); opacity: 0.6; }
-  .work__result { color: var(--brand-gold); font-weight: 600; }
-
   .work__next {
     display: grid;
     align-content: center;
@@ -177,6 +113,5 @@ const frame: Record<WorkKind, { ratio: string; spec: string; icon: 'play' | 'ima
   }
   @media (max-width: 899px) {
     .work { --h: clamp(280px, 56vw, 380px); }
-    .work__item--website .work__media { height: calc(var(--h) * 0.7); }
   }
 </style>
